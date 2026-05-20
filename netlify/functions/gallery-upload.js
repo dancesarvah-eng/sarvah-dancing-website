@@ -41,13 +41,14 @@ exports.handler = async (event) => {
             transformation: [{ quality: 'auto', fetch_format: 'auto' }]
         });
 
-        const newImage = {
-            id:         result.public_id,
-            url:        result.secure_url,
-            public_id:  result.public_id,
-            title:      title || 'Sarvah Dance Performance',
-            uploadedAt: new Date().toISOString()
-        };
+       // To this:
+const newImage = {
+    id:         Date.now(),  // ✅ Use numeric ID for easier comparison
+    url:        result.secure_url,
+    public_id:  result.public_id,
+    title:      title || 'Sarvah Dance Performance',
+    uploadedAt: new Date().toISOString()
+};
 
         console.log(`🖼️ Uploaded to Cloudinary: ${result.secure_url}`);
         return { statusCode: 200, headers, body: JSON.stringify({ success: true, image: newImage }) };

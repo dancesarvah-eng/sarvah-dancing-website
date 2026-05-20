@@ -1508,31 +1508,94 @@ async function submitEnquiry(e) {
 let galleryImages = [];
  
 async function loadGallery() {
-  try {
-    const res = await fetch(`${API}/api/gallery`);
-    galleryImages = await res.json();
-    renderGalleryAdditions();
-    if(document.getElementById('adminDashboard').style.display !== 'none') {
-      renderAdminGallery();
+    console.log('🖼️ Loading gallery from:', `${API}/api/gallery`);
+    
+    try {
+        const res = await fetch(`${API}/api/gallery`);
+        console.log('📡 Gallery response status:', res.status);
+        
+        if (!res.ok) {
+            throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+        }
+        
+        const data = await res.json();
+        console.log('📸 Gallery data received:', data);
+        console.log('📊 Number of images:', data.length);
+        
+        if (data.length > 0) {
+            console.log('First image URL:', data[0].url);
+        }
+        
+        galleryImages = data;
+        renderGalleryAdditions();
+        
+        if(document.getElementById('adminDashboard').style.display !== 'none') {
+            renderAdminGallery();
+        }
+        
+        // Update stats if admin panel is open
+        if(typeof updateStats === 'function') updateStats();
+        
+    } catch(e) {
+        console.error('❌ Gallery load error:', e);
+        console.error('Error details:', {
+            message: e.message,
+            stack: e.stack,
+            apiUrl: `${API}/api/gallery`
+        });
+        galleryImages = [];
+        
+        // Show error in gallery
+        const grid = document.getElementById('galleryGrid');
+        if(grid) {
+            const errorDiv = document.createElement('div');
+            errorDiv.style.cssText = 'grid-column:1/-1; text-align:center; padding:2rem; color:#c0392b;';
+            errorDiv.innerHTML = `❌ Failed to load gallery: ${e.message}<br>Make sure backend is running at ${API}`;
+            grid.appendChild(errorDiv);
+        }
     }
-  } catch(e) {
-    console.log('Gallery API not available — showing static images only');
-  }
 }
  
 function renderGalleryAdditions() {
-  const grid = document.getElementById('galleryGrid');
-  // Remove any previously injected dynamic items
-  grid.querySelectorAll('.dynamic-gallery-item').forEach(el => el.remove());
- 
-  galleryImages.forEach((img, i) => {
-    const div = document.createElement('div');
-    div.className = 'gallery-item dynamic-gallery-item reveal';
-    div.innerHTML = `<img src="${img.url}" alt="${img.title || 'Dance performance'}" loading="lazy"/>`;
-    grid.appendChild(div);
-    // Re-observe for reveal animation
-    observer.observe(div);
-  });
+    console.log('🎨 Rendering gallery. Images count:', galleryImages.length);
+    
+    const grid = document.getElementById('galleryGrid');
+    if (!grid) {
+        console.error('❌ Gallery grid element not found!');
+        return;
+    }
+    
+    // Remove existing dynamic items (keep static ones)
+    const dynamicItems = grid.querySelectorAll('.dynamic-gallery-item');
+    console.log(`🗑️ Removing ${dynamicItems.length} existing dynamic items`);
+    dynamicItems.forEach(el => el.remove());
+    
+    if (!galleryImages.length) {
+        console.log('⚠️ No images to display');
+        // Optional: Show a message
+        const messageDiv = document.createElement('div');
+        messageDiv.className = 'dynamic-gallery-item';
+        messageDiv.style.cssText = 'grid-column:1/-1; text-align:center; padding:2rem; color:var(--text-light);';
+        // messageDiv.innerHTML = '📸 No images yet. Upload your first photo using the admin panel!';
+        grid.appendChild(messageDiv);
+        return;
+    }
+    
+    console.log(`✅ Adding ${galleryImages.length} images to gallery`);
+    
+    galleryImages.forEach((img, i) => {
+        const div = document.createElement('div');
+        div.className = 'gallery-item dynamic-gallery-item reveal';
+        div.innerHTML = `<img src="${img.url}" alt="${img.title || 'Dance performance'}" loading="lazy" onerror="this.onerror=null; this.src='https://via.placeholder.com/300x400?text=Image+Not+Found'"/>`;
+        grid.appendChild(div);
+        
+        // Re-observe for reveal animation
+        if (typeof observer !== 'undefined' && observer) {
+            observer.observe(div);
+        }
+    });
+    
+    console.log('✅ Gallery rendering complete');
 }
  
 // ─── ADMIN ───
@@ -1644,88 +1707,145 @@ uploadZone.addEventListener('drop', e => {
   handleFileSelect({files: dt.files});
 });
  
+// Replace your existing uploadImages function with this
 async function uploadImages() {
-  if(!selectedFiles.length) return;
-  const btn = document.getElementById('uploadBtn');
-  const title = document.getElementById('uploadTitle').value || 'Sarvah Dance Performance';
-  const pass = sessionStorage.getItem('adminAuth') || ADMIN_PASS;
- 
-  btn.innerHTML = '<span class="spinner"></span>Uploading...';
-  btn.disabled = true;
- 
-  let success = 0;
-  for(const file of selectedFiles) {
-    const fd = new FormData();
-    fd.append('image', file);
-    fd.append('title', title);
-    fd.append('password', pass);
-    try {
-      const res = await fetch(`${API}/api/gallery/upload`, { method:'POST', body:fd });
-      const json = await res.json();
-      if(json.success) { success++; galleryImages.push(json.image); }
-    } catch(e) { console.error('Upload failed:', e); }
-  }
- 
-  btn.innerHTML = 'Upload to Gallery';
-  btn.disabled = false;
-  document.getElementById('uploadPreview').innerHTML = '';
-  document.getElementById('galleryFileInput').value = '';
-  document.getElementById('uploadTitle').value = '';
-  btn.style.display = 'none';
-  selectedFiles = [];
- 
-  if(success > 0) {
-    showToast(`✅ ${success} photo(s) uploaded!`, 'success');
-    renderGalleryAdditions();
-    renderAdminGallery();
-    updateStats();
-  } else {
-    showToast('❌ Upload failed. Check your connection.', 'error');
-  }
+    if(!selectedFiles.length) return;
+    const btn = document.getElementById('uploadBtn');
+    const title = document.getElementById('uploadTitle').value || 'Sarvah Dance Performance';
+    const pass = sessionStorage.getItem('adminAuth') || ADMIN_PASS;
+    
+    btn.innerHTML = '<span class="spinner"></span>Uploading...';
+    btn.disabled = true;
+    
+    let success = 0;
+    
+    for(const file of selectedFiles) {
+        try {
+            // Convert file to base64
+            const base64 = await new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onloadend = () => resolve(reader.result);
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+            
+            // Send to your gallery-upload function
+            const res = await fetch(`${API}/api/gallery/upload`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    password: pass,
+                    title: title,
+                    imageData: base64
+                })
+            });
+            
+            const json = await res.json();
+            
+            if(json.success) { 
+                success++;
+                // Add to gallery array
+                galleryImages.unshift(json.image);
+                renderGalleryAdditions();
+                renderAdminGallery();
+                updateStats();
+            } else {
+                console.error('Upload failed:', json.message);
+                showToast(`❌ ${json.message || 'Upload failed'}`, 'error');
+            }
+        } catch(e) { 
+            console.error('Upload error:', e);
+            showToast(`❌ Failed to upload ${file.name}`, 'error');
+        }
+    }
+    
+    btn.innerHTML = 'Upload to Gallery';
+    btn.disabled = false;
+    document.getElementById('uploadPreview').innerHTML = '';
+    document.getElementById('galleryFileInput').value = '';
+    document.getElementById('uploadTitle').value = '';
+    btn.style.display = 'none';
+    selectedFiles = [];
+    
+    if(success > 0) {
+        showToast(`✅ ${success} photo(s) uploaded successfully!`, 'success');
+        await loadGallery(); // Refresh gallery
+    } else {
+        showToast('❌ Upload failed. Check your connection.', 'error');
+    }
 }
  
 function renderAdminGallery() {
-  const container = document.getElementById('galleryManage');
-  document.getElementById('galleryCount').textContent = galleryImages.length;
- 
-  if(!galleryImages.length) {
-    container.innerHTML = '<p style="color:var(--text-light);font-size:0.9rem;text-align:center;padding:1rem;font-style:italic">No photos uploaded yet. Add your first photo above!</p>';
-    return;
-  }
- 
-  container.innerHTML = [...galleryImages].reverse().map(img => `
-    <div class="gallery-manage-item" id="gm-${img.id}">
-      <img src="${img.url}" alt="${img.title}"/>
-      <div class="gm-info">
-        <div class="gm-title">${img.title}</div>
-        <div class="gm-date">${new Date(img.uploadedAt).toLocaleDateString('en-CA',{year:'numeric',month:'short',day:'numeric'})}</div>
-      </div>
-      <button class="gm-delete" onclick="deleteImage(${img.id})" title="Delete photo">🗑️</button>
-    </div>
-  `).join('');
-}
- 
-async function deleteImage(id) {
-  if(!confirm('Delete this photo from the gallery?')) return;
-  const pass = sessionStorage.getItem('adminAuth') || ADMIN_PASS;
-  try {
-    const res = await fetch(`${API}/api/gallery/delete`, {
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({password: pass, id})
-    });
-    const json = await res.json();
-    if(json.success) {
-      galleryImages = galleryImages.filter(i => i.id !== id);
-      document.getElementById(`gm-${id}`)?.remove();
-      document.getElementById('galleryCount').textContent = galleryImages.length;
-      renderGalleryAdditions();
-      updateStats();
-      showToast('🗑️ Photo deleted', 'info');
+    console.log('🖼️ Rendering admin gallery. Images count:', galleryImages.length);
+    
+    const container = document.getElementById('galleryManage');
+    const countSpan = document.getElementById('galleryCount');
+    
+    if (!container) {
+        console.error('❌ Gallery manage container not found');
+        return;
     }
-  } catch(e) {
-    showToast('❌ Delete failed', 'error');
-  }
+    
+    if (countSpan) {
+        countSpan.textContent = galleryImages.length;
+    }
+    
+    if(!galleryImages.length) {
+        console.log('⚠️ No images in admin gallery');
+        container.innerHTML = '<p style="color:var(--text-light);font-size:0.9rem;text-align:center;padding:1rem;font-style:italic">No photos uploaded yet. Add your first photo above!</p>';
+        return;
+    }
+    
+    console.log('✅ Rendering admin gallery items');
+    
+    container.innerHTML = galleryImages.map(img => `
+        <div class="gallery-manage-item" id="gm-${img.id}">
+            <img src="${img.url}" alt="${img.title}" onerror="this.src='https://via.placeholder.com/50x50?text=Error'"/>
+            <div class="gm-info">
+                <div class="gm-title">${escapeHtml(img.title)}</div>
+                <div class="gm-date">${new Date(img.uploadedAt).toLocaleDateString('en-CA',{year:'numeric',month:'short',day:'numeric'})}</div>
+            </div>
+            <button class="gm-delete" onclick="deleteImage(${img.id})" title="Delete photo">🗑️</button>
+        </div>
+    `).join('');
+    
+    console.log('✅ Admin gallery rendering complete');
+}
+
+// Helper function to escape HTML
+function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/[&<>]/g, function(m) {
+        if (m === '&') return '&amp;';
+        if (m === '<') return '&lt;';
+        if (m === '>') return '&gt;';
+        return m;
+    });
+}
+
+async function deleteImage(publicId) {
+    if(!confirm('Delete this photo from the gallery?')) return;
+    const pass = sessionStorage.getItem('adminAuth') || ADMIN_PASS;
+    
+    try {
+        const res = await fetch(`${API}/api/gallery/delete`, {
+            method:'POST',
+            headers:{'Content-Type':'application/json'},
+            body: JSON.stringify({password: pass, id: publicId})
+        });
+        const json = await res.json();
+        if(json.success) {
+            galleryImages = galleryImages.filter(i => i.public_id !== publicId);
+            renderGalleryAdditions();
+            renderAdminGallery();
+            updateStats();
+            showToast('🗑️ Photo deleted', 'info');
+        } else {
+            showToast('❌ Delete failed: ' + json.message, 'error');
+        }
+    } catch(e) {
+        showToast('❌ Delete failed', 'error');
+    }
 }
  
 function updateStats() {
