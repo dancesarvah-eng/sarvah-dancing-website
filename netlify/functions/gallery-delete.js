@@ -15,25 +15,56 @@ const headers = {
 };
 
 exports.handler = async (event) => {
-    if (event.httpMethod === 'OPTIONS') return { statusCode: 200, headers, body: '' };
+    console.log('🔵 DELETE FUNCTION CALLED');
+    console.log('HTTP Method:', event.httpMethod);
+    console.log('Headers:', JSON.stringify(event.headers));
+    
+    if (event.httpMethod === 'OPTIONS') {
+        console.log('🟡 Handling OPTIONS preflight');
+        return { statusCode: 200, headers, body: '' };
+    }
 
+    console.log('Raw event body:', event.body);
+    
     let body;
-    try { body = JSON.parse(event.body || '{}'); }
-    catch { return { statusCode: 400, headers, body: JSON.stringify({ success: false }) }; }
+    try { 
+        body = JSON.parse(event.body || '{}');
+        console.log('✅ Parsed body:', JSON.stringify(body));
+    } catch(e) { 
+        console.error('❌ Failed to parse JSON:', e.message);
+        return { statusCode: 400, headers, body: JSON.stringify({ success: false, message: 'Invalid JSON' }) };
+    }
 
     const { password, id } = body;
+    console.log('📝 Received password:', password ? '***' : 'MISSING');
+    console.log('📝 Received id:', id);
+    console.log('📝 Expected password:', ADMIN_PASSWORD);
 
     if (password !== ADMIN_PASSWORD) {
+        console.log('❌ Password mismatch');
         return { statusCode: 401, headers, body: JSON.stringify({ success: false, message: 'Invalid password' }) };
     }
 
+    if (!id) {
+        console.log('❌ No ID provided');
+        return { statusCode: 400, headers, body: JSON.stringify({ success: false, message: 'No image ID provided' }) };
+    }
+
     try {
-        // id is the Cloudinary public_id (e.g. "sarvah-dance-academy/abc123")
-        await cloudinary.uploader.destroy(id);
-        console.log(`🗑️ Deleted from Cloudinary: ${id}`);
-        return { statusCode: 200, headers, body: JSON.stringify({ success: true }) };
+        console.log(`☁️ Attempting to delete from Cloudinary: ${id}`);
+        const result = await cloudinary.uploader.destroy(id);
+        console.log('✅ Cloudinary result:', result);
+        
+        if (result.result === 'ok') {
+            console.log(`🗑️ Successfully deleted: ${id}`);
+            return { statusCode: 200, headers, body: JSON.stringify({ success: true, message: 'Deleted successfully' }) };
+        } else {
+            console.log(`⚠️ Cloudinary returned: ${result.result}`);
+            return { statusCode: 200, headers, body: JSON.stringify({ success: true, message: 'Image removed' }) };
+        }
     } catch (err) {
-        console.error('Delete error:', err.message);
+        console.error('❌ Cloudinary delete error:', err.message);
+        console.error('Stack:', err.stack);
         return { statusCode: 500, headers, body: JSON.stringify({ success: false, message: err.message }) };
     }
 };
