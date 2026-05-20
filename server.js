@@ -205,37 +205,43 @@ app.get('/api/gallery', (req, res) => {
 });
 
 // POST upload new image to Cloudinary
-app.post('/api/gallery/upload', upload.single('image'), async (req, res) => {
-    const { password, title } = req.body;
-
+// In server.js - this endpoint expects base64 imageData
+app.post('/api/gallery/upload', async (req, res) => {
+    const { password, title, imageData } = req.body;  // Note: imageData, not image
+    
     if (password !== ADMIN_PASSWORD) {
-        // Delete from Cloudinary if password wrong
-        if (req.file && req.file.filename) {
-            await cloudinary.uploader.destroy(req.file.filename);
-        }
         return res.status(401).json({ success: false, message: 'Invalid admin password' });
     }
-
-    if (!req.file) {
-        return res.status(400).json({ success: false, message: 'No image uploaded' });
+    
+    if (!imageData) {
+        return res.status(400).json({ success: false, message: 'No image data received' });
     }
-
-    const gallery = loadGallery();
-    const newImage = {
-        id: Date.now(),
-        url: req.file.path,           // Cloudinary permanent URL
-        public_id: req.file.filename, // Cloudinary public_id for deletion
-        title: title || 'Sarvah Dance Performance',
-        filename: req.file.filename,
-        uploadedAt: new Date().toISOString()
-    };
-
-    gallery.push(newImage);
-    saveGallery(gallery);
-
-    console.log(`🖼️  Image uploaded to Cloudinary: ${newImage.title}`);
-    console.log(`🔗  URL: ${newImage.url}`);
-    res.json({ success: true, image: newImage });
+    
+    try {
+        // Upload base64 to Cloudinary
+        const result = await cloudinary.uploader.upload(imageData, {
+            folder: 'sarvah-dance-academy',
+            allowed_formats: ['jpg', 'jpeg', 'png', 'webp']
+        });
+        
+        const newImage = {
+            id: Date.now(),
+            url: result.secure_url,
+            public_id: result.public_id,
+            title: title || 'Sarvah Dance Performance',
+            uploadedAt: new Date().toISOString()
+        };
+        
+        // Save to your gallery-data.json
+        const gallery = loadGallery();
+        gallery.push(newImage);
+        saveGallery(gallery);
+        
+        res.json({ success: true, image: newImage });
+    } catch (error) {
+        console.error('Upload error:', error);
+        res.status(500).json({ success: false, message: error.message });
+    }
 });
 
 // POST delete image from Cloudinary
