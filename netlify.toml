@@ -1,0 +1,35 @@
+[build]
+  publish = "public"
+  functions = "netlify/functions"
+
+[functions]
+  node_bundler = "esbuild"
+
+# Increase body size limit for image uploads (10MB)
+[functions."gallery-upload"]
+  included_files = []
+
+[[redirects]]
+  from = "/api/contact"
+  to = "/.netlify/functions/contact"
+  status = 200
+
+[[redirects]]
+  from = "/api/admin/verify"
+  to = "/.netlify/functions/admin-verify"
+  status = 200
+
+[[redirects]]
+  from = "/api/gallery"
+  to = "/.netlify/functions/gallery"
+  status = 200
+
+[[redirects]]
+  from = "/api/gallery/upload"
+  to = "/.netlify/functions/gallery-upload"
+  status = 200
+
+[[redirects]]
+  from = "/api/gallery/delete"
+  to = "/.netlify/functions/gallery-delete"
+  status = 200
