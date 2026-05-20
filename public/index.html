@@ -1,0 +1,1752 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sarvah Dance Academy – Bharatanatyam | London, Ontario</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,600&family=Josefin+Sans:wght@200;300;400;600&family=Crimson+Pro:ital,wght@0,300;0,400;1,400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --cream:#F7F0E3;
+  --paper:#EDE3CC;
+  --parchment:#E8D9BB;
+  --rust:#B84A1A;
+  --rust-light:#D4622A;
+  --burgundy:#6B1A0A;
+  --gold:#C09448;
+  --gold-light:#D4B060;
+  --black:#1A0800;
+  --text:#2C1A0E;
+  --text-light:#6B5040;
+  --white:#FFFDF8;
+  --nav-h:80px;
+}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Crimson Pro',Georgia,serif;
+  background:var(--cream);
+  color:var(--text);
+  overflow-x:hidden;
+}
+
+/* Texture overlay */
+body::before{
+  content:'';
+  position:fixed;
+  inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events:none;
+  z-index:1000;
+  opacity:0.5;
+}
+
+
+/* ─── NAVIGATION ─── */
+nav{
+  position:fixed;top:0;left:0;right:0;
+  height:var(--nav-h);
+  z-index:900;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 3rem;
+  transition:all 0.4s ease;
+}
+nav.scrolled{
+  background:rgba(247,240,227,0.97);
+  backdrop-filter:blur(10px);
+  box-shadow:0 2px 30px rgba(184,74,26,0.12);
+  border-bottom:1px solid rgba(192,148,72,0.3);
+}
+.nav-logo img{height:52px;display:block;transition:height 0.3s ease}
+nav.scrolled .nav-logo img{height:44px}
+.nav-links{display:flex;gap:2.2rem;list-style:none}
+.nav-links a{
+  font-family:'Josefin Sans',sans-serif;
+  font-size:0.72rem;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;
+  color:var(--white);
+  text-decoration:none;
+  position:relative;
+  transition:color 0.3s;
+}
+nav.scrolled .nav-links a{color:var(--text)}
+.nav-links a::after{
+  content:'';position:absolute;bottom:-3px;left:0;right:0;height:1px;
+  background:var(--gold);
+  transform:scaleX(0);transition:transform 0.3s;
+}
+.nav-links a:hover{color:var(--gold)}
+.nav-links a:hover::after{transform:scaleX(1)}
+.nav-cta{
+  font-family:'Josefin Sans',sans-serif;font-size:0.7rem;font-weight:600;
+  letter-spacing:0.15em;text-transform:uppercase;
+  padding:0.6rem 1.6rem;
+  border:1px solid rgba(255,255,255,0.6);
+  color:var(--white);background:transparent;
+  text-decoration:none;cursor:pointer;
+  transition:all 0.3s;
+}
+nav.scrolled .nav-cta{border-color:var(--rust);color:var(--rust)}
+.nav-cta:hover{background:var(--rust);border-color:var(--rust);color:var(--white)!important}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:5px}
+.hamburger span{display:block;width:24px;height:2px;background:var(--white);transition:0.3s}
+nav.scrolled .hamburger span{background:var(--text)}
+
+/* ─── HERO ─── */
+#hero{
+  position:relative;height:100vh;min-height:700px;
+  display:flex;align-items:flex-end;
+  overflow:hidden;
+}
+.hero-bg{
+  position:absolute;inset:0;
+  background:linear-gradient(135deg,#1A0800 0%,#2D0D05 40%,#0D2010 100%);
+}
+.hero-dancer-wrap{
+  position:absolute;
+  right:5%;bottom:0;
+  height:92%;
+  display:flex;align-items:flex-end;
+}
+.hero-dancer-wrap img{
+  height:100%;object-fit:contain;
+  filter:drop-shadow(0 0 60px rgba(184,74,26,0.4));
+}
+.hero-glow{
+  position:absolute;right:25%;top:50%;
+  transform:translate(50%,-50%);
+  width:500px;height:500px;
+  background:radial-gradient(circle,rgba(184,74,26,0.3) 0%,transparent 70%);
+  border-radius:50%;
+  pointer-events:none;
+}
+.hero-content{
+  position:relative;z-index:2;
+  padding:0 5rem 8rem;
+  max-width:600px;
+}
+.hero-eyebrow{
+  font-family:'Josefin Sans',sans-serif;
+  font-size:0.68rem;font-weight:600;letter-spacing:0.3em;text-transform:uppercase;
+  color:var(--gold-light);
+  margin-bottom:1.2rem;
+  display:flex;align-items:center;gap:0.8rem;
+}
+.hero-eyebrow::before{
+  content:'';display:block;width:30px;height:1px;background:var(--gold-light);
+}
+.hero-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(3.5rem,7vw,6.5rem);
+  font-weight:300;line-height:1.05;
+  color:var(--white);
+  margin-bottom:0.4rem;
+}
+.hero-title em{
+  font-style:italic;color:var(--gold-light);
+  display:block;
+}
+.hero-subtitle{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.25rem;font-weight:300;
+  color:rgba(255,255,255,0.7);
+  margin-bottom:2.5rem;
+  line-height:1.6;
+}
+.hero-actions{display:flex;gap:1.2rem;flex-wrap:wrap}
+.btn-primary{
+  display:inline-block;
+  font-family:'Josefin Sans',sans-serif;font-size:0.7rem;font-weight:600;
+  letter-spacing:0.2em;text-transform:uppercase;
+  padding:0.9rem 2.4rem;
+  background:var(--rust);color:var(--white);
+  text-decoration:none;border:none;cursor:pointer;
+  transition:all 0.3s;
+  position:relative;overflow:hidden;
+}
+.btn-primary::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.1),transparent);
+  transform:translateX(-100%);transition:transform 0.6s;
+}
+.btn-primary:hover{background:var(--rust-light);transform:translateY(-2px)}
+.btn-primary:hover::before{transform:translateX(100%)}
+.btn-outline{
+  display:inline-block;
+  font-family:'Josefin Sans',sans-serif;font-size:0.7rem;font-weight:600;
+  letter-spacing:0.2em;text-transform:uppercase;
+  padding:0.9rem 2.4rem;
+  border:1px solid rgba(255,255,255,0.4);color:var(--white);
+  text-decoration:none;cursor:pointer;background:transparent;
+  transition:all 0.3s;
+}
+.btn-outline:hover{background:rgba(255,255,255,0.08);border-color:var(--gold)}
+.hero-scroll{
+  position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:0.5rem;
+  color:rgba(255,255,255,0.4);
+  font-family:'Josefin Sans',sans-serif;font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;
+  animation:scrollBounce 2.5s ease-in-out infinite;
+}
+.hero-scroll::after{
+  content:'';display:block;width:1px;height:40px;
+  background:linear-gradient(to bottom,rgba(255,255,255,0.4),transparent);
+}
+@keyframes scrollBounce{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(6px)}}
+
+/* ─── SECTION COMMON ─── */
+section{padding:7rem 0}
+.container{max-width:1200px;margin:0 auto;padding:0 3rem}
+.section-label{
+  font-family:'Josefin Sans',sans-serif;
+  font-size:0.65rem;font-weight:600;letter-spacing:0.35em;text-transform:uppercase;
+  color:var(--rust);margin-bottom:1rem;
+  display:flex;align-items:center;gap:0.8rem;
+}
+.section-label::before{content:'';display:block;width:30px;height:1px;background:var(--rust)}
+.section-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(2.2rem,4vw,3.5rem);
+  font-weight:400;line-height:1.15;
+  color:var(--burgundy);
+  margin-bottom:1rem;
+}
+.section-title em{font-style:italic;color:var(--rust)}
+.ornament{
+  display:block;text-align:center;
+  font-size:1.5rem;color:var(--gold);
+  margin:0.5rem 0 2rem;
+  letter-spacing:0.3em;
+}
+
+/* ─── ABOUT ─── */
+#about{background:var(--white)}
+.about-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:6rem;
+  align-items:center;
+}
+.about-image-wrap{position:relative}
+.about-image-frame{
+  position:relative;
+  border:1px solid var(--gold);
+  padding:1.2rem;
+  display:inline-block;
+  width:100%;
+}
+.about-image-frame::before{
+  content:'';position:absolute;
+  top:-12px;left:-12px;right:12px;bottom:12px;
+  border:1px solid var(--parchment);
+  z-index:-1;
+}
+.about-image-frame img{
+  width:100%;height:500px;object-fit:cover;
+  object-position:center top;
+  display:block;
+  filter:sepia(10%);
+}
+.about-badge{
+  position:absolute;bottom:-1.5rem;right:-1.5rem;
+  width:100px;height:100px;
+  background:var(--rust);
+  border-radius:50%;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  color:var(--white);
+  box-shadow:0 8px 30px rgba(184,74,26,0.4);
+}
+.about-badge .num{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:600;line-height:1}
+.about-badge .label{font-family:'Josefin Sans',sans-serif;font-size:0.5rem;letter-spacing:0.15em;text-transform:uppercase;text-align:center}
+.about-content p{
+  font-size:1.1rem;line-height:1.85;
+  color:var(--text);margin-bottom:1.2rem;
+}
+.about-stats{
+  display:flex;gap:3rem;margin-top:2.5rem;
+  padding-top:2.5rem;
+  border-top:1px solid var(--parchment);
+}
+.stat{}
+.stat-num{
+  font-family:'Cormorant Garamond',serif;
+  font-size:2.8rem;font-weight:300;
+  color:var(--rust);line-height:1;
+}
+.stat-label{
+  font-family:'Josefin Sans',sans-serif;
+  font-size:0.65rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;
+  color:var(--text-light);margin-top:0.3rem;
+}
+
+/* ─── VISION ─── */
+#vision{
+  background:linear-gradient(135deg,var(--burgundy) 0%,#3D0A05 100%);
+  position:relative;overflow:hidden;
+  padding:8rem 0;
+}
+#vision::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at 30% 50%,rgba(192,148,72,0.12) 0%,transparent 60%);
+}
+.vision-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:5rem;
+  position:relative;z-index:1;
+}
+.vision-card{}
+.vision-card .section-label{color:var(--gold-light)}
+.vision-card .section-label::before{background:var(--gold-light)}
+.vision-card h3{
+  font-family:'Cormorant Garamond',serif;
+  font-size:2.2rem;font-weight:400;
+  color:var(--white);margin-bottom:1.2rem;
+}
+.vision-card p{
+  font-size:1.05rem;line-height:1.85;
+  color:rgba(255,255,255,0.75);
+}
+.vision-divider{
+  width:1px;background:rgba(255,255,255,0.1);
+  align-self:stretch;justify-self:center;
+}
+
+/* ─── CLASSES ─── */
+#classes{background:var(--cream)}
+.classes-intro{
+  max-width:650px;margin-bottom:4rem;
+}
+.classes-grid{
+  display:grid;grid-template-columns:repeat(2,1fr);gap:2rem;
+}
+.class-card{
+  background:var(--white);
+  border:1px solid var(--parchment);
+  padding:2.5rem;
+  position:relative;
+  overflow:hidden;
+  transition:transform 0.3s,box-shadow 0.3s;
+}
+.class-card::before{
+  content:'';position:absolute;
+  top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--rust),var(--gold));
+}
+.class-card:hover{
+  transform:translateY(-4px);
+  box-shadow:0 20px 50px rgba(107,26,10,0.12);
+}
+.class-icon{
+  font-size:2.5rem;margin-bottom:1.2rem;
+}
+.class-card h3{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.7rem;font-weight:500;
+  color:var(--burgundy);margin-bottom:0.5rem;
+}
+.class-level{
+  font-family:'Josefin Sans',sans-serif;font-size:0.65rem;font-weight:600;
+  letter-spacing:0.2em;text-transform:uppercase;
+  color:var(--rust);margin-bottom:1rem;
+  display:inline-block;
+  padding:0.25rem 0.8rem;
+  border:1px solid rgba(184,74,26,0.3);
+}
+.class-card p{font-size:0.95rem;line-height:1.75;color:var(--text-light)}
+.class-tag{
+  display:inline-block;margin-top:1.2rem;
+  font-family:'Josefin Sans',sans-serif;font-size:0.6rem;font-weight:600;
+  letter-spacing:0.15em;text-transform:uppercase;
+  color:var(--gold);
+}
+
+/* ─── FACULTY ─── */
+#faculty{background:var(--paper)}
+.faculty-grid{
+  display:grid;grid-template-columns:1fr 1.4fr;gap:6rem;
+  align-items:start;
+}
+.faculty-image{position:relative}
+.faculty-portrait{
+  width:100%;
+  border:1px solid var(--gold);
+  display:block;
+}
+.faculty-portrait img{width:100%;display:block;object-fit:cover;height:600px;object-position:top center;filter:sepia(8%)}
+.faculty-accent{
+  position:absolute;top:-1rem;left:-1rem;
+  width:80px;height:80px;
+  border:1px solid var(--gold);
+  border-right:none;border-bottom:none;
+  pointer-events:none;
+}
+.faculty-accent2{
+  position:absolute;bottom:-1rem;right:-1rem;
+  width:80px;height:80px;
+  border:1px solid var(--gold);
+  border-left:none;border-top:none;
+  pointer-events:none;
+}
+.faculty-name{
+  font-family:'Cormorant Garamond',serif;
+  font-size:2.5rem;font-weight:400;
+  color:var(--burgundy);margin-bottom:0.3rem;
+}
+.faculty-title{
+  font-family:'Josefin Sans',sans-serif;font-size:0.7rem;font-weight:600;
+  letter-spacing:0.2em;text-transform:uppercase;
+  color:var(--rust);margin-bottom:2rem;
+}
+.faculty-bio p{font-size:1.05rem;line-height:1.85;color:var(--text);margin-bottom:1rem}
+.awards{margin-top:2rem}
+.awards-title{
+  font-family:'Josefin Sans',sans-serif;font-size:0.65rem;font-weight:600;
+  letter-spacing:0.2em;text-transform:uppercase;
+  color:var(--text-light);margin-bottom:1rem;
+}
+.award-item{
+  display:flex;gap:1rem;align-items:flex-start;
+  margin-bottom:0.9rem;
+}
+.award-dot{
+  width:6px;height:6px;border-radius:50%;
+  background:var(--gold);margin-top:0.5rem;flex-shrink:0;
+}
+.award-item p{font-size:0.92rem;color:var(--text-light);line-height:1.5}
+
+/* ─── GALLERY ─── */
+#gallery{background:var(--white)}
+.gallery-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:1rem;
+}
+.gallery-item{
+  position:relative;overflow:hidden;
+  aspect-ratio:3/4;cursor:pointer;
+}
+.gallery-item img{
+  width:100%;height:100%;object-fit:cover;
+  transition:transform 0.6s ease;filter:sepia(15%);
+}
+.gallery-item:hover img{transform:scale(1.05);filter:sepia(5%)}
+.gallery-item::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(107,26,10,0.6),transparent 50%);
+  opacity:0;transition:opacity 0.4s;
+}
+.gallery-item:hover::after{opacity:1}
+.gallery-item.tall{grid-row:span 2;aspect-ratio:auto}
+.gallery-note{
+  margin-top:2rem;text-align:center;
+  font-family:'Josefin Sans',sans-serif;font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--text-light)
+}
+
+/* ─── EVENTS ─── */
+#events{background:var(--cream)}
+.events-grid{display:grid;grid-template-columns:1fr 1fr;gap:2rem;}
+.event-card{
+  background:var(--white);
+  border:1px solid var(--parchment);
+  padding:2.5rem;
+  position:relative;
+  transition:transform 0.3s,box-shadow 0.3s;
+}
+.event-card:hover{transform:translateY(-3px);box-shadow:0 15px 40px rgba(107,26,10,0.1)}
+.event-type{
+  font-family:'Josefin Sans',sans-serif;font-size:0.62rem;font-weight:600;
+  letter-spacing:0.25em;text-transform:uppercase;
+  color:var(--gold);display:inline-block;
+  border:1px solid rgba(192,148,72,0.4);padding:0.2rem 0.7rem;
+  margin-bottom:1rem;
+}
+.event-card h3{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.8rem;font-weight:500;color:var(--burgundy);
+  margin-bottom:0.8rem;
+}
+.event-card p{font-size:0.95rem;line-height:1.75;color:var(--text-light)}
+.event-card .event-detail{
+  margin-top:1.2rem;
+  display:flex;align-items:center;gap:0.5rem;
+  font-family:'Josefin Sans',sans-serif;font-size:0.65rem;font-weight:600;
+  letter-spacing:0.15em;text-transform:uppercase;color:var(--rust);
+}
+
+/* ─── TESTIMONIALS ─── */
+#testimonials{
+  background:linear-gradient(135deg,var(--burgundy),#2D0508);
+  padding:8rem 0;position:relative;overflow:hidden;
+}
+#testimonials::before{
+  content:'';position:absolute;inset:0;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Ccircle cx='30' cy='30' r='1' fill='rgba(192,148,72,0.15)'/%3E%3C/svg%3E");
+}
+.testimonials-wrap{position:relative;z-index:1}
+.testimonials-header{text-align:center;margin-bottom:4rem}
+.testimonials-header .section-label{justify-content:center}
+.testimonials-header .section-label::before{display:none}
+.testimonials-header .section-title{color:var(--white)}
+.testi-slider{
+  display:flex;gap:2rem;overflow-x:auto;padding-bottom:2rem;
+  scrollbar-width:none;
+}
+.testi-slider::-webkit-scrollbar{display:none}
+.testi-card{
+  flex:0 0 380px;
+  background:rgba(255,255,255,0.05);
+  border:1px solid rgba(255,255,255,0.1);
+  padding:2.5rem;
+  position:relative;
+}
+.testi-quote{
+  font-family:'Cormorant Garamond',serif;
+  font-size:4rem;line-height:0.8;
+  color:var(--gold);
+  margin-bottom:0.5rem;
+}
+.testi-text{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.1rem;font-style:italic;
+  color:rgba(255,255,255,0.85);line-height:1.7;
+  margin-bottom:1.5rem;
+}
+.testi-author{
+  font-family:'Josefin Sans',sans-serif;
+  font-size:0.65rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;
+  color:var(--gold-light);
+}
+.testi-role{
+  font-family:'Josefin Sans',sans-serif;
+  font-size:0.6rem;letter-spacing:0.1em;
+  color:rgba(255,255,255,0.4);margin-top:0.2rem;
+}
+
+/* ─── REGISTRATION ─── */
+#registration{background:var(--paper)}
+.registration-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:6rem;
+}
+.registration-info h3{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.8rem;font-weight:400;color:var(--burgundy);
+  margin-bottom:1rem;
+}
+.registration-info p{font-size:1rem;line-height:1.8;color:var(--text);margin-bottom:1.5rem}
+.info-item{
+  display:flex;gap:1rem;align-items:center;
+  margin-bottom:1rem;
+}
+.info-icon{font-size:1.2rem;flex-shrink:0}
+.info-text{font-size:0.95rem;color:var(--text-light)}
+.form-group{margin-bottom:1.4rem}
+.form-group label{
+  display:block;
+  font-family:'Josefin Sans',sans-serif;font-size:0.65rem;font-weight:600;
+  letter-spacing:0.15em;text-transform:uppercase;
+  color:var(--text);margin-bottom:0.5rem;
+}
+.form-group input,
+.form-group select,
+.form-group textarea{
+  width:100%;
+  padding:0.9rem 1.2rem;
+  border:1px solid var(--parchment);
+  background:var(--white);
+  font-family:'Crimson Pro',serif;font-size:1rem;
+  color:var(--text);
+  outline:none;
+  transition:border-color 0.3s;
+}
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus{
+  border-color:var(--gold);
+}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.form-group textarea{height:110px;resize:vertical}
+.form-note{
+  font-size:0.82rem;color:var(--text-light);margin-bottom:1.2rem;font-style:italic;
+}
+.form-success{
+  display:none;
+  background:rgba(107,26,10,0.08);
+  border:1px solid var(--gold);
+  padding:1.2rem;
+  text-align:center;
+  font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--burgundy);
+}
+
+/* ─── CONTACT ─── */
+#contact{background:var(--white)}
+.contact-top{
+  display:grid;grid-template-columns:1fr 1fr;gap:6rem;margin-bottom:4rem;
+}
+.contact-info h3{
+  font-family:'Cormorant Garamond',serif;
+  font-size:2rem;font-weight:400;color:var(--burgundy);margin-bottom:2rem;
+}
+.contact-item{
+  display:flex;gap:1.2rem;margin-bottom:1.5rem;
+  align-items:flex-start;
+}
+.contact-icon{
+  width:42px;height:42px;flex-shrink:0;
+  background:var(--cream);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.1rem;
+}
+.contact-detail{}
+.contact-detail strong{
+  display:block;
+  font-family:'Josefin Sans',sans-serif;font-size:0.65rem;font-weight:600;
+  letter-spacing:0.15em;text-transform:uppercase;
+  color:var(--text-light);margin-bottom:0.2rem;
+}
+.contact-detail a,
+.contact-detail span{
+  font-size:0.95rem;color:var(--text);text-decoration:none;
+  transition:color 0.3s;
+}
+.contact-detail a:hover{color:var(--rust)}
+.social-links{
+  display:flex;gap:1rem;margin-top:2rem;
+}
+.social-link{
+  display:flex;align-items:center;gap:0.5rem;
+  font-family:'Josefin Sans',sans-serif;font-size:0.65rem;font-weight:600;
+  letter-spacing:0.1em;text-transform:uppercase;
+  padding:0.6rem 1.2rem;
+  border:1px solid var(--parchment);
+  color:var(--text);text-decoration:none;
+  transition:all 0.3s;
+}
+.social-link:hover{background:var(--rust);color:var(--white);border-color:var(--rust)}
+.map-embed{
+  width:100%;height:350px;border:0;filter:sepia(30%) contrast(1.1);
+}
+.contact-form-wrap{}
+/* ─── CONTACT FORM ─── */
+.contact-form-section{background:var(--cream);padding:5rem 0}
+.contact-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:6rem;align-items:start}
+.contact-form-info h3{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:400;color:var(--burgundy);margin-bottom:1rem}
+.contact-form-info p{font-size:1.05rem;line-height:1.85;color:var(--text-light);margin-bottom:1.5rem}
+.contact-form-box{background:var(--white);padding:2.5rem;border:1px solid var(--parchment)}
+.contact-form-box h4{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:400;color:var(--burgundy);margin-bottom:1.5rem;border-bottom:1px solid var(--parchment);padding-bottom:1rem}
+
+
+/* ─── FOOTER ─── */
+footer{
+  background:var(--black);
+  padding:4rem 0 2rem;
+  color:rgba(255,255,255,0.6);
+}
+.footer-grid{
+  display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:4rem;
+  margin-bottom:3rem;
+  padding-bottom:3rem;
+  border-bottom:1px solid rgba(255,255,255,0.08);
+}
+.footer-brand p{
+  font-size:0.9rem;line-height:1.7;
+  color:rgba(255,255,255,0.5);margin-top:1rem;max-width:280px;
+}
+.footer-logo{height:50px}
+.footer-col h4{
+  font-family:'Josefin Sans',sans-serif;font-size:0.65rem;font-weight:600;
+  letter-spacing:0.2em;text-transform:uppercase;
+  color:var(--gold-light);margin-bottom:1.2rem;
+}
+.footer-col ul{list-style:none}
+.footer-col ul li{margin-bottom:0.6rem}
+.footer-col ul a{
+  font-size:0.88rem;color:rgba(255,255,255,0.5);
+  text-decoration:none;transition:color 0.3s;
+}
+.footer-col ul a:hover{color:var(--white)}
+.footer-bottom{
+  display:flex;justify-content:space-between;align-items:center;
+  font-size:0.78rem;color:rgba(255,255,255,0.3);
+}
+
+/* ─── WHATSAPP BUTTON ─── */
+.whatsapp-btn{
+  position:fixed;bottom:2rem;right:2rem;z-index:800;
+  display:flex;align-items:center;gap:0.7rem;
+  background:#25D366;color:var(--white);
+  padding:0.8rem 1.4rem;
+  border-radius:50px;
+  text-decoration:none;
+  box-shadow:0 4px 20px rgba(37,211,102,0.4);
+  transition:all 0.3s;
+  font-family:'Josefin Sans',sans-serif;font-size:0.7rem;font-weight:600;letter-spacing:0.1em;
+}
+.whatsapp-btn:hover{
+  transform:translateY(-3px);
+  box-shadow:0 8px 30px rgba(37,211,102,0.5);
+}
+.whatsapp-icon{font-size:1.3rem}
+
+/* ─── ANIMATIONS ─── */
+.reveal{
+  opacity:0;transform:translateY(30px);
+  transition:opacity 0.7s ease,transform 0.7s ease;
+}
+.reveal.visible{opacity:1;transform:translateY(0)}
+.reveal-delay-1{transition-delay:0.1s}
+.reveal-delay-2{transition-delay:0.2s}
+.reveal-delay-3{transition-delay:0.3s}
+
+/* ─── NOTIFICATION TOAST ─── */
+.toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(100px);z-index:9999;padding:1rem 2rem;border-radius:8px;font-family:'Josefin Sans',sans-serif;font-size:0.75rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;transition:transform 0.4s cubic-bezier(0.34,1.56,0.64,1);pointer-events:none}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.toast.success{background:var(--burgundy);color:var(--white)}
+.toast.error{background:#c0392b;color:var(--white)}
+.toast.info{background:var(--gold);color:var(--black)}
+ 
+/* ─── ADMIN PANEL ─── */
+.admin-trigger{position:fixed;bottom:7rem;left:2rem;z-index:800;width:44px;height:44px;background:rgba(107,26,10,0.15);border:1px solid rgba(107,26,10,0.2);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.3s;font-size:1.2rem;backdrop-filter:blur(10px)}
+.admin-trigger:hover{background:var(--burgundy);border-color:var(--burgundy)}
+.admin-overlay{position:fixed;inset:0;background:rgba(26,8,0,0.85);z-index:2000;display:flex;align-items:stretch;visibility:hidden;opacity:0;transition:all 0.3s}
+.admin-overlay.open{visibility:visible;opacity:1}
+.admin-sidebar{width:380px;background:var(--white);display:flex;flex-direction:column;transform:translateX(-100%);transition:transform 0.4s cubic-bezier(0.34,1.56,0.64,1);overflow-y:auto}
+.admin-overlay.open .admin-sidebar{transform:translateX(0)}
+.admin-header{background:var(--burgundy);padding:2rem;color:var(--white);display:flex;justify-content:space-between;align-items:center}
+.admin-header h2{font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:400}
+.admin-header p{font-family:'Josefin Sans',sans-serif;font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;opacity:0.7;margin-top:0.2rem}
+.admin-close-btn{background:none;border:none;color:var(--white);font-size:1.5rem;cursor:pointer;opacity:0.7;transition:opacity 0.2s;padding:0.3rem}
+.admin-close-btn:hover{opacity:1}
+.admin-body{padding:2rem;flex:1}
+.admin-login{display:flex;flex-direction:column;gap:1rem}
+.admin-login h3{font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:var(--burgundy);margin-bottom:0.5rem}
+.admin-input{width:100%;padding:0.8rem 1rem;border:1px solid var(--parchment);font-family:'Crimson Pro',serif;font-size:1rem;color:var(--text);outline:none;transition:border-color 0.3s;background:var(--cream)}
+.admin-input:focus{border-color:var(--gold)}
+.admin-btn{width:100%;padding:0.9rem;background:var(--burgundy);color:var(--white);border:none;font-family:'Josefin Sans',sans-serif;font-size:0.7rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;transition:background 0.3s}
+.admin-btn:hover{background:var(--rust)}
+.admin-btn:disabled{opacity:0.5;cursor:not-allowed}
+.admin-btn.danger{background:#c0392b}
+.admin-btn.danger:hover{background:#e74c3c}
+.admin-section{margin-bottom:2rem}
+.admin-section h4{font-family:'Josefin Sans',sans-serif;font-size:0.65rem;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:var(--rust);margin-bottom:1rem;padding-bottom:0.5rem;border-bottom:1px solid var(--parchment)}
+.upload-zone{border:2px dashed var(--parchment);padding:2rem;text-align:center;cursor:pointer;transition:all 0.3s;position:relative;background:var(--cream)}
+.upload-zone:hover,.upload-zone.dragover{border-color:var(--gold);background:rgba(192,148,72,0.05)}
+.upload-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.upload-zone .upload-icon{font-size:2rem;margin-bottom:0.5rem}
+.upload-zone p{font-family:'Josefin Sans',sans-serif;font-size:0.65rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-light)}
+.upload-preview{display:flex;flex-wrap:wrap;gap:0.5rem;margin-top:1rem}
+.upload-preview img{width:70px;height:70px;object-fit:cover;border:1px solid var(--parchment)}
+.gallery-manage{display:flex;flex-direction:column;gap:0.8rem;max-height:300px;overflow-y:auto}
+.gallery-manage-item{display:flex;align-items:center;gap:0.8rem;padding:0.6rem;background:var(--cream);border:1px solid var(--parchment)}
+.gallery-manage-item img{width:50px;height:50px;object-fit:cover;flex-shrink:0}
+.gallery-manage-item .gm-info{flex:1;min-width:0}
+.gallery-manage-item .gm-title{font-size:0.85rem;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gallery-manage-item .gm-date{font-family:'Josefin Sans',sans-serif;font-size:0.55rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-light)}
+.gm-delete{background:none;border:none;cursor:pointer;color:#c0392b;font-size:1.1rem;padding:0.3rem;flex-shrink:0;transition:transform 0.2s}
+.gm-delete:hover{transform:scale(1.2)}
+.admin-divider{height:1px;background:var(--parchment);margin:1.5rem 0}
+.admin-stat-row{display:flex;justify-content:space-between;align-items:center;padding:0.6rem 0;border-bottom:1px solid var(--parchment)}
+.admin-stat-row:last-child{border:none}
+.admin-stat-label{font-family:'Josefin Sans',sans-serif;font-size:0.65rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-light)}
+.admin-stat-val{font-family:'Cormorant Garamond',serif;font-size:1.2rem;color:var(--burgundy);font-weight:600}
+.progress-bar{width:100%;height:4px;background:var(--parchment);border-radius:2px;overflow:hidden;margin-top:0.5rem}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--rust),var(--gold));transition:width 0.5s}
+.spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,0.4);border-top-color:white;border-radius:50%;animation:spin 0.6s linear infinite;margin-right:6px;vertical-align:middle}
+@keyframes spin{to{transform:rotate(360deg)}}
+.admin-backdrop{flex:1;cursor:pointer}
+.admin-tabs{display:flex;border-bottom:1px solid var(--parchment);margin-bottom:1.5rem}
+.admin-tab{flex:1;padding:0.7rem;background:none;border:none;border-bottom:2px solid transparent;font-family:'Josefin Sans',sans-serif;font-size:0.6rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:var(--text-light);cursor:pointer;transition:all 0.2s}
+.admin-tab.active{color:var(--burgundy);border-bottom-color:var(--rust)}
+.admin-tab-content{display:none}.admin-tab-content.active{display:block}
+
+
+/* ─── RESPONSIVE ─── */
+@media(max-width:900px){
+  nav{padding:0 1.5rem}
+  .nav-links{display:none;position:absolute;top:var(--nav-h);left:0;right:0;flex-direction:column;background:var(--cream);padding:1.5rem 2rem;border-bottom:1px solid var(--parchment);gap:1rem}
+  .nav-links.open{display:flex}
+  .hamburger{display:flex}
+  .hero-content{padding:0 2rem 6rem;}
+  .hero-dancer-wrap{right:-5%;height:75%}
+  .about-grid,.faculty-grid,.registration-grid,.contact-top,.vision-grid{grid-template-columns:1fr}
+  .vision-divider{display:none}
+  .classes-grid{grid-template-columns:1fr}
+  .gallery-grid{grid-template-columns:1fr 1fr}
+  .events-grid{grid-template-columns:1fr}
+  .footer-grid{grid-template-columns:1fr}
+  .container{padding:0 1.5rem}
+  .about-image-frame img{height:350px}
+  .form-row{grid-template-columns:1fr}
+  .footer-bottom{flex-direction:column;gap:0.5rem;text-align:center}
+}
+@media(max-width:480px){
+  .hero-title{font-size:2.8rem}
+  .gallery-grid{grid-template-columns:1fr}
+  .about-stats{gap:1.5rem}
+  section{padding:4rem 0}
+}
+</style>
+</head>
+<body>
+
+<!-- ─── NAVIGATION ─── -->
+<nav id="navbar">
+  <a href="#hero" class="nav-logo">
+    <img src="sarvah/logos/4.png"/>
+  </a>
+  <div class="hamburger" onclick="toggleNav()">
+    <span></span><span></span><span></span>
+  </div>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#about">About</a></li>
+    <li><a href="#classes">Classes</a></li>
+    <li><a href="#faculty">Faculty</a></li>
+    <li><a href="#gallery">Gallery</a></li>
+    <li><a href="#events">Events</a></li>
+    <li><a href="#testimonials">Reviews</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="#registration" class="nav-cta">Register Now</a>
+</nav>
+
+<!-- ─── HERO ─── -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-dancer-wrap">
+    <img src="sarvah/photos/IMG_0511.JPEG"/>
+  </div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">Kalakshetra Tradition · Est. 2022</div>
+    <h1 class="hero-title">
+      The Art of<br>
+      <em>Bharatanatyam</em>
+    </h1>
+    <p class="hero-subtitle">Authentic classical training in London, Ontario — where tradition meets transformation.</p>
+    <div class="hero-actions">
+      <a href="#registration" class="btn-primary">Enroll Now</a>
+      <a href="#about" class="btn-outline">Discover More</a>
+    </div>
+  </div>
+  <div class="hero-scroll">Scroll</div>
+</section>
+
+<!-- ─── ABOUT ─── -->
+<section id="about">
+  <div class="container">
+    <div class="about-grid">
+      <div class="about-image-wrap reveal">
+        <div class="about-image-frame">
+         <img src="sarvah/photos/IMG_0512.JPEG"/>
+          <div class="about-badge">
+            <span class="num">100+</span>
+            <span class="label">Students Trained</span>
+          </div>
+        </div>
+      </div>
+      <div class="about-content reveal reveal-delay-1">
+        <div class="section-label">Our Story</div>
+        <h2 class="section-title">Preserving a <em>Sacred Art Form</em></h2>
+        <p>Sarvah Dance Academy was established in 2022 with the aim of teaching pure Bharatanatyam in the traditional Kalakshetra style. The academy focuses on building strong foundations in technique, discipline, expression, and stage presence while helping students grow with confidence and professionalism.</p>
+        <p>Over the past four years, Sarvah has proudly trained more than 100 students and continues to create a supportive environment that encourages passion, dedication, and artistic excellence.</p>
+        <p>Students have had the opportunity to perform on numerous prestigious stages across Ontario, gaining real-world stage experience that enriches their artistry and builds lasting confidence.</p>
+        <div class="about-stats">
+          <div class="stat">
+            <div class="stat-num">4+</div>
+            <div class="stat-label">Years of Excellence</div>
+          </div>
+          <div class="stat">
+            <div class="stat-num">100+</div>
+            <div class="stat-label">Students Trained</div>
+          </div>
+          <div class="stat">
+            <div class="stat-num">10+</div>
+            <div class="stat-label">Stages Per Year</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── VISION ─── -->
+<section id="vision">
+  <div class="container">
+    <div class="vision-grid">
+      <div class="vision-card reveal">
+        <div class="section-label">Our Mission</div>
+        <h3>Authentic &amp; Professional Training</h3>
+        <p>Our mission is to provide authentic and professional Bharatanatyam training while preserving the richness and traditions of Indian classical dance. We strive to guide every student with personal attention, helping them develop technical skill, cultural understanding, confidence, and a lifelong love for the art form.</p>
+      </div>
+      <div class="vision-divider"></div>
+      <div class="vision-card reveal reveal-delay-1">
+        <div class="section-label">Our Vision</div>
+        <h3>Inspiring the Next Generation</h3>
+        <p>Our vision is to inspire and nurture the next generation of Bharatanatyam dancers who carry forward the beauty, discipline, and heritage of classical dance with grace and excellence. Sarvah Dance Academy aims to create confident performers and passionate artists who grow both on and off the stage.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── CLASSES ─── -->
+<section id="classes">
+  <div class="container">
+    <div class="classes-intro reveal">
+      <div class="section-label">Our Programs</div>
+      <h2 class="section-title">Classes for <em>Every Age</em></h2>
+      <p style="font-size:1.05rem;line-height:1.8;color:var(--text-light)">We welcome students of all ages with no age bar. Each batch is carefully structured to ensure progressive, meaningful growth in the art of Bharatanatyam.</p>
+    </div>
+    <div class="classes-grid">
+      <div class="class-card reveal">
+        <div class="class-icon">🌸</div>
+        <h3>Sub-Junior Batch</h3>
+        <span class="class-level">Kids · Foundation</span>
+        <p>Our youngest learners are introduced to the world of Bharatanatyam through playful, structured sessions designed to spark joy, curiosity, and a love for classical movement.</p>
+        <span class="class-tag">→ Ages 4 and above · 1 hr/week</span>
+      </div>
+      <div class="class-card reveal reveal-delay-1">
+        <div class="class-icon">🌺</div>
+        <h3>Junior Batch</h3>
+        <span class="class-level">Kids · Developing</span>
+        <p>Building upon foundational skills, Junior students develop coordination, rhythm awareness, and expressive storytelling through traditional adavus and compositions.</p>
+        <span class="class-tag">→ Progressive placement · 1 hr/week</span>
+      </div>
+      <div class="class-card reveal reveal-delay-2">
+        <div class="class-icon">✨</div>
+        <h3>Seniors Beginner</h3>
+        <span class="class-level">Adults · Beginner</span>
+        <p>An introduction to the fundamentals of Bharatanatyam for adult beginners. Learn basic posture, footwork, and hand gestures (mudras) in a warm, welcoming environment.</p>
+        <span class="class-tag">→ No prior experience needed · 1 hr/week</span>
+      </div>
+      <div class="class-card reveal reveal-delay-3">
+        <div class="class-icon">💫</div>
+        <h3>Seniors Intermediate &amp; Advanced</h3>
+        <span class="class-level">Adults · Intermediate + Advanced</span>
+        <p>Deeper exploration of adavus, complex compositions, abhinaya (expression), and performance refinement. Advanced students focus on choreography excellence and stage presence.</p>
+        <span class="class-tag">→ All levels welcome · 1 hr/week</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── FACULTY ─── -->
+<section id="faculty">
+  <div class="container">
+    <div class="faculty-grid">
+      <div class="faculty-image reveal">
+        <div class="faculty-portrait">
+          <img src="sarvah/photos/IMG_0511.JPEG"/>        
+        </div>
+        <div class="faculty-accent"></div>
+        <div class="faculty-accent2"></div>
+      </div>
+      <div class="faculty-content reveal reveal-delay-1">
+        <div class="section-label">Meet Your Guru</div>
+        <h2 class="section-title" style="margin-bottom:0.2rem">Smt. Gayatri <em>Inaayat</em></h2>
+        <div class="faculty-title">Bharatanatyam Exponent · Choreographer · Educator</div>
+        <div class="faculty-bio">
+          <p>Smt. Gayatri Inaayat is a distinguished Bharatanatyam exponent with over 20 years of performance experience and more than a decade dedicated to teaching and choreography. Trained in the revered Kalakshetra tradition, she brings an unparalleled depth of classical knowledge to every class.</p>
+          <p>Through Sarvah Dance Academy, Gayatri continues to dedicate herself to preserving and propagating the Kalakshetra style of Bharatanatyam while mentoring the next generation of classical dancers with discipline, depth, and artistic excellence.</p>
+        </div>
+        <div class="awards">
+          <div class="awards-title">Achievements &amp; Recognition</div>
+          <div class="award-item">
+            <div class="award-dot"></div>
+            <p>National Awardee of the prestigious <strong>Sangeet Natak Akademi</strong>, India's national academy of music, dance and drama</p>
+          </div>
+          <div class="award-item">
+            <div class="award-dot"></div>
+            <p>Bharatanatyam Scholarship recipient from the <strong>Centre for Cultural Resources and Training</strong>, under India's Ministry of Culture</p>
+          </div>
+          <div class="award-item">
+            <div class="award-dot"></div>
+            <p>Performed at the <strong>World Culture Festival</strong>, sharing stage with international artists from across the globe</p>
+          </div>
+          <div class="award-item">
+            <div class="award-dot"></div>
+            <p>Over <strong>250 Bharatanatyam performances</strong> presented across India and Canada on prestigious stages</p>
+          </div>
+          <div class="award-item">
+            <div class="award-dot"></div>
+            <p>Conducted choreography workshops at <strong>Western University</strong> and <strong>Fanshawe College</strong>, London, Ontario</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── GALLERY ─── -->
+<section id="gallery">
+  <div class="container">
+    <div class="reveal" style="text-align:center;max-width:500px;margin:0 auto 3rem">
+      <div class="section-label" style="justify-content:center"><span></span>Gallery</div>
+      <h2 class="section-title">Moments of <em>Grace</em></h2>
+    </div>
+    <div class="gallery-grid" id="galleryGrid">
+      <div class="gallery-item tall reveal">
+        <img src="sarvah/photos/IMG_0511.JPEG"/>      
+      </div>
+      <div class="gallery-item reveal reveal-delay-1">
+        <img src="sarvah/photos/IMG_0512.JPEG"/>      
+      </div>
+      <div class="gallery-item reveal reveal-delay-1" style="aspect-ratio:1/0.5;background:linear-gradient(135deg,var(--burgundy),#3D0A05);display:flex;align-items:center;justify-content:center">
+        <img src="sarvah/logos/Group 199.svg"/>      
+      </div>
+      <div class="gallery-item reveal reveal-delay-2" style="aspect-ratio:1/1;background:var(--cream);display:flex;align-items:center;justify-content:center">
+        <img src="sarvah/logos/1.png"/> 
+      </div>
+      <div class="gallery-item tall reveal reveal-delay-2">
+        <img src="sarvah/photos/IMG_0511.JPEG"/>      
+      </div>
+    </div>
+    <p class="gallery-note reveal">Explore more on <a href="https://youtube.com/@sarvahdanceacademycanada" target="_blank" style="color:var(--rust);text-decoration:none">YouTube</a> &amp; <a href="https://www.instagram.com/sarvahdanceacademy" target="_blank" style="color:var(--rust);text-decoration:none">Instagram</a></p>
+  </div>
+</section>
+
+<!-- ─── EVENTS ─── -->
+<section id="events">
+  <div class="container">
+    <div class="reveal" style="max-width:600px;margin-bottom:3rem">
+      <div class="section-label">Events &amp; Performances</div>
+      <h2 class="section-title">Where <em>Art Comes Alive</em></h2>
+    </div>
+    <div class="events-grid">
+      <div class="event-card reveal">
+        <span class="event-type">Annual Production</span>
+        <h3>Navarasa</h3>
+        <p>Sarvah Dance Academy's flagship annual production — a grand showcase of the nine emotions (Navarasa) through professionally curated Bharatanatyam performances by our students. A celebration of depth, beauty, and the expressive richness of classical Indian dance.</p>
+        <div class="event-detail">📍 London, Ontario · Annual</div>
+      </div>
+      <div class="event-card reveal reveal-delay-1">
+        <span class="event-type">Community Performances</span>
+        <h3>Stages Across Ontario</h3>
+        <p>Sarvah students perform on approximately 10 cultural and community stages each year across Ontario. This consistent performance exposure builds real-world stage confidence and artistic maturity in every student.</p>
+        <div class="event-detail">📍 Across Ontario · Year-round</div>
+      </div>
+      <div class="event-card reveal reveal-delay-2">
+        <span class="event-type">Workshop</span>
+        <h3>University &amp; College Workshops</h3>
+        <p>Smt. Gayatri Inaayat has conducted choreography workshops at Western University and Fanshawe College in London, Ontario — bringing the beauty of Bharatanatyam to academic communities and new audiences.</p>
+        <div class="event-detail">📍 Western University &amp; Fanshawe College</div>
+      </div>
+      <div class="event-card reveal reveal-delay-3" style="background:linear-gradient(135deg,var(--burgundy),#3D0A05);border-color:transparent">
+        <span class="event-type" style="color:var(--gold-light);border-color:rgba(212,176,96,0.4)">Interested?</span>
+        <h3 style="color:var(--white)">Join Our Next Performance</h3>
+        <p style="color:rgba(255,255,255,0.7)">Enroll today and get the opportunity to perform on prestigious stages across Ontario as part of the Sarvah Dance Academy family.</p>
+        <div style="margin-top:1.5rem">
+          <a href="#registration" class="btn-primary">Register Now</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── TESTIMONIALS ─── -->
+<section id="testimonials">
+  <div class="container testimonials-wrap">
+    <div class="testimonials-header reveal">
+      <div class="section-label">What Students Say</div>
+      <h2 class="section-title">Words of <em style="color:var(--gold-light)">Appreciation</em></h2>
+    </div>
+    <div class="testi-slider">
+      <div class="testi-card reveal">
+        <div class="testi-quote">"</div>
+        <p class="testi-text">Joining Sarvah has been one of the best decisions for my daughter. Gayatri ma'am's dedication and depth of knowledge is truly remarkable. The progress has been incredible.</p>
+        <div class="testi-author">Parent of a Student</div>
+        <div class="testi-role">Junior Batch · London, ON</div>
+      </div>
+      <div class="testi-card reveal reveal-delay-1">
+        <div class="testi-quote">"</div>
+        <p class="testi-text">I started as a complete beginner and never imagined I'd be performing on stage. The training at Sarvah is authentic, disciplined, and deeply nurturing. Truly blessed to learn here.</p>
+        <div class="testi-author">Adult Student</div>
+        <div class="testi-role">Seniors Batch · London, ON</div>
+      </div>
+      <div class="testi-card reveal reveal-delay-2">
+        <div class="testi-quote">"</div>
+        <p class="testi-text">The Kalakshetra style training is unparalleled. Gayatri ma'am's attention to detail — the precision of footwork, the expressiveness of abhinaya — shapes you into a real artist.</p>
+        <div class="testi-author">Intermediate Student</div>
+        <div class="testi-role">Advanced Batch · London, ON</div>
+      </div>
+      <div class="testi-card reveal reveal-delay-3">
+        <div class="testi-quote">"</div>
+        <p class="testi-text">The annual Navarasa production was a life-changing experience for our kids. Sarvah provides a platform and confidence that goes far beyond just dancing — it builds character.</p>
+        <div class="testi-author">Parent of Students</div>
+        <div class="testi-role">Sub-Junior Batch · London, ON</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── REGISTRATION ─── -->
+<section id="registration">
+  <div class="container">
+    <div class="reveal" style="text-align:center;max-width:550px;margin:0 auto 4rem">
+      <div class="section-label" style="justify-content:center"><span></span>Registration</div>
+      <h2 class="section-title">Begin Your <em>Journey</em></h2>
+      <p style="font-size:1rem;color:var(--text-light);line-height:1.7">Fill out the form below and we will get in touch with you shortly to discuss your enrollment.</p>
+    </div>
+    <div class="registration-grid">
+      <div class="registration-info reveal">
+        <h3>Why Choose Sarvah?</h3>
+        <p>Sarvah Dance Academy offers a rare combination of authentic classical training, personal attention, and unmatched performance opportunities — all under the guidance of a nationally acclaimed Bharatanatyam artist.</p>
+        <div class="info-item">
+          <span class="info-icon">🎓</span>
+          <span class="info-text">Authentic Kalakshetra style Bharatanatyam training</span>
+        </div>
+        <div class="info-item">
+          <span class="info-icon">🌟</span>
+          <span class="info-text">Taught by National Awardee Smt. Gayatri Inaayat</span>
+        </div>
+        <div class="info-item">
+          <span class="info-icon">🎭</span>
+          <span class="info-text">Regular performance opportunities across Ontario</span>
+        </div>
+        <div class="info-item">
+          <span class="info-icon">👶</span>
+          <span class="info-text">Open to all ages — no age bar</span>
+        </div>
+        <div class="info-item">
+          <span class="info-icon">📅</span>
+          <span class="info-text">1-hour classes per week, offline in London ON</span>
+        </div>
+        <div style="margin-top:2rem">
+          <a href="https://wa.me/19055971808" target="_blank" class="btn-primary" style="display:inline-flex;align-items:center;gap:0.5rem">
+            <span>💬</span> Chat on WhatsApp
+          </a>
+        </div>
+      </div>
+      <div class="reveal reveal-delay-1">
+        <form id="enquiryForm" onsubmit="submitEnquiry(event)">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Student Name *</label>
+              <input type="text" name="studentName" required placeholder="Full name">
+            </div>
+            <div class="form-group">
+              <label>Age *</label>
+              <input type="number" name="age" required placeholder="Age" min="3" max="99">
+            </div>
+          </div>
+          <div class="form-group" id="parentNameGroup">
+            <label>Parent / Guardian Name</label>
+            <input type="text" name="parentName" placeholder="Required for students under 18">
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Phone Number *</label>
+              <input type="tel" name="phone" required placeholder="+1 000 000 0000">
+            </div>
+            <div class="form-group">
+              <label>Email Address *</label>
+              <input type="email" name="email" required placeholder="your@email.com">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Batch Interest</label>
+            <select name="batch">
+              <option value="">Select a batch...</option>
+              <option>Sub-Junior Batch (Kids)</option>
+              <option>Junior Batch (Kids)</option>
+              <option>Seniors Beginner (Adults)</option>
+              <option>Seniors Intermediate (Adults)</option>
+              <option>Super Seniors Advanced (Adults)</option>
+              <option>Not sure — need guidance</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Message / Questions</label>
+            <textarea name="message" placeholder="Any questions or additional information..."></textarea>
+          </div>
+          <p class="form-note">We will contact you within 24 hours via phone or WhatsApp.</p>
+          <button type="submit" id="enquirySubmitBtn" class="btn-primary" style="width:100%;justify-content:center;display:flex">Send Enquiry</button>
+          <div class="form-success" id="enquirySuccess">
+            🙏 Thank you! We'll be in touch soon. Namaste!
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── CONTACT ─── -->
+<section id="contact">
+  <div class="container">
+    <div class="contact-top">
+      <div class="contact-info reveal">
+        <div class="section-label">Get In Touch</div>
+        <h3>We'd Love to <em style="font-style:italic;color:var(--rust)">Hear From You</em></h3>
+        <div class="contact-item">
+          <div class="contact-icon">📞</div>
+          <div class="contact-detail">
+            <strong>Phone / WhatsApp</strong>
+            <a href="tel:+19055871808">+1 905-587-1808</a>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">✉️</div>
+          <div class="contact-detail">
+            <strong>Email</strong>
+            <a href="mailto:sarvahdance@gmail.com">sarvahdance@gmail.com</a>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">📍</div>
+          <div class="contact-detail">
+            <strong>Location</strong>
+            <span>London, Ontario, Canada</span>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">🕐</div>
+          <div class="contact-detail">
+            <strong>Response Hours</strong>
+            <span>Available 24 hours for enquiries</span>
+          </div>
+        </div>
+        <div class="social-links">
+          <a href="https://www.instagram.com/sarvahdanceacademy" target="_blank" class="social-link">
+            📷 Instagram
+          </a>
+          <a href="https://youtube.com/@sarvahdanceacademycanada" target="_blank" class="social-link">
+            ▶ YouTube
+          </a>
+        </div>
+      </div>
+      <div class="reveal reveal-delay-1">
+        <iframe class="map-embed" 
+          src="https://maps.google.com/maps?q=London,+Ontario,+Canada&output=embed"
+          title="Sarvah Dance Academy Location" allowfullscreen loading="lazy">
+        </iframe>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── CONTACT FORM ─── -->
+    <!-- <div style="background:var(--cream);padding:3rem;border:1px solid var(--parchment)" class="reveal">
+      <div class="contact-form-grid">
+        <div class="contact-form-info">
+          <div class="section-label">Send a Message</div>
+          <h3 class="section-title" style="font-size:1.8rem">Have a <em>Question?</em></h3>
+          <p style="font-size:1rem;line-height:1.8;color:var(--text-light)">Whether you're curious about our classes, schedule, fees, or anything else — reach out and we'll get back to you promptly.</p>
+          <div class="info-item" style="margin-top:1.5rem"><span class="info-icon">⚡</span><span class="info-text">Response within 24 hours guaranteed</span></div>
+          <div class="info-item"><span class="info-icon">🕉️</span><span class="info-text">Emails sent to both you and our team for confirmation</span></div>
+        </div>
+        <form id="contactForm" onsubmit="submitContact(event)">
+          <div class="form-row">
+            <div class="form-group"><label>Your Name *</label><input type="text" name="name" required placeholder="Full name"></div>
+            <div class="form-group"><label>Phone Number</label><input type="tel" name="phone" placeholder="+1 000 000 0000"></div>
+          </div>
+          <div class="form-group"><label>Email Address *</label><input type="email" name="email" required placeholder="your@email.com"></div>
+          <div class="form-group"><label>Your Message *</label><textarea name="message" required placeholder="How can we help you?" style="height:120px"></textarea></div>
+          <button type="submit" id="contactSubmitBtn" class="btn-primary" style="width:100%;display:flex;justify-content:center;align-items:center">Send Message</button>
+          <div class="form-success" id="contactSuccess" style="margin-top:1rem">🙏 Message sent! We'll reply within 24 hours. Namaste!</div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section> -->
+
+
+<!-- ─── FOOTER ─── -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+          <img src="sarvah/logos/4.png" class="footer-logo" alt="Sarvah Dance Academy"/>
+        <p>Authentic Bharatanatyam training in the Kalakshetra tradition. Inspiring the next generation of classical dancers in London, Ontario since 2022.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="#about">About Us</a></li>
+          <li><a href="#classes">Classes</a></li>
+          <li><a href="#faculty">Faculty</a></li>
+          <li><a href="#gallery">Gallery</a></li>
+          <li><a href="#events">Events</a></li>
+          <li><a href="#registration">Register</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Connect</h4>
+        <ul>
+          <li><a href="https://www.instagram.com/sarvahdanceacademy" target="_blank">Instagram</a></li>
+          <li><a href="https://youtube.com/@sarvahdanceacademycanada" target="_blank">YouTube</a></li>
+          <li><a href="mailto:sarvahdance@gmail.com">sarvahdance@gmail.com</a></li>
+          <li><a href="tel:+19055871808">+1 905-587-1808</a></li>
+          <li><a href="https://wa.me/19055971808" target="_blank">WhatsApp</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2024 Sarvah Dance Academy. All rights reserved.</span>
+      <span>London, Ontario, Canada · Est. 2022</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ─── WHATSAPP BUTTON ─── -->
+<a href="https://wa.me/19055971808" target="_blank" class="whatsapp-btn">
+  <span class="whatsapp-icon">💬</span>
+  WhatsApp Us
+</a>
+
+<!-- ─── ADMIN TRIGGER ─── -->
+<div class="admin-trigger" id="adminTrigger" onclick="openAdmin()" title="Admin Panel">⚙️</div>
+
+ 
+<!-- ─── ADMIN PANEL ─── -->
+<div class="admin-overlay" id="adminOverlay">
+  <div class="admin-sidebar" id="adminSidebar">
+    <div class="admin-header">
+      <div>
+        <h2>Admin Panel</h2>
+        <p>Sarvah Dance Academy</p>
+      </div>
+      <button class="admin-close-btn" onclick="closeAdmin()">✕</button>
+    </div>
+    <div class="admin-body">
+ 
+      <!-- LOGIN STATE -->
+      <div id="adminLogin">
+        <div class="admin-login">
+          <h3>🔐 Secure Login</h3>
+          <p style="font-size:0.9rem;color:var(--text-light);line-height:1.6">Enter your admin password to manage gallery images and view site stats.</p>
+          <input type="password" class="admin-input" id="adminPasswordInput" placeholder="Enter admin password" onkeydown="if(event.key==='Enter')adminLogin()"/>
+          <button class="admin-btn" onclick="adminLogin()" id="loginBtn">Login to Admin</button>
+        </div>
+      </div>
+ 
+      <!-- DASHBOARD STATE -->
+      <div id="adminDashboard" style="display:none">
+        <div class="admin-tabs">
+          <button class="admin-tab active" onclick="switchTab('gallery')">🖼 Gallery</button>
+          <button class="admin-tab" onclick="switchTab('stats')">📊 Stats</button>
+          <button class="admin-tab" onclick="switchTab('settings')">⚙️ Settings</button>
+        </div>
+ 
+        <!-- GALLERY TAB -->
+        <div class="admin-tab-content active" id="tab-gallery">
+          <div class="admin-section">
+            <h4>Upload New Photos</h4>
+            <div class="upload-zone" id="uploadZone">
+              <input type="file" id="galleryFileInput" accept="image/*" multiple onchange="handleFileSelect(this)"/>
+              <div class="upload-icon">📷</div>
+              <p>Click or drag photos here</p>
+              <p style="margin-top:0.3rem;font-size:0.55rem;color:var(--text-light)">JPEG, PNG, WebP · Max 5MB each</p>
+            </div>
+            <div class="upload-preview" id="uploadPreview"></div>
+            <div class="form-group" style="margin-top:1rem">
+              <label style="font-family:'Josefin Sans',sans-serif;font-size:0.6rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:var(--text);display:block;margin-bottom:0.4rem">Photo Title (optional)</label>
+              <input type="text" class="admin-input" id="uploadTitle" placeholder="e.g. Annual Navarasa 2024"/>
+            </div>
+            <button class="admin-btn" onclick="uploadImages()" id="uploadBtn" style="display:none">Upload to Gallery</button>
+          </div>
+ 
+          <div class="admin-divider"></div>
+ 
+          <div class="admin-section">
+            <h4>Manage Gallery (<span id="galleryCount">0</span> photos)</h4>
+            <div class="gallery-manage" id="galleryManage">
+              <p style="color:var(--text-light);font-size:0.9rem;text-align:center;padding:1rem">Loading gallery...</p>
+            </div>
+          </div>
+        </div>
+ 
+        <!-- STATS TAB -->
+        <div class="admin-tab-content" id="tab-stats">
+          <div class="admin-section">
+            <h4>Gallery Overview</h4>
+            <div id="statsContent">
+              <div class="admin-stat-row"><span class="admin-stat-label">Total Photos</span><span class="admin-stat-val" id="statTotal">—</span></div>
+              <div class="admin-stat-row"><span class="admin-stat-label">Last Upload</span><span class="admin-stat-val" id="statLast" style="font-size:0.9rem">—</span></div>
+              <div style="margin-top:1rem">
+                <div style="font-family:'Josefin Sans',sans-serif;font-size:0.6rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-light);margin-bottom:0.4rem">Gallery Fill</div>
+                <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+              </div>
+            </div>
+          </div>
+          <div class="admin-section">
+            <h4>Quick Links</h4>
+            <div style="display:flex;flex-direction:column;gap:0.5rem">
+              <a href="https://www.instagram.com/sarvahdanceacademy" target="_blank" class="admin-btn" style="text-decoration:none;text-align:center;display:block">📷 Open Instagram</a>
+              <a href="https://youtube.com/@sarvahdanceacademycanada" target="_blank" class="admin-btn" style="text-decoration:none;text-align:center;display:block">▶ Open YouTube</a>
+              <a href="mailto:sarvahdance@gmail.com" class="admin-btn" style="text-decoration:none;text-align:center;display:block">✉️ Open Email</a>
+            </div>
+          </div>
+        </div>
+ 
+        <!-- SETTINGS TAB -->
+        <div class="admin-tab-content" id="tab-settings">
+          <div class="admin-section">
+            <h4>Session</h4>
+            <p style="font-size:0.85rem;color:var(--text-light);margin-bottom:1rem;line-height:1.6">You are currently logged in as Administrator. Your session remains active while this panel is open.</p>
+            <button class="admin-btn danger" onclick="adminLogout()">🔒 Logout</button>
+          </div>
+          <div class="admin-divider"></div>
+          <div class="admin-section">
+            <h4>Gallery Display</h4>
+            <p style="font-size:0.85rem;color:var(--text-light);margin-bottom:1rem;line-height:1.6">Gallery images uploaded here appear automatically in the Gallery section of the website. Static images are always shown alongside uploaded photos.</p>
+          </div>
+        </div>
+ 
+        <!-- Logout -->
+        <div class="admin-divider"></div>
+      </div>
+    </div>
+  </div>
+  <div class="admin-backdrop" onclick="closeAdmin()"></div>
+</div>
+ 
+<!-- ─── TOAST ─── -->
+<div class="toast" id="toast"></div>
+ 
+<script>
+const API = 'http://localhost:3000'; // Set to your backend URL e.g. 'http://localhost:3000' or 'https://yourdomain.com'
+const ADMIN_PASS = 'sarvah123'; // Change this — should match server ADMIN_PASSWORD
+ 
+// ─── NAV ───
+const navbar = document.getElementById('navbar');
+window.addEventListener('scroll', () => {
+  navbar.classList.toggle('scrolled', window.scrollY > 60);
+});
+function toggleNav() {
+  document.getElementById('navLinks').classList.toggle('open');
+}
+document.querySelectorAll('.nav-links a').forEach(a => {
+  a.addEventListener('click', () => document.getElementById('navLinks').classList.remove('open'));
+});
+ 
+// ─── REVEAL ───
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+}, {threshold:0.12});
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+ 
+// ─── TOAST ───
+function showToast(msg, type='info', dur=3500) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = `toast ${type}`;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), dur);
+}
+ 
+// ─── CONTACT FORM ───
+async function submitContact(e) {
+  e.preventDefault();
+  const form = e.target;
+  const btn = document.getElementById('contactSubmitBtn');
+  const success = document.getElementById('contactSuccess');
+  const fd = new FormData(form);
+  const data = Object.fromEntries(fd.entries());
+ 
+  btn.innerHTML = '<span class="spinner"></span>Sending...';
+  btn.disabled = true;
+ 
+  try {
+    const res = await fetch(`${API}/api/contact`, {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify(data)
+    });
+    const json = await res.json();
+    if(json.success) {
+      form.style.display = 'none';
+      success.style.display = 'block';
+      showToast('✅ Message sent successfully!', 'success');
+    } else {
+      throw new Error(json.message);
+    }
+  } catch(err) {
+    btn.innerHTML = 'Send Message';
+    btn.disabled = false;
+    showToast('❌ Failed to send. Please try WhatsApp or email directly.', 'error', 5000);
+    console.error(err);
+  }
+}
+ 
+// ─── ENQUIRY FORM ───
+async function submitEnquiry(e) {
+  e.preventDefault();
+  const form = e.target;
+  const btn = document.getElementById('enquirySubmitBtn');
+  const success = document.getElementById('enquirySuccess');
+  const fd = new FormData(form);
+  const raw = Object.fromEntries(fd.entries());
+ 
+  const data = {
+    name: raw.studentName,
+    email: raw.email,
+    phone: raw.phone,
+    message: `Student Name: ${raw.studentName}\nAge: ${raw.age}\nParent: ${raw.parentName || 'N/A'}\nBatch: ${raw.batch || 'Not specified'}\n\nMessage:\n${raw.message || 'No message'}`
+  };
+ 
+  btn.innerHTML = '<span class="spinner"></span>Sending...';
+  btn.disabled = true;
+ 
+  try {
+    const res = await fetch(`${API}/api/contact`, {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify(data)
+    });
+    const json = await res.json();
+    if(json.success) {
+      form.style.display = 'none';
+      success.style.display = 'block';
+      showToast('🙏 Enquiry sent! We\'ll be in touch soon.', 'success');
+    } else {
+      throw new Error(json.message);
+    }
+  } catch(err) {
+    btn.innerHTML = 'Send Enquiry';
+    btn.disabled = false;
+    showToast('❌ Failed to send. Please contact us on WhatsApp.', 'error', 5000);
+  }
+}
+ 
+// ─── GALLERY LOADER ───
+let galleryImages = [];
+ 
+async function loadGallery() {
+  try {
+    const res = await fetch(`${API}/api/gallery`);
+    galleryImages = await res.json();
+    renderGalleryAdditions();
+    if(document.getElementById('adminDashboard').style.display !== 'none') {
+      renderAdminGallery();
+    }
+  } catch(e) {
+    console.log('Gallery API not available — showing static images only');
+  }
+}
+ 
+function renderGalleryAdditions() {
+  const grid = document.getElementById('galleryGrid');
+  // Remove any previously injected dynamic items
+  grid.querySelectorAll('.dynamic-gallery-item').forEach(el => el.remove());
+ 
+  galleryImages.forEach((img, i) => {
+    const div = document.createElement('div');
+    div.className = 'gallery-item dynamic-gallery-item reveal';
+    div.innerHTML = `<img src="${img.url}" alt="${img.title || 'Dance performance'}" loading="lazy"/>`;
+    grid.appendChild(div);
+    // Re-observe for reveal animation
+    observer.observe(div);
+  });
+}
+ 
+// ─── ADMIN ───
+let adminAuthenticated = false;
+let selectedFiles = [];
+ 
+function openAdmin() {
+  document.getElementById('adminOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeAdmin() {
+  document.getElementById('adminOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+ 
+function adminLogin() {
+  const pass = document.getElementById('adminPasswordInput').value;
+  const btn = document.getElementById('loginBtn');
+  if(!pass) { showToast('Please enter password', 'error'); return; }
+ 
+  btn.innerHTML = '<span class="spinner"></span>Verifying...';
+  btn.disabled = true;
+ 
+  // Verify against backend
+  setTimeout(async () => {
+    try {
+      const res = await fetch(`${API}/api/admin/verify`, {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({password: pass})
+      });
+      const json = await res.json();
+      if(json.success) {
+        adminAuthenticated = true;
+        sessionStorage.setItem('adminAuth', pass);
+        showAdminDashboard();
+      } else {
+        showToast('❌ Incorrect password', 'error');
+        btn.innerHTML = 'Login to Admin';
+        btn.disabled = false;
+      }
+    } catch {
+      // Fallback: local check (for dev without backend)
+      if(pass === ADMIN_PASS) {
+        adminAuthenticated = true;
+        sessionStorage.setItem('adminAuth', pass);
+        showAdminDashboard();
+      } else {
+        showToast('❌ Incorrect password', 'error');
+        btn.innerHTML = 'Login to Admin';
+        btn.disabled = false;
+      }
+    }
+  }, 600);
+}
+ 
+function showAdminDashboard() {
+  document.getElementById('adminLogin').style.display = 'none';
+  document.getElementById('adminDashboard').style.display = 'block';
+  renderAdminGallery();
+  updateStats();
+}
+ 
+function adminLogout() {
+  adminAuthenticated = false;
+  sessionStorage.removeItem('adminAuth');
+  document.getElementById('adminDashboard').style.display = 'none';
+  document.getElementById('adminLogin').style.display = 'block';
+  document.getElementById('adminPasswordInput').value = '';
+  document.getElementById('loginBtn').innerHTML = 'Login to Admin';
+  document.getElementById('loginBtn').disabled = false;
+  showToast('Logged out successfully', 'info');
+}
+ 
+function switchTab(tab) {
+  document.querySelectorAll('.admin-tab').forEach((t,i) => {
+    const tabs = ['gallery','stats','settings'];
+    t.classList.toggle('active', tabs[i] === tab);
+  });
+  document.querySelectorAll('.admin-tab-content').forEach(c => c.classList.remove('active'));
+  document.getElementById(`tab-${tab}`).classList.add('active');
+  if(tab === 'stats') updateStats();
+}
+ 
+function handleFileSelect(input) {
+  selectedFiles = Array.from(input.files);
+  const preview = document.getElementById('uploadPreview');
+  preview.innerHTML = '';
+  selectedFiles.forEach(file => {
+    const url = URL.createObjectURL(file);
+    const img = document.createElement('img');
+    img.src = url;
+    preview.appendChild(img);
+  });
+  document.getElementById('uploadBtn').style.display = selectedFiles.length ? 'block' : 'none';
+}
+ 
+// Drag & drop
+const uploadZone = document.getElementById('uploadZone');
+uploadZone.addEventListener('dragover', e => { e.preventDefault(); uploadZone.classList.add('dragover'); });
+uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('dragover'));
+uploadZone.addEventListener('drop', e => {
+  e.preventDefault();
+  uploadZone.classList.remove('dragover');
+  selectedFiles = Array.from(e.dataTransfer.files).filter(f => f.type.startsWith('image/'));
+  const dt = new DataTransfer();
+  selectedFiles.forEach(f => dt.items.add(f));
+  document.getElementById('galleryFileInput').files = dt.files;
+  handleFileSelect({files: dt.files});
+});
+ 
+async function uploadImages() {
+  if(!selectedFiles.length) return;
+  const btn = document.getElementById('uploadBtn');
+  const title = document.getElementById('uploadTitle').value || 'Sarvah Dance Performance';
+  const pass = sessionStorage.getItem('adminAuth') || ADMIN_PASS;
+ 
+  btn.innerHTML = '<span class="spinner"></span>Uploading...';
+  btn.disabled = true;
+ 
+  let success = 0;
+  for(const file of selectedFiles) {
+    const fd = new FormData();
+    fd.append('image', file);
+    fd.append('title', title);
+    fd.append('password', pass);
+    try {
+      const res = await fetch(`${API}/api/gallery/upload`, { method:'POST', body:fd });
+      const json = await res.json();
+      if(json.success) { success++; galleryImages.push(json.image); }
+    } catch(e) { console.error('Upload failed:', e); }
+  }
+ 
+  btn.innerHTML = 'Upload to Gallery';
+  btn.disabled = false;
+  document.getElementById('uploadPreview').innerHTML = '';
+  document.getElementById('galleryFileInput').value = '';
+  document.getElementById('uploadTitle').value = '';
+  btn.style.display = 'none';
+  selectedFiles = [];
+ 
+  if(success > 0) {
+    showToast(`✅ ${success} photo(s) uploaded!`, 'success');
+    renderGalleryAdditions();
+    renderAdminGallery();
+    updateStats();
+  } else {
+    showToast('❌ Upload failed. Check your connection.', 'error');
+  }
+}
+ 
+function renderAdminGallery() {
+  const container = document.getElementById('galleryManage');
+  document.getElementById('galleryCount').textContent = galleryImages.length;
+ 
+  if(!galleryImages.length) {
+    container.innerHTML = '<p style="color:var(--text-light);font-size:0.9rem;text-align:center;padding:1rem;font-style:italic">No photos uploaded yet. Add your first photo above!</p>';
+    return;
+  }
+ 
+  container.innerHTML = [...galleryImages].reverse().map(img => `
+    <div class="gallery-manage-item" id="gm-${img.id}">
+      <img src="${img.url}" alt="${img.title}"/>
+      <div class="gm-info">
+        <div class="gm-title">${img.title}</div>
+        <div class="gm-date">${new Date(img.uploadedAt).toLocaleDateString('en-CA',{year:'numeric',month:'short',day:'numeric'})}</div>
+      </div>
+      <button class="gm-delete" onclick="deleteImage(${img.id})" title="Delete photo">🗑️</button>
+    </div>
+  `).join('');
+}
+ 
+async function deleteImage(id) {
+  if(!confirm('Delete this photo from the gallery?')) return;
+  const pass = sessionStorage.getItem('adminAuth') || ADMIN_PASS;
+  try {
+    const res = await fetch(`${API}/api/gallery/delete`, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({password: pass, id})
+    });
+    const json = await res.json();
+    if(json.success) {
+      galleryImages = galleryImages.filter(i => i.id !== id);
+      document.getElementById(`gm-${id}`)?.remove();
+      document.getElementById('galleryCount').textContent = galleryImages.length;
+      renderGalleryAdditions();
+      updateStats();
+      showToast('🗑️ Photo deleted', 'info');
+    }
+  } catch(e) {
+    showToast('❌ Delete failed', 'error');
+  }
+}
+ 
+function updateStats() {
+  document.getElementById('statTotal').textContent = galleryImages.length;
+  const last = galleryImages.length ? new Date(galleryImages[galleryImages.length-1].uploadedAt) : null;
+  document.getElementById('statLast').textContent = last ? last.toLocaleDateString('en-CA',{month:'short',day:'numeric',year:'numeric'}) : 'No uploads yet';
+  const pct = Math.min((galleryImages.length / 20) * 100, 100);
+  document.getElementById('progressFill').style.width = `${pct}%`;
+}
+ 
+// ─── INIT ───
+loadGallery();
+ 
+// Check if already logged in this session
+if(sessionStorage.getItem('adminAuth')) {
+  adminAuthenticated = true;
+}
+ 
+// Password input enter key
+document.getElementById('adminPasswordInput').addEventListener('keydown', e => {
+  if(e.key === 'Enter') adminLogin();
+});
+</script>
+</body>
+</html>
