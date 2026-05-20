@@ -1805,7 +1805,8 @@ function renderAdminGallery() {
                 <div class="gm-title">${escapeHtml(img.title)}</div>
                 <div class="gm-date">${new Date(img.uploadedAt).toLocaleDateString('en-CA',{year:'numeric',month:'short',day:'numeric'})}</div>
             </div>
-            <button class="gm-delete" onclick="deleteImage("${img.public_id}")" title="Delete photo">🗑️</button>
+            <button class="gm-delete" onclick="deleteImage('${img.public_id}')" title="Delete photo">🗑️</button>
+
         </div>
     `).join('');
     
@@ -1825,50 +1826,25 @@ function escapeHtml(str) {
 
 
 async function deleteImage(publicId) {
-    console.log('🗑️ DELETE IMAGE CALLED');
-    console.log('Public ID to delete:', publicId);
-    console.log('API endpoint:', `${API}/api/gallery/delete`);
-    console.log('Admin auth present:', !!sessionStorage.getItem('adminAuth'));
-    
-    if(!confirm('Delete this photo from the gallery?')) {
-        console.log('User cancelled deletion');
-        return;
-    }
-    
+    if(!confirm('Delete this photo from the gallery?')) return;
     const pass = sessionStorage.getItem('adminAuth') || ADMIN_PASS;
-    console.log('Using password:', pass === ADMIN_PASS ? 'Correct' : 'Might be incorrect');
-    
     try {
-        const requestBody = JSON.stringify({password: pass, id: publicId});
-        console.log('Request body:', requestBody);
-        
         const res = await fetch(`${API}/api/gallery/delete`, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: requestBody
+            body: JSON.stringify({ password: pass, id: publicId })
         });
-        
-        console.log('Response status:', res.status);
-        console.log('Response status text:', res.statusText);
-        
         const json = await res.json();
-        console.log('Response JSON:', json);
-        
         if(json.success) {
-            console.log('✅ Delete successful on server');
             galleryImages = galleryImages.filter(i => i.public_id !== publicId);
             renderGalleryAdditions();
             renderAdminGallery();
             updateStats();
             showToast('🗑️ Photo deleted', 'info');
         } else {
-            console.error('❌ Server returned error:', json.message);
             showToast('❌ Delete failed: ' + (json.message || 'Unknown error'), 'error');
         }
     } catch(e) {
-        console.error('❌ Network or fetch error:', e);
-        console.error('Error name:', e.name);
-        console.error('Error message:', e.message);
         showToast('❌ Delete failed: ' + e.message, 'error');
     }
 }
