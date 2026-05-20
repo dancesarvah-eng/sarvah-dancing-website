@@ -1823,28 +1823,53 @@ function escapeHtml(str) {
     });
 }
 
+
 async function deleteImage(publicId) {
-    if(!confirm('Delete this photo from the gallery?')) return;
+    console.log('🗑️ DELETE IMAGE CALLED');
+    console.log('Public ID to delete:', publicId);
+    console.log('API endpoint:', `${API}/api/gallery/delete`);
+    console.log('Admin auth present:', !!sessionStorage.getItem('adminAuth'));
+    
+    if(!confirm('Delete this photo from the gallery?')) {
+        console.log('User cancelled deletion');
+        return;
+    }
+    
     const pass = sessionStorage.getItem('adminAuth') || ADMIN_PASS;
+    console.log('Using password:', pass === ADMIN_PASS ? 'Correct' : 'Might be incorrect');
     
     try {
+        const requestBody = JSON.stringify({password: pass, id: publicId});
+        console.log('Request body:', requestBody);
+        
         const res = await fetch(`${API}/api/gallery/delete`, {
-            method:'POST',
-            headers:{'Content-Type':'application/json'},
-            body: JSON.stringify({password: pass, id: publicId})
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: requestBody
         });
+        
+        console.log('Response status:', res.status);
+        console.log('Response status text:', res.statusText);
+        
         const json = await res.json();
+        console.log('Response JSON:', json);
+        
         if(json.success) {
+            console.log('✅ Delete successful on server');
             galleryImages = galleryImages.filter(i => i.public_id !== publicId);
             renderGalleryAdditions();
             renderAdminGallery();
             updateStats();
             showToast('🗑️ Photo deleted', 'info');
         } else {
-            showToast('❌ Delete failed: ' + json.message, 'error');
+            console.error('❌ Server returned error:', json.message);
+            showToast('❌ Delete failed: ' + (json.message || 'Unknown error'), 'error');
         }
     } catch(e) {
-        showToast('❌ Delete failed', 'error');
+        console.error('❌ Network or fetch error:', e);
+        console.error('Error name:', e.name);
+        console.error('Error message:', e.message);
+        showToast('❌ Delete failed: ' + e.message, 'error');
     }
 }
  
