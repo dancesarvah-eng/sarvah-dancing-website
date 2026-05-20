@@ -1805,7 +1805,7 @@ function renderAdminGallery() {
                 <div class="gm-title">${escapeHtml(img.title)}</div>
                 <div class="gm-date">${new Date(img.uploadedAt).toLocaleDateString('en-CA',{year:'numeric',month:'short',day:'numeric'})}</div>
             </div>
-            <button class="gm-delete" onclick="deleteImage(${img.id})" title="Delete photo">🗑️</button>
+            <button class="gm-delete" onclick="deleteImage("${img.public_id}")" title="Delete photo">🗑️</button>
         </div>
     `).join('');
     
