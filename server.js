@@ -304,7 +304,7 @@ const app = express();
 
 // ============ MIDDLEWARE ============
 app.use(cors());
-app.use(express.json({ limit: '50mb' })); // Increased limit for base64 images
+app.use(express.json({ limit: '50mb' }));
 
 // Debug middleware - log all requests
 app.use((req, res, next) => {
@@ -329,73 +329,46 @@ cloudinary.config({
     api_secret: process.env.CLOUDINARY_API_SECRET || 'TN60PQPNSqiCkzBJ7bgBEizq4EQ',
 });
 
-// ============ CLOUDINARY STORAGE ============
-const storage = new CloudinaryStorage({
+// ============ CLOUDINARY STORAGE — GALLERY ============
+const galleryStorage = new CloudinaryStorage({
     cloudinary,
     params: {
-        folder: 'sarvah-dance-academy',
+        folder: 'sarvah-dance-academy/gallery',
         allowed_formats: ['jpg', 'jpeg', 'png', 'webp', 'gif'],
         transformation: [{ quality: 'auto', fetch_format: 'auto' }]
     }
 });
 
-const upload = multer({
-    storage,
-    limits: { fileSize: 5 * 1024 * 1024 }
+const galleryUpload = multer({
+    storage: galleryStorage,
+    limits: { fileSize: 10 * 1024 * 1024 } // 10MB
 });
 
-// ============ DATA FILES ============
-const HERO_DATA_FILE = path.join(__dirname, 'hero-data.json');
+// ============ CLOUDINARY STORAGE — HERO ============
+const heroStorage = new CloudinaryStorage({
+    cloudinary,
+    params: {
+        folder: 'sarvah-dance-academy/hero',
+        allowed_formats: ['jpg', 'jpeg', 'png', 'webp'],
+        transformation: [{ quality: 'auto', fetch_format: 'auto' }]
+    }
+});
+
+const heroUpload = multer({
+    storage: heroStorage,
+    limits: { fileSize: 10 * 1024 * 1024 } // 10MB
+});
+
+// ============ DATA FILES (used as optional local backup) ============
 const GALLERY_DATA_FILE = path.join(__dirname, 'gallery-data.json');
 
-// Load/Save Hero functions
-function loadHeroImages() {
-    if (!fs.existsSync(HERO_DATA_FILE)) {
-        // Return default hero images if file doesn't exist
-        const defaultHeroes = [
-            { 
-                id: 1, 
-                url: '/images/hero/default1.jpg', 
-                title: 'Traditional Bharatanatyam Performance',
-                isDefault: true,
-                uploadedAt: new Date().toISOString()
-            },
-            { 
-                id: 2, 
-                url: '/images/hero/default2.jpg', 
-                title: 'Sarvah Dance Academy',
-                isDefault: true,
-                uploadedAt: new Date().toISOString()
-            }
-        ];
-        saveHeroImages(defaultHeroes);
-        return defaultHeroes;
-    }
-    try { 
-        return JSON.parse(fs.readFileSync(HERO_DATA_FILE, 'utf8')); 
-    } catch (e) { 
-        console.error('Error loading hero images:', e);
-        return []; 
-    }
-}
-
-function saveHeroImages(heroImages) {
-    try {
-        fs.writeFileSync(HERO_DATA_FILE, JSON.stringify(heroImages, null, 2));
-        console.log(`✅ Saved ${heroImages.length} hero images to file`);
-    } catch (e) {
-        console.error('Error saving hero images:', e);
-    }
-}
-
-// Load/Save Gallery functions
 function loadGallery() {
     if (!fs.existsSync(GALLERY_DATA_FILE)) return [];
-    try { 
-        return JSON.parse(fs.readFileSync(GALLERY_DATA_FILE, 'utf8')); 
-    } catch (e) { 
+    try {
+        return JSON.parse(fs.readFileSync(GALLERY_DATA_FILE, 'utf8'));
+    } catch (e) {
         console.error('Error loading gallery images:', e);
-        return []; 
+        return [];
     }
 }
 
@@ -550,131 +523,158 @@ app.post('/api/contact', async (req, res) => {
 
 // ============ HERO SECTION ENDPOINTS ============
 
-// GET all hero images
-app.get('/api/hero', (req, res) => {
-    const heroImages = loadHeroImages();
-    res.json(heroImages);
+// GET all hero images — reads from Cloudinary directly so it persists across deploys
+app.get('/api/hero', async (req, res) => {
+    // These two local images are always included as defaults
+    const defaults = [
+        {
+            id: 1,
+            url: '/sarvah/photos/IMG_0512.JPEG',
+            title: 'Traditional Bharatanatyam Performance',
+            isDefault: true,
+            uploadedAt: new Date().toISOString()
+        },
+        {
+            id: 2,
+            url: '/sarvah/photos/IMG_0511.JPEG',
+            title: 'Sarvah Dance Academy',
+            isDefault: true,
+            uploadedAt: new Date().toISOString()
+        }
+    ];
+
+    try {
+        // Query Cloudinary for any uploaded hero images
+        const result = await cloudinary.search
+            .expression('folder:sarvah-dance-academy/hero')
+            .sort_by('created_at', 'asc')
+            .max_results(30)
+            .execute();
+
+        const cloudinaryImages = (result.resources || []).map(r => ({
+            id: r.asset_id,
+            url: r.secure_url,
+            public_id: r.public_id,
+            title: 'Hero Image',
+            uploadedAt: r.created_at,
+            isDefault: false
+        }));
+
+        console.log(`✅ Hero: ${defaults.length} defaults + ${cloudinaryImages.length} from Cloudinary`);
+        res.json([...defaults, ...cloudinaryImages]);
+    } catch (e) {
+        console.error('❌ Cloudinary search error:', e.message);
+        // If Cloudinary search fails, just return the two defaults
+        res.json(defaults);
+    }
 });
 
-// POST upload new hero image to Cloudinary
-app.post('/api/hero/upload', async (req, res) => {
-    const { password, title, imageData } = req.body;
-    
+// POST upload new hero image — uses multipart/form-data (fixes body-size limit on hosting platforms)
+app.post('/api/hero/upload', heroUpload.single('image'), async (req, res) => {
+    const { password, title } = req.body;
+
     if (password !== ADMIN_PASSWORD) {
         return res.status(401).json({ success: false, message: 'Invalid admin password' });
     }
-    
-    if (!imageData) {
-        return res.status(400).json({ success: false, message: 'No image data received' });
+
+    if (!req.file) {
+        return res.status(400).json({ success: false, message: 'No image file received' });
     }
-    
-    try {
-        // Upload base64 to Cloudinary
-        const result = await cloudinary.uploader.upload(imageData, {
-            folder: 'sarvah-dance-academy/hero',
-            allowed_formats: ['jpg', 'jpeg', 'png', 'webp']
-        });
-        
-        const newImage = {
-            id: Date.now(),
-            url: result.secure_url,
-            public_id: result.public_id,
-            title: title || 'Hero Image',
-            uploadedAt: new Date().toISOString(),
-            isDefault: false
-        };
-        
-        // Save to hero-data.json
-        const heroImages = loadHeroImages();
-        heroImages.push(newImage);
-        saveHeroImages(heroImages);
-        
-        console.log(`✅ Hero image uploaded: ${newImage.title}`);
-        res.json({ success: true, image: newImage });
-    } catch (error) {
-        console.error('Hero upload error:', error);
-        res.status(500).json({ success: false, message: error.message });
-    }
+
+    const newImage = {
+        id: Date.now(),
+        url: req.file.path,           // Cloudinary secure URL set by multer-storage-cloudinary
+        public_id: req.file.filename, // Cloudinary public_id
+        title: title || 'Hero Image',
+        uploadedAt: new Date().toISOString(),
+        isDefault: false
+    };
+
+    console.log(`✅ Hero image uploaded to Cloudinary: ${newImage.url}`);
+    res.json({ success: true, image: newImage });
 });
 
 // POST delete hero image from Cloudinary
 app.post('/api/hero/delete', async (req, res) => {
-    const { password, id } = req.body;
+    const { password, public_id } = req.body;
 
     if (password !== ADMIN_PASSWORD) {
         return res.status(401).json({ success: false, message: 'Invalid admin password' });
     }
 
-    let heroImages = loadHeroImages();
-    const imageToDelete = heroImages.find(img => img.id === parseInt(id));
+    if (!public_id) {
+        return res.status(400).json({ success: false, message: 'No public_id provided' });
+    }
 
-    if (imageToDelete && !imageToDelete.isDefault) {
-        try {
-            // Delete from Cloudinary
-            if (imageToDelete.public_id) {
-                await cloudinary.uploader.destroy(imageToDelete.public_id);
-                console.log(`🗑️ Deleted from Cloudinary: ${imageToDelete.public_id}`);
-            }
-        } catch (e) {
-            console.error('Cloudinary delete error:', e);
-        }
-        heroImages = heroImages.filter(img => img.id !== parseInt(id));
-        saveHeroImages(heroImages);
-        console.log(`🗑️ Hero image removed: ${imageToDelete.title}`);
+    try {
+        await cloudinary.uploader.destroy(public_id);
+        console.log(`🗑️ Deleted hero image from Cloudinary: ${public_id}`);
         res.json({ success: true, message: 'Hero image deleted successfully' });
-    } else if (imageToDelete && imageToDelete.isDefault) {
-        res.status(400).json({ success: false, message: 'Cannot delete default hero images' });
-    } else {
-        res.status(404).json({ success: false, message: 'Hero image not found' });
+    } catch (e) {
+        console.error('❌ Cloudinary delete error:', e.message);
+        res.status(500).json({ success: false, message: e.message });
     }
 });
 
 // ============ GALLERY SECTION ENDPOINTS ============
 
-// GET all gallery images
-app.get('/api/gallery', (req, res) => {
-    const gallery = loadGallery();
-    res.json(gallery);
+// GET all gallery images — reads from Cloudinary directly so it persists across deploys
+app.get('/api/gallery', async (req, res) => {
+    try {
+        const result = await cloudinary.search
+            .expression('folder:sarvah-dance-academy/gallery')
+            .sort_by('created_at', 'desc')
+            .max_results(50)
+            .execute();
+
+        const images = (result.resources || []).map(r => ({
+            id: r.asset_id,
+            url: r.secure_url,
+            public_id: r.public_id,
+            title: r.context?.caption || 'Sarvah Dance Performance',
+            uploadedAt: r.created_at
+        }));
+
+        console.log(`✅ Gallery: ${images.length} images from Cloudinary`);
+        res.json(images);
+    } catch (e) {
+        console.error('❌ Cloudinary gallery search error:', e.message);
+        // Fallback to local JSON if Cloudinary search fails
+        res.json(loadGallery());
+    }
 });
 
-// POST upload new gallery image to Cloudinary
-app.post('/api/gallery/upload', async (req, res) => {
-    const { password, title, imageData } = req.body;
-    
+// POST upload new gallery image — uses multipart/form-data
+app.post('/api/gallery/upload', galleryUpload.single('image'), async (req, res) => {
+    const { password, title } = req.body;
+
     if (password !== ADMIN_PASSWORD) {
         return res.status(401).json({ success: false, message: 'Invalid admin password' });
     }
-    
-    if (!imageData) {
-        return res.status(400).json({ success: false, message: 'No image data received' });
+
+    if (!req.file) {
+        return res.status(400).json({ success: false, message: 'No image file received' });
     }
-    
+
+    const newImage = {
+        id: Date.now(),
+        url: req.file.path,
+        public_id: req.file.filename,
+        title: title || 'Sarvah Dance Performance',
+        uploadedAt: new Date().toISOString()
+    };
+
+    // Also save to local JSON as backup
     try {
-        // Upload base64 to Cloudinary
-        const result = await cloudinary.uploader.upload(imageData, {
-            folder: 'sarvah-dance-academy/gallery',
-            allowed_formats: ['jpg', 'jpeg', 'png', 'webp']
-        });
-        
-        const newImage = {
-            id: Date.now(),
-            url: result.secure_url,
-            public_id: result.public_id,
-            title: title || 'Sarvah Dance Performance',
-            uploadedAt: new Date().toISOString()
-        };
-        
-        // Save to gallery-data.json
         const gallery = loadGallery();
-        gallery.push(newImage);
+        gallery.unshift(newImage);
         saveGallery(gallery);
-        
-        console.log(`✅ Gallery image uploaded: ${newImage.title}`);
-        res.json({ success: true, image: newImage });
-    } catch (error) {
-        console.error('Gallery upload error:', error);
-        res.status(500).json({ success: false, message: error.message });
+    } catch (e) {
+        console.warn('Could not save to gallery-data.json (non-fatal):', e.message);
     }
+
+    console.log(`✅ Gallery image uploaded: ${newImage.title}`);
+    res.json({ success: true, image: newImage });
 });
 
 // POST delete gallery image from Cloudinary
@@ -685,55 +685,53 @@ app.post('/api/gallery/delete', async (req, res) => {
         return res.status(401).json({ success: false, message: 'Invalid admin password' });
     }
 
-    let gallery = loadGallery();
-    const imageToDelete = gallery.find(img => img.id === parseInt(id) || img.public_id === id);
+    if (!id) {
+        return res.status(400).json({ success: false, message: 'No public_id provided' });
+    }
 
-    if (imageToDelete) {
+    try {
+        await cloudinary.uploader.destroy(id);
+        console.log(`🗑️ Deleted gallery image from Cloudinary: ${id}`);
+
+        // Also remove from local JSON if it exists
         try {
-            // Delete from Cloudinary
-            if (imageToDelete.public_id) {
-                await cloudinary.uploader.destroy(imageToDelete.public_id);
-                console.log(`🗑️ Deleted from Cloudinary: ${imageToDelete.public_id}`);
-            }
-        } catch (e) {
-            console.error('Cloudinary delete error:', e);
-        }
-        
-        gallery = gallery.filter(img => img.id !== imageToDelete.id && img.public_id !== id);
-        saveGallery(gallery);
-        console.log(`🗑️ Gallery image removed: ${imageToDelete.title}`);
+            const gallery = loadGallery();
+            const updated = gallery.filter(img => img.public_id !== id);
+            saveGallery(updated);
+        } catch (e) { /* non-fatal */ }
+
         res.json({ success: true, message: 'Gallery image deleted successfully' });
-    } else {
-        console.log(`⚠️ Image with id ${id} not found in gallery`);
-        res.status(404).json({ success: false, message: 'Gallery image not found' });
+    } catch (e) {
+        console.error('❌ Cloudinary delete error:', e.message);
+        res.status(500).json({ success: false, message: e.message });
     }
 });
 
 // ============ DEBUG ENDPOINT ============
-app.get('/api/debug/files', (req, res) => {
-    const heroExists = fs.existsSync(HERO_DATA_FILE);
-    const galleryExists = fs.existsSync(GALLERY_DATA_FILE);
-    
-    res.json({
-        hero: {
-            exists: heroExists,
-            count: heroExists ? loadHeroImages().length : 0,
-            images: heroExists ? loadHeroImages().map(img => ({ id: img.id, title: img.title, isDefault: img.isDefault })) : []
-        },
-        gallery: {
-            exists: galleryExists,
-            count: galleryExists ? loadGallery().length : 0
-        }
-    });
+app.get('/api/debug/files', async (req, res) => {
+    try {
+        const heroResult = await cloudinary.search
+            .expression('folder:sarvah-dance-academy/hero')
+            .max_results(5)
+            .execute();
+        const galleryResult = await cloudinary.search
+            .expression('folder:sarvah-dance-academy/gallery')
+            .max_results(5)
+            .execute();
+        res.json({
+            hero: { count: heroResult.total_count },
+            gallery: { count: galleryResult.total_count }
+        });
+    } catch (e) {
+        res.status(500).json({ error: e.message });
+    }
 });
 
 // ============ SERVE STATIC FILES ============
-// Serve images from public directory
 app.use('/images', express.static(path.join(__dirname, 'public', 'images')));
 
 // ✅ Catch-all: serve index.html for client-side routing
 app.get('*', (req, res) => {
-    // Don't serve index.html for API routes
     if (!req.path.startsWith('/api')) {
         res.sendFile(path.join(__dirname, 'public', 'index.html'));
     }
@@ -748,7 +746,7 @@ app.listen(PORT, () => {
 ║  🌐 Website  →  http://localhost:${PORT}              ║
 ║  📧 Email    →  ${EMAIL_USER}                         ║
 ║  ☁️  Gallery  →  Cloudinary Cloud Storage            ║
-║  🖼️  Hero     →  Cloudinary + Local JSON            ║
+║  🖼️  Hero     →  Cloudinary (persistent)             ║
 ║  🔐 Admin pw →  ${ADMIN_PASSWORD}                     ║
 ╚══════════════════════════════════════════════════════╝
     `);
