@@ -47,8 +47,14 @@ nav.scrolled{
   box-shadow:0 2px 30px rgba(184,74,26,0.12);
   border-bottom:1px solid rgba(192,148,72,0.3);
 }
-.nav-logo img{height:52px;display:block;transition:height 0.3s ease}
-nav.scrolled .nav-logo img{height:44px}
+.nav-logo img{
+  height:52px;display:block;transition:height 0.3s ease, filter 0.4s ease;
+  filter: brightness(0) invert(1); /* white on dark hero */
+}
+nav.scrolled .nav-logo img{
+  height:44px;
+  filter: none; /* original color on light scrolled nav */
+}
 .nav-links{display:flex;gap:2.2rem;list-style:none}
 .nav-links a{
   font-family:'Josefin Sans',sans-serif;
@@ -75,98 +81,54 @@ nav.scrolled .nav-cta{border-color:var(--rust);color:var(--rust)}
 nav.scrolled .hamburger span{background:var(--text)}
 
 /* ══════════════════════════════
-   HERO — FULL-WIDTH HORIZONTAL CAROUSEL
+   HERO
    ══════════════════════════════ */
 #hero{
   position:relative;height:100vh;min-height:700px;
   display:flex;align-items:center;overflow:hidden;
 }
-
-/* Full-section carousel background */
 .hero-carousel-wrap{
-  position:absolute;
-  inset:0;
-  width:100%;
-  height:100%;
-  z-index:0;
+  position:absolute;inset:0;width:100%;height:100%;z-index:0;
 }
 .hero-carousel-slide{
-  position:absolute;
-  inset:0;
-  opacity:0;
-  transition:opacity 1.2s ease;
+  position:absolute;inset:0;opacity:0;transition:opacity 1.2s ease;
 }
 .hero-carousel-slide.active{opacity:1;}
-/* The actual image fills the full section */
 .hero-carousel-slide img{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  object-position:center top;
-  display:block;
+  width:100%;height:100%;object-fit:cover;object-position:center top;display:block;
 }
-/* Dark gradient overlay so text stays readable */
 .hero-carousel-slide::after{
-  content:'';
-  position:absolute;
-  inset:0;
-  background:linear-gradient(
-    105deg,
-    rgba(26,8,0,0.88) 0%,
-    rgba(26,8,0,0.6)  45%,
-    rgba(26,8,0,0.25) 100%
-  );
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(105deg,rgba(26,8,0,0.88) 0%,rgba(26,8,0,0.6) 45%,rgba(26,8,0,0.25) 100%);
 }
-
-/* Horizontal dot indicators at bottom centre */
 .hero-cdots{
-  position:absolute;
-  bottom:2.8rem;
-  left:50%;
-  transform:translateX(-50%);
-  display:flex;
-  flex-direction:row;
-  gap:0.55rem;
-  z-index:3;
+  position:absolute;bottom:2.8rem;left:50%;transform:translateX(-50%);
+  display:flex;flex-direction:row;gap:0.55rem;z-index:3;
 }
 .hero-cdot{
   width:8px;height:8px;border-radius:50%;
-  background:rgba(255,255,255,0.35);
-  border:none;cursor:pointer;
+  background:rgba(255,255,255,0.35);border:none;cursor:pointer;
   transition:all 0.4s;padding:0;
 }
-.hero-cdot.active{
-  background:var(--gold);
-  width:26px;border-radius:4px;
-}
-
-/* hero-glow stays as decorative bg element */
+.hero-cdot.active{background:var(--gold);width:26px;border-radius:4px;}
 .hero-glow{
-  position:absolute;left:40%;top:50%;
-  transform:translate(-50%,-50%);
+  position:absolute;left:40%;top:50%;transform:translate(-50%,-50%);
   width:600px;height:600px;
   background:radial-gradient(circle,rgba(184,74,26,0.18) 0%,transparent 70%);
   border-radius:50%;pointer-events:none;z-index:1;
 }
-
-/* Content sits above carousel */
 .hero-content{
-  position:relative;z-index:2;
-  padding:0 5rem 4rem;
-  max-width:640px;
+  position:relative;z-index:2;padding:0 5rem 4rem;max-width:640px;
 }
 .hero-title{
   font-family:'Cormorant Garamond',serif;
-  font-size:clamp(3.5rem,7vw,6.5rem);
-  font-weight:300;line-height:1.05;color:var(--white);
-  margin-bottom:0.4rem;
+  font-size:clamp(3.5rem,7vw,6.5rem);font-weight:300;line-height:1.05;
+  color:var(--white);margin-bottom:0.4rem;
 }
 .hero-title em{font-style:italic;color:var(--gold-light);display:block;}
 .hero-subtitle{
-  font-family:'Cormorant Garamond',serif;
-  font-size:1.25rem;font-weight:300;
-  color:rgba(255,255,255,0.75);
-  margin-bottom:2.5rem;line-height:1.6;
+  font-family:'Cormorant Garamond',serif;font-size:1.25rem;font-weight:300;
+  color:rgba(255,255,255,0.75);margin-bottom:2.5rem;line-height:1.6;
 }
 .hero-actions{display:flex;gap:1.2rem;flex-wrap:wrap}
 .hero-scroll{
@@ -180,17 +142,13 @@ nav.scrolled .hamburger span{background:var(--text)}
   content:'';display:block;width:1px;height:40px;
   background:linear-gradient(to bottom,rgba(255,255,255,0.4),transparent);
 }
-@keyframes scrollBounce{
-  0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}
-}
+@keyframes scrollBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}
 
 /* Buttons */
 .btn-primary{
-  display:inline-block;
-  font-family:'Josefin Sans',sans-serif;font-size:0.7rem;font-weight:600;
-  letter-spacing:0.2em;text-transform:uppercase;
-  padding:0.9rem 2.4rem;background:var(--rust);color:var(--white);
-  text-decoration:none;border:none;cursor:pointer;
+  display:inline-block;font-family:'Josefin Sans',sans-serif;font-size:0.7rem;font-weight:600;
+  letter-spacing:0.2em;text-transform:uppercase;padding:0.9rem 2.4rem;
+  background:var(--rust);color:var(--white);text-decoration:none;border:none;cursor:pointer;
   transition:all 0.3s;position:relative;overflow:hidden;
 }
 .btn-primary::before{
@@ -201,10 +159,8 @@ nav.scrolled .hamburger span{background:var(--text)}
 .btn-primary:hover{background:var(--rust-light);transform:translateY(-2px)}
 .btn-primary:hover::before{transform:translateX(100%)}
 .btn-outline{
-  display:inline-block;
-  font-family:'Josefin Sans',sans-serif;font-size:0.7rem;font-weight:600;
-  letter-spacing:0.2em;text-transform:uppercase;
-  padding:0.9rem 2.4rem;
+  display:inline-block;font-family:'Josefin Sans',sans-serif;font-size:0.7rem;font-weight:600;
+  letter-spacing:0.2em;text-transform:uppercase;padding:0.9rem 2.4rem;
   border:1px solid rgba(255,255,255,0.4);color:var(--white);
   text-decoration:none;cursor:pointer;background:transparent;transition:all 0.3s;
 }
@@ -214,77 +170,46 @@ nav.scrolled .hamburger span{background:var(--text)}
 section{padding:7rem 0}
 .container{max-width:1200px;margin:0 auto;padding:0 3rem}
 .section-label{
-  font-family:'Josefin Sans',sans-serif;
-  font-size:0.65rem;font-weight:600;letter-spacing:0.35em;text-transform:uppercase;
-  color:var(--rust);margin-bottom:1rem;
+  font-family:'Josefin Sans',sans-serif;font-size:0.65rem;font-weight:600;
+  letter-spacing:0.35em;text-transform:uppercase;color:var(--rust);margin-bottom:1rem;
   display:flex;align-items:center;gap:0.8rem;
 }
 .section-label::before{content:'';display:block;width:30px;height:1px;background:var(--rust)}
 .section-title{
-  font-family:'Cormorant Garamond',serif;
-  font-size:clamp(2.2rem,4vw,3.5rem);
+  font-family:'Cormorant Garamond',serif;font-size:clamp(2.2rem,4vw,3.5rem);
   font-weight:400;line-height:1.15;color:var(--burgundy);margin-bottom:1rem;
 }
 .section-title em{font-style:italic;color:var(--rust)}
 
-/* ══════════════════════════════
-   ABOUT — FIXED IMAGE
-   ══════════════════════════════ */
+/* ─── ABOUT ─── */
 #about{background:var(--white)}
-.about-grid{
-  display:grid;grid-template-columns:1fr 1fr;gap:6rem;align-items:center;
-}
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:6rem;align-items:center;}
 .about-image-wrap{position:relative}
-.about-image-frame{
-  position:relative;border:1px solid var(--gold);
-  padding:1.2rem;display:inline-block;width:100%;
-}
+.about-image-frame{position:relative;border:1px solid var(--gold);padding:1.2rem;display:inline-block;width:100%;}
 .about-image-frame::before{
-  content:'';position:absolute;
-  top:-12px;left:-12px;right:12px;bottom:12px;
+  content:'';position:absolute;top:-12px;left:-12px;right:12px;bottom:12px;
   border:1px solid var(--parchment);z-index:-1;
 }
-/* FIXED: contain so the full dancer is visible, no cropping */
 .about-image-frame img{
-  width:100%;
-  height:480px;
-  object-fit:contain;
-  object-position:center bottom;
-  display:block;
-  background:linear-gradient(to bottom, #0b1f0e 0%, #102915 100%);
+  width:100%;height:480px;object-fit:contain;object-position:center bottom;
+  display:block;background:linear-gradient(to bottom,#0b1f0e 0%,#102915 100%);
 }
 .about-badge{
-  position:absolute;bottom:-1.5rem;right:-1.5rem;
-  width:100px;height:100px;background:var(--rust);border-radius:50%;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  color:var(--white);box-shadow:0 8px 30px rgba(184,74,26,0.4);
+  position:absolute;bottom:-1.5rem;right:-1.5rem;width:100px;height:100px;
+  background:var(--rust);border-radius:50%;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;color:var(--white);
+  box-shadow:0 8px 30px rgba(184,74,26,0.4);
 }
 .about-badge .num{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:600;line-height:1}
 .about-badge .label{font-family:'Josefin Sans',sans-serif;font-size:0.5rem;letter-spacing:0.15em;text-transform:uppercase;text-align:center}
 .about-content p{font-size:1.1rem;line-height:1.85;color:var(--text);margin-bottom:1.2rem;}
-.about-stats{
-  display:flex;gap:3rem;margin-top:2.5rem;padding-top:2.5rem;
-  border-top:1px solid var(--parchment);
-}
-.stat-num{
-  font-family:'Cormorant Garamond',serif;
-  font-size:2.8rem;font-weight:300;color:var(--rust);line-height:1;
-}
-.stat-label{
-  font-family:'Josefin Sans',sans-serif;
-  font-size:0.65rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;
-  color:var(--text-light);margin-top:0.3rem;
-}
+.about-stats{display:flex;gap:3rem;margin-top:2.5rem;padding-top:2.5rem;border-top:1px solid var(--parchment);}
+.stat-num{font-family:'Cormorant Garamond',serif;font-size:2.8rem;font-weight:300;color:var(--rust);line-height:1;}
+.stat-label{font-family:'Josefin Sans',sans-serif;font-size:0.65rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:var(--text-light);margin-top:0.3rem;}
 
 /* ─── VISION ─── */
-#vision{
-  background:linear-gradient(135deg,var(--burgundy) 0%,#3D0A05 100%);
-  position:relative;overflow:hidden;padding:8rem 0;
-}
-#vision::before{
-  content:'';position:absolute;inset:0;
-  background:radial-gradient(ellipse at 30% 50%,rgba(192,148,72,0.12) 0%,transparent 60%);
-}
+#vision{background:linear-gradient(135deg,var(--burgundy) 0%,#3D0A05 100%);position:relative;overflow:hidden;padding:8rem 0;}
+#vision::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 30% 50%,rgba(192,148,72,0.12) 0%,transparent 60%);}
 .vision-grid{display:grid;grid-template-columns:1fr 1fr;gap:5rem;position:relative;z-index:1;}
 .vision-card .section-label{color:var(--gold-light)}
 .vision-card .section-label::before{background:var(--gold-light)}
@@ -296,29 +221,14 @@ section{padding:7rem 0}
 #classes{background:var(--cream)}
 .classes-intro{max-width:650px;margin-bottom:4rem;}
 .classes-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:2rem;}
-.class-card{
-  background:var(--white);border:1px solid var(--parchment);padding:2.5rem;
-  position:relative;overflow:hidden;transition:transform 0.3s,box-shadow 0.3s;
-}
-.class-card::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:3px;
-  background:linear-gradient(90deg,var(--rust),var(--gold));
-}
+.class-card{background:var(--white);border:1px solid var(--parchment);padding:2.5rem;position:relative;overflow:hidden;transition:transform 0.3s,box-shadow 0.3s;}
+.class-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--rust),var(--gold));}
 .class-card:hover{transform:translateY(-4px);box-shadow:0 20px 50px rgba(107,26,10,0.12);}
 .class-icon{font-size:2.5rem;margin-bottom:1.2rem;}
 .class-card h3{font-family:'Cormorant Garamond',serif;font-size:1.7rem;font-weight:500;color:var(--burgundy);margin-bottom:0.5rem;}
-.class-level{
-  font-family:'Josefin Sans',sans-serif;font-size:0.65rem;font-weight:600;
-  letter-spacing:0.2em;text-transform:uppercase;
-  color:var(--rust);margin-bottom:1rem;display:inline-block;
-  padding:0.25rem 0.8rem;border:1px solid rgba(184,74,26,0.3);
-}
+.class-level{font-family:'Josefin Sans',sans-serif;font-size:0.65rem;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:var(--rust);margin-bottom:1rem;display:inline-block;padding:0.25rem 0.8rem;border:1px solid rgba(184,74,26,0.3);}
 .class-card p{font-size:0.95rem;line-height:1.75;color:var(--text-light)}
-.class-tag{
-  display:inline-block;margin-top:1.2rem;
-  font-family:'Josefin Sans',sans-serif;font-size:0.6rem;font-weight:600;
-  letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);
-}
+.class-tag{display:inline-block;margin-top:1.2rem;font-family:'Josefin Sans',sans-serif;font-size:0.6rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);}
 
 /* ─── FACULTY ─── */
 #faculty{background:var(--paper)}
@@ -336,76 +246,37 @@ section{padding:7rem 0}
 .award-dot{width:6px;height:6px;border-radius:50%;background:var(--gold);margin-top:0.5rem;flex-shrink:0;}
 .award-item p{font-size:0.92rem;color:var(--text-light);line-height:1.5}
 
-/* ══════════════════════════════
-   GALLERY SLIDER — FIXED
-   ══════════════════════════════ */
+/* ─── GALLERY ─── */
 #gallery{background:var(--white);overflow:hidden}
-.gallery-slider-container{
-  position:relative;max-width:100%;margin:0;padding:0 3rem;
-}
+.gallery-slider-container{position:relative;max-width:100%;margin:0;padding:0 3rem;}
 .gallery-slider{
-  display:flex;
-  overflow-x:auto;
-  scroll-snap-type:x mandatory;
-  gap:1rem;
-  padding:0.5rem 0 1.5rem;
-  scroll-behavior:smooth;
-  scrollbar-width:thin;
-  /* hide ugly scrollbar on webkit */
+  display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:1rem;
+  padding:0.5rem 0 1.5rem;scroll-behavior:smooth;scrollbar-width:thin;
   -ms-overflow-style:none;
 }
 .gallery-slider::-webkit-scrollbar{height:4px;}
 .gallery-slider::-webkit-scrollbar-track{background:var(--parchment);border-radius:10px;}
 .gallery-slider::-webkit-scrollbar-thumb{background:var(--rust);border-radius:10px;}
-
-/* FIXED: smaller cards, consistent size */
 .gallery-slide{
-  flex:0 0 200px;       /* smaller width */
-  scroll-snap-align:start;
-  position:relative;
-  overflow:hidden;
-  border-radius:6px;
-  height:260px;         /* fixed height — no aspect-ratio that distorts */
-  cursor:pointer;
-  transition:transform 0.3s,box-shadow 0.3s;
-  background:#111;
+  flex:0 0 200px;scroll-snap-align:start;position:relative;overflow:hidden;
+  border-radius:6px;height:260px;cursor:pointer;
+  transition:transform 0.3s,box-shadow 0.3s;background:#111;
 }
 .gallery-slide:hover{transform:scale(1.03);box-shadow:0 12px 35px rgba(107,26,10,0.25);}
-.gallery-slide img{
-  width:100%;height:100%;
-  object-fit:cover;
-  object-position:center top;
-  transition:transform 0.5s ease;
-}
+.gallery-slide img{width:100%;height:100%;object-fit:cover;object-position:center top;transition:transform 0.5s ease;}
 .gallery-slide:hover img{transform:scale(1.07);}
 .gallery-slide-overlay{
   position:absolute;bottom:0;left:0;right:0;
   background:linear-gradient(to top,rgba(107,26,10,0.85),transparent);
-  padding:1.2rem 0.8rem 0.6rem;
-  transform:translateY(100%);transition:transform 0.3s;
+  padding:1.2rem 0.8rem 0.6rem;transform:translateY(100%);transition:transform 0.3s;
 }
 .gallery-slide:hover .gallery-slide-overlay{transform:translateY(0);}
-.gallery-slide-overlay p{
-  color:var(--white);font-family:'Josefin Sans',sans-serif;
-  font-size:0.62rem;letter-spacing:0.1em;text-transform:uppercase;margin:0;
-}
-
-/* Slider nav buttons */
+.gallery-slide-overlay p{color:var(--white);font-family:'Josefin Sans',sans-serif;font-size:0.62rem;letter-spacing:0.1em;text-transform:uppercase;margin:0;}
 .slider-nav{display:flex;justify-content:center;gap:1rem;margin-top:1.2rem;}
-.slider-btn{
-  width:40px;height:40px;border-radius:50%;
-  background:var(--burgundy);color:var(--white);
-  border:none;cursor:pointer;font-size:1rem;
-  transition:all 0.3s;display:inline-flex;align-items:center;justify-content:center;
-}
+.slider-btn{width:40px;height:40px;border-radius:50%;background:var(--burgundy);color:var(--white);border:none;cursor:pointer;font-size:1rem;transition:all 0.3s;display:inline-flex;align-items:center;justify-content:center;}
 .slider-btn:hover{background:var(--rust);transform:scale(1.1);}
-
-/* Horizontal dots for gallery */
 .gallery-dots{display:flex;justify-content:center;gap:0.5rem;margin-top:0.8rem;}
-.gallery-dot{
-  width:6px;height:6px;border-radius:50%;
-  background:var(--parchment);cursor:pointer;transition:all 0.3s;
-}
+.gallery-dot{width:6px;height:6px;border-radius:50%;background:var(--parchment);cursor:pointer;transition:all 0.3s;}
 .gallery-dot.active{background:var(--rust);width:20px;border-radius:3px;}
 
 /* ─── EVENTS ─── */
@@ -469,7 +340,7 @@ section{padding:7rem 0}
 footer{background:var(--black);padding:4rem 0 2rem;color:rgba(255,255,255,0.6);}
 .footer-grid{display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:4rem;margin-bottom:3rem;padding-bottom:3rem;border-bottom:1px solid rgba(255,255,255,0.08);}
 .footer-brand p{font-size:0.9rem;line-height:1.7;color:rgba(255,255,255,0.5);margin-top:1rem;max-width:280px;}
-.footer-logo{height:50px}
+.footer-logo{height:50px; filter: brightness(0) invert(1);}
 .footer-col h4{font-family:'Josefin Sans',sans-serif;font-size:0.65rem;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold-light);margin-bottom:1.2rem;}
 .footer-col ul{list-style:none}
 .footer-col ul li{margin-bottom:0.6rem}
@@ -606,11 +477,8 @@ footer{background:var(--black);padding:4rem 0 2rem;color:rgba(255,255,255,0.6);}
 
 <!-- ─── HERO ─── -->
 <section id="hero">
-  <!-- FULL-WIDTH HORIZONTAL CAROUSEL (background layer) -->
   <div class="hero-carousel-wrap" id="heroCarousel"></div>
   <div class="hero-glow"></div>
-
-  <!-- Text content sits on top -->
   <div class="hero-content">
     <h1 class="hero-title">
       The Art of<br>
@@ -622,8 +490,6 @@ footer{background:var(--black);padding:4rem 0 2rem;color:rgba(255,255,255,0.6);}
       <a href="#about" class="btn-outline">Discover More</a>
     </div>
   </div>
-
-  <!-- Horizontal dots at bottom -->
   <div class="hero-cdots" id="heroCdots"></div>
   <div class="hero-scroll">Scroll</div>
 </section>
@@ -766,8 +632,6 @@ footer{background:var(--black);padding:4rem 0 2rem;color:rgba(255,255,255,0.6);}
       <h2 class="section-title">Moments of <em>Grace</em></h2>
     </div>
   </div>
-
-  <!-- Full-width slider (no container constraint) -->
   <div class="gallery-slider-container">
     <div class="gallery-slider" id="gallerySlider">
       <div class="gallery-slide">
@@ -790,16 +654,13 @@ footer{background:var(--black);padding:4rem 0 2rem;color:rgba(255,255,255,0.6);}
         <img src="sarvah/photos/13.JPEG" alt="Dance performance"/>
         <div class="gallery-slide-overlay"><p>Stage Performance</p></div>
       </div>
-      <!-- dynamic slides appended here -->
     </div>
-
     <div class="slider-nav">
       <button class="slider-btn" onclick="slideGallery(-1)">◀</button>
       <button class="slider-btn" onclick="slideGallery(1)">▶</button>
     </div>
     <div class="gallery-dots" id="galleryDots"></div>
   </div>
-
   <div class="container">
     <p class="reveal" style="text-align:center;margin-top:2rem;font-size:0.9rem;color:var(--text-light)">
       Explore more on
@@ -821,7 +682,7 @@ footer{background:var(--black);padding:4rem 0 2rem;color:rgba(255,255,255,0.6);}
       <div class="event-card reveal">
         <span class="event-type">Annual Production</span>
         <h3>Navarasa</h3>
-        <p>Sarvah Dance Academy's flagship annual production — a grand showcase of the nine emotions (Navarasa) through professionally curated Bharatanatyam performances by our students.A celebration of depth, beauty, and the expressive richness of classical Indian dance.</p>
+        <p>Sarvah Dance Academy's flagship annual production — a grand showcase of the nine emotions (Navarasa) through professionally curated Bharatanatyam performances by our students. A celebration of depth, beauty, and the expressive richness of classical Indian dance.</p>
         <div class="event-detail">📍 London, Ontario · Annual</div>
       </div>
       <div class="event-card reveal reveal-delay-1">
@@ -1029,7 +890,7 @@ footer{background:var(--black);padding:4rem 0 2rem;color:rgba(255,255,255,0.6);}
               <input type="file" id="galleryFileInput" accept="image/*" multiple onchange="handleFileSelect(this)"/>
               <div class="upload-icon">📷</div>
               <p>Click or drag photos here</p>
-              <p style="margin-top:0.3rem;font-size:0.55rem;color:var(--text-light)">JPEG, PNG, WebP · Max 5MB each</p>
+              <p style="margin-top:0.3rem;font-size:0.55rem;color:var(--text-light)">JPEG, PNG, WebP · Max 10MB each</p>
             </div>
             <div class="upload-preview" id="uploadPreview"></div>
             <div class="form-group" style="margin-top:1rem">
@@ -1052,14 +913,14 @@ footer{background:var(--black);padding:4rem 0 2rem;color:rgba(255,255,255,0.6);}
           <div class="admin-section">
             <h4>Upload Hero Slides</h4>
             <p style="font-size:0.8rem;color:var(--text-light);margin-bottom:1rem;line-height:1.5">
-              These images fill the full home page background and auto-scroll horizontally.<br>
+              These images fill the full home page background and auto-scroll.<br>
               <strong style="color:var(--rust)">Tip: Landscape or portrait both work great.</strong>
             </p>
             <div class="upload-zone" id="heroUploadZone">
               <input type="file" id="heroFileInput" accept="image/*" multiple onchange="handleHeroFileSelect(this)"/>
               <div class="upload-icon">🎭</div>
               <p>Click or drag hero images here</p>
-              <p style="margin-top:0.3rem;font-size:0.55rem;color:var(--text-light)">Any orientation · JPEG or PNG</p>
+              <p style="margin-top:0.3rem;font-size:0.55rem;color:var(--text-light)">Any orientation · JPEG or PNG · Max 10MB</p>
             </div>
             <div class="upload-preview" id="heroUploadPreview"></div>
             <button class="admin-btn" id="heroUploadBtn" onclick="addHeroSlides()" style="display:none;margin-top:1rem">Add to Hero Carousel</button>
@@ -1127,109 +988,93 @@ document.querySelectorAll('.reveal').forEach(el => ro.observe(el));
 
 /* ── TOAST ── */
 function showToast(msg, type='info', dur=3500){
-  const t=document.getElementById('toast');
-  t.textContent=msg; t.className=`toast ${type}`; t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'),dur);
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.className = `toast ${type}`; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), dur);
 }
 
 /* ══════════════════════════════════════
-   HERO — FULL-WIDTH HORIZONTAL CAROUSEL (FIXED)
+   HERO CAROUSEL
    ══════════════════════════════════════ */
 let heroImages = [];
 let heroIdx = 0;
 let heroTimer = null;
-let heroDataFromServer = []; // Store full objects from server
+let heroDataFromServer = [];
 
-// Fetch hero slides from API
+// Two default images — must match server defaults exactly
+const HERO_DEFAULTS = [
+  'sarvah/photos/IMG_0512.JPEG',
+  'sarvah/photos/IMG_0511.JPEG'
+];
+
 async function fetchHeroSlides() {
-    try {
-        console.log('Fetching hero slides...');
-        const response = await fetch(`${API}/api/hero`);
-        if (!response.ok) throw new Error('Failed to fetch');
-        const slides = await response.json();
-        console.log('Hero slides received:', slides);
-        
-        if (slides && slides.length > 0) {
-            heroDataFromServer = slides;
-            heroImages = slides.map(slide => slide.url);
-        } else {
-            console.log('No hero slides from API, using defaults');
-            // Fallback to default local images
-            heroImages = [
-                'sarvah/photos/IMG_0511.JPEG',
-                'sarvah/photos/5.JPEG',
-                'sarvah/photos/1.JPEG',
-                'sarvah/photos/9.JPEG'
-            ];
-        }
-        buildHeroCarousel();
-        if (document.getElementById('adminDashboard').style.display !== 'none') {
-            renderHeroAdmin();
-        }
-    } catch (error) {
-        console.error('Error fetching hero slides:', error);
-        heroImages = [
-            'sarvah/photos/IMG_0511.JPEG',
-            'sarvah/photos/5.JPEG',
-            'sarvah/photos/1.JPEG',
-            'sarvah/photos/9.JPEG'
-        ];
-        buildHeroCarousel();
+  try {
+    const response = await fetch(`${API}/api/hero`);
+    if (!response.ok) throw new Error('HTTP ' + response.status);
+    const slides = await response.json();
+
+    if (slides && slides.length > 0) {
+      heroDataFromServer = slides;
+      heroImages = slides.map(slide => slide.url);
+    } else {
+      heroImages = [...HERO_DEFAULTS];
     }
+  } catch (error) {
+    console.error('Hero fetch error:', error.message);
+    // Fallback: same 2 defaults as the server
+    heroImages = [...HERO_DEFAULTS];
+  }
+
+  buildHeroCarousel();
+  if (document.getElementById('adminDashboard').style.display !== 'none') {
+    renderHeroAdmin();
+  }
 }
 
 function buildHeroCarousel() {
-    const wrap = document.getElementById('heroCarousel');
-    const dots = document.getElementById('heroCdots');
-    if (!wrap) {
-        console.error('Hero carousel element not found');
-        return;
-    }
-    wrap.innerHTML = '';
-    dots.innerHTML = '';
+  const wrap = document.getElementById('heroCarousel');
+  const dots = document.getElementById('heroCdots');
+  if (!wrap) return;
+  wrap.innerHTML = '';
+  dots.innerHTML = '';
+  if (heroImages.length === 0) return;
 
-    if (heroImages.length === 0) {
-        console.warn('No hero images to display');
-        return;
-    }
+  heroImages.forEach((src, i) => {
+    const slide = document.createElement('div');
+    slide.className = 'hero-carousel-slide' + (i === heroIdx ? ' active' : '');
+    const img = document.createElement('img');
+    img.src = src;
+    img.alt = 'Bharatanatyam performance';
+    img.loading = i === 0 ? 'eager' : 'lazy';
+    slide.appendChild(img);
+    wrap.appendChild(slide);
 
-    heroImages.forEach((src, i) => {
-        const slide = document.createElement('div');
-        slide.className = 'hero-carousel-slide' + (i === heroIdx ? ' active' : '');
+    const dot = document.createElement('button');
+    dot.className = 'hero-cdot' + (i === heroIdx ? ' active' : '');
+    dot.setAttribute('aria-label', 'Slide ' + (i + 1));
+    dot.addEventListener('click', () => goHeroSlide(i));
+    dots.appendChild(dot);
+  });
 
-        const img = document.createElement('img');
-        img.src = src;
-        img.alt = 'Bharatanatyam performance';
-        img.loading = i === 0 ? 'eager' : 'lazy';
-        slide.appendChild(img);
-        wrap.appendChild(slide);
-
-        const dot = document.createElement('button');
-        dot.className = 'hero-cdot' + (i === heroIdx ? ' active' : '');
-        dot.setAttribute('aria-label', 'Slide ' + (i + 1));
-        dot.addEventListener('click', () => goHeroSlide(i));
-        dots.appendChild(dot);
-    });
-
-    if (heroTimer) clearInterval(heroTimer);
-    if (heroImages.length > 1) {
-        heroTimer = setInterval(() => goHeroSlide((heroIdx + 1) % heroImages.length), 4500);
-    }
+  if (heroTimer) clearInterval(heroTimer);
+  if (heroImages.length > 1) {
+    heroTimer = setInterval(() => goHeroSlide((heroIdx + 1) % heroImages.length), 4500);
+  }
 }
 
 function goHeroSlide(n) {
-    const slides = document.querySelectorAll('.hero-carousel-slide');
-    const dots = document.querySelectorAll('.hero-cdot');
-    if (!slides.length) return;
-    slides[heroIdx].classList.remove('active');
-    if (dots[heroIdx]) dots[heroIdx].classList.remove('active');
-    heroIdx = n;
-    slides[heroIdx].classList.add('active');
-    if (dots[heroIdx]) dots[heroIdx].classList.add('active');
-    if (heroTimer) clearInterval(heroTimer);
-    if (slides.length > 1) {
-        heroTimer = setInterval(() => goHeroSlide((heroIdx + 1) % slides.length), 4500);
-    }
+  const slides = document.querySelectorAll('.hero-carousel-slide');
+  const dots   = document.querySelectorAll('.hero-cdot');
+  if (!slides.length) return;
+  slides[heroIdx].classList.remove('active');
+  if (dots[heroIdx]) dots[heroIdx].classList.remove('active');
+  heroIdx = n;
+  slides[heroIdx].classList.add('active');
+  if (dots[heroIdx]) dots[heroIdx].classList.add('active');
+  if (heroTimer) clearInterval(heroTimer);
+  if (slides.length > 1) {
+    heroTimer = setInterval(() => goHeroSlide((heroIdx + 1) % slides.length), 4500);
+  }
 }
 
 /* ══════════════════════════════════════
@@ -1237,60 +1082,62 @@ function goHeroSlide(n) {
    ══════════════════════════════════════ */
 let galleryImages = [];
 
-async function loadGallery(){
-  try{
+async function loadGallery() {
+  try {
     const res = await fetch(`${API}/api/gallery`);
-    if(!res.ok) throw new Error('HTTP '+res.status);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
     galleryImages = await res.json();
-    console.log('Gallery images loaded:', galleryImages.length);
     renderGalleryAdditions();
     setTimeout(updateGalleryDots, 200);
-    if(document.getElementById('adminDashboard').style.display!=='none') renderAdminGallery();
-  } catch(e){ console.warn('Gallery API:', e.message); galleryImages=[]; }
+    if (document.getElementById('adminDashboard').style.display !== 'none') renderAdminGallery();
+  } catch(e) {
+    console.warn('Gallery fetch error:', e.message);
+    galleryImages = [];
+  }
 }
 
-function slideGallery(dir){
+function slideGallery(dir) {
   const slider = document.getElementById('gallerySlider');
-  if(!slider) return;
+  if (!slider) return;
   const card = slider.querySelector('.gallery-slide');
   const step = (card ? card.offsetWidth : 200) + 16;
-  slider.scrollBy({left: dir * step * 3, behavior:'smooth'});
+  slider.scrollBy({ left: dir * step * 3, behavior: 'smooth' });
 }
 
-function updateGalleryDots(){
+function updateGalleryDots() {
   const slider = document.getElementById('gallerySlider');
-  const dc = document.getElementById('galleryDots');
-  if(!slider||!dc) return;
-  const slides = slider.querySelectorAll('.gallery-slide');
-  const pageSize = Math.max(1, Math.floor(slider.offsetWidth / (200+16)));
-  const pages = Math.ceil(slides.length / pageSize);
-  dc.innerHTML = '';
-  for(let i=0;i<pages;i++){
+  const dc     = document.getElementById('galleryDots');
+  if (!slider || !dc) return;
+  const slides   = slider.querySelectorAll('.gallery-slide');
+  const pageSize = Math.max(1, Math.floor(slider.offsetWidth / (200 + 16)));
+  const pages    = Math.ceil(slides.length / pageSize);
+  dc.innerHTML   = '';
+  for (let i = 0; i < pages; i++) {
     const d = document.createElement('div');
-    d.className = 'gallery-dot'+(i===0?' active':'');
-    d.onclick = ()=>{ slider.scrollTo({left: i*pageSize*(200+16), behavior:'smooth'}); };
+    d.className = 'gallery-dot' + (i === 0 ? ' active' : '');
+    d.onclick = () => { slider.scrollTo({ left: i * pageSize * (200 + 16), behavior: 'smooth' }); };
     dc.appendChild(d);
   }
-  slider.addEventListener('scroll', ()=>{
+  slider.addEventListener('scroll', () => {
     const card = slider.querySelector('.gallery-slide');
-    const sw = card ? card.offsetWidth+16 : 216;
-    const ps = Math.max(1, Math.floor(slider.offsetWidth/sw));
-    const active = Math.round(slider.scrollLeft/(sw*ps));
-    document.querySelectorAll('.gallery-dot').forEach((d,i)=>d.classList.toggle('active',i===active));
-  },{passive:true});
+    const sw   = card ? card.offsetWidth + 16 : 216;
+    const ps   = Math.max(1, Math.floor(slider.offsetWidth / sw));
+    const active = Math.round(slider.scrollLeft / (sw * ps));
+    document.querySelectorAll('.gallery-dot').forEach((d, i) => d.classList.toggle('active', i === active));
+  }, { passive: true });
 }
 
-function renderGalleryAdditions(){
+function renderGalleryAdditions() {
   const slider = document.getElementById('gallerySlider');
-  if(!slider) return;
-  slider.querySelectorAll('.dynamic-gallery-slide').forEach(el=>el.remove());
-  galleryImages.forEach(img=>{
+  if (!slider) return;
+  slider.querySelectorAll('.dynamic-gallery-slide').forEach(el => el.remove());
+  galleryImages.forEach(img => {
     const div = document.createElement('div');
     div.className = 'gallery-slide dynamic-gallery-slide';
-    div.innerHTML = `<img src="${img.url}" alt="${img.title||'Dance performance'}" loading="lazy"/><div class="gallery-slide-overlay"><p>${img.title||'Sarvah Performance'}</p></div>`;
+    div.innerHTML = `<img src="${img.url}" alt="${img.title || 'Dance performance'}" loading="lazy"/><div class="gallery-slide-overlay"><p>${img.title || 'Sarvah Performance'}</p></div>`;
     slider.appendChild(div);
   });
-  setTimeout(updateGalleryDots,100);
+  setTimeout(updateGalleryDots, 100);
 }
 
 /* ══════════════════════════════════════
@@ -1298,313 +1145,364 @@ function renderGalleryAdditions(){
    ══════════════════════════════════════ */
 let adminAuthenticated = false;
 let selectedGalleryFiles = [];
-let heroSelectedFiles = [];
+let heroSelectedFiles    = [];
 
-function openAdmin(){ document.getElementById('adminOverlay').classList.add('open'); document.body.style.overflow='hidden'; }
-function closeAdmin(){ document.getElementById('adminOverlay').classList.remove('open'); document.body.style.overflow=''; }
+function openAdmin()  { document.getElementById('adminOverlay').classList.add('open'); document.body.style.overflow = 'hidden'; }
+function closeAdmin() { document.getElementById('adminOverlay').classList.remove('open'); document.body.style.overflow = ''; }
 
-function adminLogin(){
+function adminLogin() {
   const pass = document.getElementById('adminPasswordInput').value;
   const btn  = document.getElementById('loginBtn');
-  if(!pass){ showToast('Please enter password','error'); return; }
-  btn.innerHTML = '<span class="spinner"></span>Verifying...'; btn.disabled=true;
-  setTimeout(async()=>{
-    let ok=false;
-    try{
-      const r=await fetch(`${API}/api/admin/verify`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:pass})});
-      ok=(await r.json()).success;
-    }catch{ ok=(pass===ADMIN_PASS); }
-    if(ok){ adminAuthenticated=true; sessionStorage.setItem('adminAuth',pass); showAdminDashboard(); }
-    else{ showToast('❌ Incorrect password','error'); btn.innerHTML='Login to Admin'; btn.disabled=false; }
-  },600);
+  if (!pass) { showToast('Please enter password', 'error'); return; }
+  btn.innerHTML = '<span class="spinner"></span>Verifying...'; btn.disabled = true;
+  setTimeout(async () => {
+    let ok = false;
+    try {
+      const r = await fetch(`${API}/api/admin/verify`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password: pass })
+      });
+      ok = (await r.json()).success;
+    } catch { ok = (pass === ADMIN_PASS); }
+    if (ok) {
+      adminAuthenticated = true;
+      sessionStorage.setItem('adminAuth', pass);
+      showAdminDashboard();
+    } else {
+      showToast('❌ Incorrect password', 'error');
+      btn.innerHTML = 'Login to Admin'; btn.disabled = false;
+    }
+  }, 600);
 }
 
-function showAdminDashboard(){
-  document.getElementById('adminLogin').style.display='none';
-  document.getElementById('adminDashboard').style.display='block';
-  renderAdminGallery(); 
-  renderHeroAdmin(); 
+function showAdminDashboard() {
+  document.getElementById('adminLogin').style.display = 'none';
+  document.getElementById('adminDashboard').style.display = 'block';
+  renderAdminGallery();
+  renderHeroAdmin();
   updateStats();
 }
 
-function adminLogout(){
-  adminAuthenticated=false; sessionStorage.removeItem('adminAuth');
-  document.getElementById('adminDashboard').style.display='none';
-  document.getElementById('adminLogin').style.display='block';
-  document.getElementById('adminPasswordInput').value='';
-  document.getElementById('loginBtn').innerHTML='Login to Admin';
-  document.getElementById('loginBtn').disabled=false;
-  showToast('Logged out','info');
+function adminLogout() {
+  adminAuthenticated = false;
+  sessionStorage.removeItem('adminAuth');
+  document.getElementById('adminDashboard').style.display = 'none';
+  document.getElementById('adminLogin').style.display = 'block';
+  document.getElementById('adminPasswordInput').value = '';
+  document.getElementById('loginBtn').innerHTML = 'Login to Admin';
+  document.getElementById('loginBtn').disabled = false;
+  showToast('Logged out', 'info');
 }
 
-function switchTab(tab){
-  const tabs=['gallery','hero','stats','settings'];
-  document.querySelectorAll('.admin-tab').forEach((b,i)=>b.classList.toggle('active',tabs[i]===tab));
-  document.querySelectorAll('.admin-tab-content').forEach(c=>c.classList.remove('active'));
+function switchTab(tab) {
+  const tabs = ['gallery', 'hero', 'stats', 'settings'];
+  document.querySelectorAll('.admin-tab').forEach((b, i) => b.classList.toggle('active', tabs[i] === tab));
+  document.querySelectorAll('.admin-tab-content').forEach(c => c.classList.remove('active'));
   document.getElementById(`tab-${tab}`).classList.add('active');
-  if(tab==='stats') updateStats();
-  if(tab==='hero') renderHeroAdmin();
+  if (tab === 'stats') updateStats();
+  if (tab === 'hero')  renderHeroAdmin();
 }
 
-/* Hero admin - FIXED */
+/* ── Hero Admin ── */
 function renderHeroAdmin() {
-    const list = document.getElementById('heroManageList');
-    const cnt = document.getElementById('heroSlideCount');
-    if (!list) return;
-    if (cnt) cnt.textContent = heroImages.length;
-    
-    if (heroImages.length === 0) {
-        list.innerHTML = '<p style="color:var(--text-light);font-size:0.9rem;text-align:center;padding:1rem">No hero slides yet. Upload some!</p>';
-        return;
-    }
-    
-    list.innerHTML = heroImages.map((src, i) => {
-        // Check if it's a default image (local path) or Cloudinary URL
-        const isDefault = src.includes('sarvah/photos/') || src.includes('/images/hero/');
-        const displaySrc = src;
-        const fileName = src.split('/').pop().substring(0, 28);
-        
-        return `<div class="gallery-manage-item">
-            <img src="${displaySrc}" style="width:50px;height:38px;object-fit:cover;flex-shrink:0" onerror="this.src='sarvah/photos/IMG_0511.JPEG'"/>
-            <div class="gm-info">
-                <div class="gm-title">Slide ${i + 1}${isDefault ? ' <em style="color:var(--text-light)">(default)</em>' : ''}</div>
-                <div class="gm-date">${fileName}</div>
-            </div>
-            ${!isDefault ? `<button class="gm-delete" onclick="removeHeroSlide(${i})">🗑️</button>` : ''}
-        </div>`;
-    }).join('');
-}
+  const list = document.getElementById('heroManageList');
+  const cnt  = document.getElementById('heroSlideCount');
+  if (!list) return;
+  if (cnt) cnt.textContent = heroImages.length;
 
-async function removeHeroSlide(idx) {
-    if (!confirm('Remove this hero slide?')) return;
-    
-    const slideToRemove = heroImages[idx];
-    if (!slideToRemove) return;
-    
-    // Check if it's a default image
-    if (slideToRemove.includes('sarvah/photos/') || slideToRemove.includes('/images/hero/')) {
-        showToast('Cannot delete default slides', 'error');
-        return;
-    }
-    
-    const pass = sessionStorage.getItem('adminAuth') || ADMIN_PASS;
-    
-    try {
-        // Find the slide ID from server data
-        const slideObj = heroDataFromServer.find(s => s.url === slideToRemove);
-        if (!slideObj) {
-            showToast('Slide not found on server', 'error');
-            return;
-        }
-        
-        const response = await fetch(`${API}/api/hero/delete`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ password: pass, id: slideObj.id })
-        });
-        const result = await response.json();
-        
-        if (result.success) {
-            await fetchHeroSlides(); // Refresh from server
-            updateStats();
-            showToast('Slide removed successfully', 'success');
-        } else {
-            showToast('Failed to delete slide: ' + (result.message || 'Unknown error'), 'error');
-        }
-    } catch (e) {
-        console.error('Delete failed:', e);
-        showToast('Failed to delete slide', 'error');
-    }
-}
-
-function handleHeroFileSelect(input){
-  heroSelectedFiles=Array.from(input.files);
-  const pv=document.getElementById('heroUploadPreview'); pv.innerHTML='';
-  heroSelectedFiles.forEach(f=>{ const img=document.createElement('img'); img.src=URL.createObjectURL(f); img.style.cssText='width:70px;height:50px;object-fit:cover;border:1px solid var(--parchment)'; pv.appendChild(img); });
-  document.getElementById('heroUploadBtn').style.display=heroSelectedFiles.length?'block':'none';
-}
-
-async function addHeroSlides() {
-    if (!heroSelectedFiles.length) return;
-    const pass = sessionStorage.getItem('adminAuth') || ADMIN_PASS;
-    const btn = document.getElementById('heroUploadBtn');
-    btn.innerHTML = '<span class="spinner"></span>Uploading...';
-    btn.disabled = true;
-    let success = 0;
-    let errors = [];
-    
-    for (const file of heroSelectedFiles) {
-        try {
-            console.log('Uploading:', file.name);
-            const base64 = await new Promise((res, rej) => {
-                const r = new FileReader();
-                r.onloadend = () => res(r.result);
-                r.onerror = rej;
-                r.readAsDataURL(file);
-            });
-            
-            const response = await fetch(`${API}/api/hero/upload`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ password: pass, imageData: base64 })
-            });
-            
-            const result = await response.json();
-            if (result.success) {
-                success++;
-                console.log('Upload successful:', result.slide);
-            } else {
-                errors.push(`${file.name}: ${result.message}`);
-                showToast(`❌ Upload failed: ${result.message}`, 'error');
-            }
-        } catch (e) {
-            console.error('Upload failed:', e);
-            errors.push(`${file.name}: ${e.message}`);
-            showToast(`❌ Failed: ${file.name}`, 'error');
-        }
-    }
-    
-    btn.innerHTML = 'Add to Hero Carousel';
-    btn.disabled = false;
-    
-    if (success > 0) {
-        await fetchHeroSlides(); // Refresh hero slides from server
-        updateStats();
-        showToast(`✅ ${success} slide(s) uploaded successfully!`, 'success');
-    }
-    
-    if (errors.length > 0) {
-        console.error('Upload errors:', errors);
-    }
-    
-    document.getElementById('heroUploadPreview').innerHTML = '';
-    document.getElementById('heroFileInput').value = '';
-    btn.style.display = 'none';
-    heroSelectedFiles = [];
-}
-
-/* Gallery admin */
-function handleFileSelect(input){
-  selectedGalleryFiles=Array.from(input.files);
-  const pv=document.getElementById('uploadPreview'); pv.innerHTML='';
-  selectedGalleryFiles.forEach(f=>{ const img=document.createElement('img'); img.src=URL.createObjectURL(f); pv.appendChild(img); });
-  document.getElementById('uploadBtn').style.display=selectedGalleryFiles.length?'block':'none';
-}
-
-const uploadZone=document.getElementById('uploadZone');
-if(uploadZone){
-  uploadZone.addEventListener('dragover',e=>{e.preventDefault();uploadZone.classList.add('dragover');});
-  uploadZone.addEventListener('dragleave',()=>uploadZone.classList.remove('dragover'));
-  uploadZone.addEventListener('drop',e=>{
-    e.preventDefault(); uploadZone.classList.remove('dragover');
-    selectedGalleryFiles=Array.from(e.dataTransfer.files).filter(f=>f.type.startsWith('image/'));
-    const dt=new DataTransfer(); selectedGalleryFiles.forEach(f=>dt.items.add(f));
-    document.getElementById('galleryFileInput').files=dt.files;
-    handleFileSelect({files:dt.files});
-  });
-}
-
-const heroUploadZone=document.getElementById('heroUploadZone');
-if(heroUploadZone){
-  heroUploadZone.addEventListener('dragover',e=>{e.preventDefault();heroUploadZone.classList.add('dragover');});
-  heroUploadZone.addEventListener('dragleave',()=>heroUploadZone.classList.remove('dragover'));
-  heroUploadZone.addEventListener('drop',e=>{
-    e.preventDefault(); heroUploadZone.classList.remove('dragover');
-    heroSelectedFiles=Array.from(e.dataTransfer.files).filter(f=>f.type.startsWith('image/'));
-    const dt=new DataTransfer(); heroSelectedFiles.forEach(f=>dt.items.add(f));
-    document.getElementById('heroFileInput').files=dt.files;
-    handleHeroFileSelect({files:dt.files});
-  });
-}
-
-async function uploadImages(){
-  if(!selectedGalleryFiles.length) return;
-  const btn=document.getElementById('uploadBtn');
-  const title=document.getElementById('uploadTitle').value||'Sarvah Dance Performance';
-  const pass=sessionStorage.getItem('adminAuth')||ADMIN_PASS;
-  btn.innerHTML='<span class="spinner"></span>Uploading...'; btn.disabled=true;
-  let success=0;
-  for(const file of selectedGalleryFiles){
-    try{
-      const base64=await new Promise((res,rej)=>{ const r=new FileReader(); r.onloadend=()=>res(r.result); r.onerror=rej; r.readAsDataURL(file); });
-      const res=await fetch(`${API}/api/gallery/upload`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:pass,title,imageData:base64})});
-      const json=await res.json();
-      if(json.success){ success++; galleryImages.unshift(json.image); renderGalleryAdditions(); setTimeout(updateGalleryDots,200); renderAdminGallery(); updateStats(); }
-      else showToast(`❌ ${json.message||'Upload failed'}`,'error');
-    }catch(e){ showToast(`❌ Failed: ${file.name}`,'error'); }
+  if (heroImages.length === 0) {
+    list.innerHTML = '<p style="color:var(--text-light);font-size:0.9rem;text-align:center;padding:1rem">No hero slides yet.</p>';
+    return;
   }
-  btn.innerHTML='Upload to Gallery'; btn.disabled=false;
-  document.getElementById('uploadPreview').innerHTML='';
-  document.getElementById('galleryFileInput').value='';
-  document.getElementById('uploadTitle').value='';
-  btn.style.display='none'; selectedGalleryFiles=[];
-  if(success>0){ showToast(`✅ ${success} photo(s) uploaded!`,'success'); await loadGallery(); }
+
+  list.innerHTML = heroImages.map((src, i) => {
+    // A slide is "default" if it came from local sarvah/photos (not a Cloudinary URL)
+    const isDefault = !src.startsWith('http');
+    const fileName  = src.split('/').pop();
+    // Find public_id from server data for Cloudinary images
+    const serverObj = heroDataFromServer.find(s => s.url === src);
+    const publicId  = serverObj ? serverObj.public_id : null;
+
+    return `<div class="gallery-manage-item">
+      <img src="${src}" style="width:50px;height:38px;object-fit:cover;flex-shrink:0" onerror="this.style.background='#ccc'"/>
+      <div class="gm-info">
+        <div class="gm-title">Slide ${i + 1}${isDefault ? ' <em style="color:var(--text-light)">(default)</em>' : ''}</div>
+        <div class="gm-date">${fileName.substring(0, 30)}</div>
+      </div>
+      ${!isDefault && publicId ? `<button class="gm-delete" onclick="removeHeroSlide('${publicId}')">🗑️</button>` : ''}
+    </div>`;
+  }).join('');
 }
 
-function renderAdminGallery(){
-  const c=document.getElementById('galleryManage');
-  const cs=document.getElementById('galleryCount');
-  if(!c) return;
-  if(cs) cs.textContent=galleryImages.length;
-  if(!galleryImages.length){ c.innerHTML='<p style="color:var(--text-light);font-size:0.9rem;text-align:center;padding:1rem;font-style:italic">No photos yet.</p>'; return; }
-  c.innerHTML=galleryImages.map(img=>`<div class="gallery-manage-item" id="gm-${img.id}"><img src="${img.url}" alt="${img.title}"/><div class="gm-info"><div class="gm-title">${escHtml(img.title)}</div><div class="gm-date">${new Date(img.uploadedAt).toLocaleDateString('en-CA',{year:'numeric',month:'short',day:'numeric'})}</div></div><button class="gm-delete" onclick="deleteImage('${img.public_id}')">🗑️</button></div>`).join('');
-}
-
-function escHtml(s){ if(!s)return''; return s.replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
-
-async function deleteImage(publicId){
-  if(!confirm('Delete this photo?')) return;
-  const pass=sessionStorage.getItem('adminAuth')||ADMIN_PASS;
-  try{
-    const r=await fetch(`${API}/api/gallery/delete`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:pass,id:publicId})});
-    const j=await r.json();
-    if(j.success){ 
-      galleryImages=galleryImages.filter(i=>i.public_id!==publicId); 
-      renderGalleryAdditions(); 
-      setTimeout(updateGalleryDots,200); 
-      renderAdminGallery(); 
-      updateStats(); 
-      showToast('🗑️ Deleted','info'); 
+async function removeHeroSlide(publicId) {
+  if (!confirm('Remove this hero slide?')) return;
+  const pass = sessionStorage.getItem('adminAuth') || ADMIN_PASS;
+  try {
+    const response = await fetch(`${API}/api/hero/delete`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password: pass, public_id: publicId })
+    });
+    const result = await response.json();
+    if (result.success) {
+      await fetchHeroSlides();
+      updateStats();
+      showToast('🗑️ Slide removed', 'info');
+    } else {
+      showToast('❌ Delete failed: ' + (result.message || ''), 'error');
     }
-    else showToast('❌ Delete failed: '+(j.message||''),'error');
-  }catch(e){ showToast('❌ Delete failed: '+e.message,'error'); }
+  } catch (e) {
+    showToast('❌ Delete failed: ' + e.message, 'error');
+  }
 }
 
-function updateStats(){
-  document.getElementById('statTotal').textContent=galleryImages.length;
-  document.getElementById('statHero').textContent=heroImages.length;
-  const last=galleryImages.length?new Date(galleryImages[galleryImages.length-1].uploadedAt):null;
-  document.getElementById('statLast').textContent=last?last.toLocaleDateString('en-CA',{month:'short',day:'numeric',year:'numeric'}):'No uploads yet';
-  document.getElementById('progressFill').style.width=`${Math.min((galleryImages.length/20)*100,100)}%`;
+function handleHeroFileSelect(input) {
+  heroSelectedFiles = Array.from(input.files);
+  const pv = document.getElementById('heroUploadPreview');
+  pv.innerHTML = '';
+  heroSelectedFiles.forEach(f => {
+    const img = document.createElement('img');
+    img.src = URL.createObjectURL(f);
+    img.style.cssText = 'width:70px;height:50px;object-fit:cover;border:1px solid var(--parchment)';
+    pv.appendChild(img);
+  });
+  document.getElementById('heroUploadBtn').style.display = heroSelectedFiles.length ? 'block' : 'none';
 }
 
-/* Enquiry form */
-async function submitEnquiry(e){
+// ── HERO UPLOAD — uses FormData (multipart) to avoid body-size limits on hosting ──
+async function addHeroSlides() {
+  if (!heroSelectedFiles.length) return;
+  const pass = sessionStorage.getItem('adminAuth') || ADMIN_PASS;
+  const btn  = document.getElementById('heroUploadBtn');
+  btn.innerHTML = '<span class="spinner"></span>Uploading...';
+  btn.disabled  = true;
+  let success = 0;
+
+  for (const file of heroSelectedFiles) {
+    try {
+      const formData = new FormData();
+      formData.append('image', file);       // key must match heroUpload.single('image')
+      formData.append('password', pass);
+      formData.append('title', 'Hero Image');
+      // NOTE: Do NOT set Content-Type header — browser sets it with the correct multipart boundary
+
+      const response = await fetch(`${API}/api/hero/upload`, {
+        method: 'POST',
+        body: formData
+      });
+
+      const result = await response.json();
+      if (result.success) {
+        success++;
+        console.log('Hero upload OK:', result.image.url);
+      } else {
+        showToast(`❌ Upload failed: ${result.message || 'Unknown error'}`, 'error');
+      }
+    } catch (e) {
+      console.error('Hero upload error:', e);
+      showToast(`❌ Failed: ${file.name}`, 'error');
+    }
+  }
+
+  btn.innerHTML = 'Add to Hero Carousel';
+  btn.disabled  = false;
+
+  if (success > 0) {
+    await fetchHeroSlides();
+    updateStats();
+    showToast(`✅ ${success} slide(s) uploaded!`, 'success');
+  }
+
+  document.getElementById('heroUploadPreview').innerHTML = '';
+  document.getElementById('heroFileInput').value = '';
+  btn.style.display = 'none';
+  heroSelectedFiles = [];
+}
+
+/* ── Gallery Admin ── */
+function handleFileSelect(input) {
+  selectedGalleryFiles = Array.from(input.files);
+  const pv = document.getElementById('uploadPreview');
+  pv.innerHTML = '';
+  selectedGalleryFiles.forEach(f => {
+    const img = document.createElement('img');
+    img.src = URL.createObjectURL(f);
+    pv.appendChild(img);
+  });
+  document.getElementById('uploadBtn').style.display = selectedGalleryFiles.length ? 'block' : 'none';
+}
+
+// Drag-and-drop for gallery
+const uploadZone = document.getElementById('uploadZone');
+if (uploadZone) {
+  uploadZone.addEventListener('dragover', e => { e.preventDefault(); uploadZone.classList.add('dragover'); });
+  uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('dragover'));
+  uploadZone.addEventListener('drop', e => {
+    e.preventDefault(); uploadZone.classList.remove('dragover');
+    selectedGalleryFiles = Array.from(e.dataTransfer.files).filter(f => f.type.startsWith('image/'));
+    const dt = new DataTransfer();
+    selectedGalleryFiles.forEach(f => dt.items.add(f));
+    document.getElementById('galleryFileInput').files = dt.files;
+    handleFileSelect({ files: dt.files });
+  });
+}
+
+// Drag-and-drop for hero
+const heroUploadZone = document.getElementById('heroUploadZone');
+if (heroUploadZone) {
+  heroUploadZone.addEventListener('dragover', e => { e.preventDefault(); heroUploadZone.classList.add('dragover'); });
+  heroUploadZone.addEventListener('dragleave', () => heroUploadZone.classList.remove('dragover'));
+  heroUploadZone.addEventListener('drop', e => {
+    e.preventDefault(); heroUploadZone.classList.remove('dragover');
+    heroSelectedFiles = Array.from(e.dataTransfer.files).filter(f => f.type.startsWith('image/'));
+    const dt = new DataTransfer();
+    heroSelectedFiles.forEach(f => dt.items.add(f));
+    document.getElementById('heroFileInput').files = dt.files;
+    handleHeroFileSelect({ files: dt.files });
+  });
+}
+
+// ── GALLERY UPLOAD — uses FormData (multipart) ──
+async function uploadImages() {
+  if (!selectedGalleryFiles.length) return;
+  const btn   = document.getElementById('uploadBtn');
+  const title = document.getElementById('uploadTitle').value || 'Sarvah Dance Performance';
+  const pass  = sessionStorage.getItem('adminAuth') || ADMIN_PASS;
+  btn.innerHTML = '<span class="spinner"></span>Uploading...'; btn.disabled = true;
+  let success = 0;
+
+  for (const file of selectedGalleryFiles) {
+    try {
+      const formData = new FormData();
+      formData.append('image', file);
+      formData.append('password', pass);
+      formData.append('title', title);
+
+      const res  = await fetch(`${API}/api/gallery/upload`, { method: 'POST', body: formData });
+      const json = await res.json();
+      if (json.success) {
+        success++;
+        galleryImages.unshift(json.image);
+        renderGalleryAdditions();
+        setTimeout(updateGalleryDots, 200);
+        renderAdminGallery();
+        updateStats();
+      } else {
+        showToast(`❌ ${json.message || 'Upload failed'}`, 'error');
+      }
+    } catch(e) {
+      showToast(`❌ Failed: ${file.name}`, 'error');
+    }
+  }
+
+  btn.innerHTML = 'Upload to Gallery'; btn.disabled = false;
+  document.getElementById('uploadPreview').innerHTML = '';
+  document.getElementById('galleryFileInput').value = '';
+  document.getElementById('uploadTitle').value = '';
+  btn.style.display = 'none'; selectedGalleryFiles = [];
+  if (success > 0) { showToast(`✅ ${success} photo(s) uploaded!`, 'success'); await loadGallery(); }
+}
+
+function renderAdminGallery() {
+  const c  = document.getElementById('galleryManage');
+  const cs = document.getElementById('galleryCount');
+  if (!c) return;
+  if (cs) cs.textContent = galleryImages.length;
+  if (!galleryImages.length) {
+    c.innerHTML = '<p style="color:var(--text-light);font-size:0.9rem;text-align:center;padding:1rem;font-style:italic">No photos yet.</p>';
+    return;
+  }
+  c.innerHTML = galleryImages.map(img =>
+    `<div class="gallery-manage-item" id="gm-${img.id}">
+      <img src="${img.url}" alt="${img.title}"/>
+      <div class="gm-info">
+        <div class="gm-title">${escHtml(img.title)}</div>
+        <div class="gm-date">${new Date(img.uploadedAt).toLocaleDateString('en-CA', {year:'numeric',month:'short',day:'numeric'})}</div>
+      </div>
+      <button class="gm-delete" onclick="deleteImage('${img.public_id}')">🗑️</button>
+    </div>`
+  ).join('');
+}
+
+function escHtml(s) {
+  if (!s) return '';
+  return s.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+}
+
+async function deleteImage(publicId) {
+  if (!confirm('Delete this photo?')) return;
+  const pass = sessionStorage.getItem('adminAuth') || ADMIN_PASS;
+  try {
+    const r = await fetch(`${API}/api/gallery/delete`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password: pass, id: publicId })
+    });
+    const j = await r.json();
+    if (j.success) {
+      galleryImages = galleryImages.filter(i => i.public_id !== publicId);
+      renderGalleryAdditions();
+      setTimeout(updateGalleryDots, 200);
+      renderAdminGallery();
+      updateStats();
+      showToast('🗑️ Deleted', 'info');
+    } else {
+      showToast('❌ Delete failed: ' + (j.message || ''), 'error');
+    }
+  } catch(e) {
+    showToast('❌ Delete failed: ' + e.message, 'error');
+  }
+}
+
+function updateStats() {
+  document.getElementById('statTotal').textContent = galleryImages.length;
+  document.getElementById('statHero').textContent  = heroImages.length;
+  const last = galleryImages.length ? new Date(galleryImages[0].uploadedAt) : null;
+  document.getElementById('statLast').textContent  = last
+    ? last.toLocaleDateString('en-CA', { month:'short', day:'numeric', year:'numeric' })
+    : 'No uploads yet';
+  document.getElementById('progressFill').style.width = `${Math.min((galleryImages.length / 20) * 100, 100)}%`;
+}
+
+/* ── Enquiry form ── */
+async function submitEnquiry(e) {
   e.preventDefault();
-  const form=e.target, btn=document.getElementById('enquirySubmitBtn'), succ=document.getElementById('enquirySuccess');
-  const raw=Object.fromEntries(new FormData(form).entries());
-  const data={name:raw.studentName,email:raw.email,phone:raw.phone,message:`Student: ${raw.studentName}\nAge: ${raw.age}\nParent: ${raw.parentName||'N/A'}\nBatch: ${raw.batch||'Not specified'}\n\n${raw.message||''}`};
-  btn.innerHTML='<span class="spinner"></span>Sending...'; btn.disabled=true;
-  try{
-    const r=await fetch(`${API}/api/contact`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
-    const j=await r.json();
-    if(j.success){ form.style.display='none'; succ.style.display='block'; showToast("🙏 Enquiry sent!",'success'); }
-    else throw new Error(j.message);
-  }catch{ btn.innerHTML='Send Enquiry'; btn.disabled=false; showToast('❌ Failed. Please contact us on WhatsApp.','error',5000); }
+  const form = e.target;
+  const btn  = document.getElementById('enquirySubmitBtn');
+  const succ = document.getElementById('enquirySuccess');
+  const raw  = Object.fromEntries(new FormData(form).entries());
+  const data = {
+    name: raw.studentName,
+    email: raw.email,
+    phone: raw.phone,
+    message: `Student: ${raw.studentName}\nAge: ${raw.age}\nParent: ${raw.parentName || 'N/A'}\nBatch: ${raw.batch || 'Not specified'}\n\n${raw.message || ''}`
+  };
+  btn.innerHTML = '<span class="spinner"></span>Sending...'; btn.disabled = true;
+  try {
+    const r = await fetch(`${API}/api/contact`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    const j = await r.json();
+    if (j.success) {
+      form.style.display = 'none';
+      succ.style.display = 'block';
+      showToast('🙏 Enquiry sent!', 'success');
+    } else throw new Error(j.message);
+  } catch {
+    btn.innerHTML = 'Send Enquiry'; btn.disabled = false;
+    showToast('❌ Failed. Please contact us on WhatsApp.', 'error', 5000);
+  }
 }
 
 /* ── INIT ── */
-console.log('Initializing Sarvah Dance Academy website...');
-// Fetch hero slides from API first
 fetchHeroSlides();
-// Load gallery
 loadGallery();
 setTimeout(updateGalleryDots, 500);
-// Check for existing admin session
-if(sessionStorage.getItem('adminAuth')) {
-    adminAuthenticated = true;
-}
-document.getElementById('adminPasswordInput').addEventListener('keydown',e=>{ if(e.key==='Enter') adminLogin(); });
+if (sessionStorage.getItem('adminAuth')) adminAuthenticated = true;
+document.getElementById('adminPasswordInput').addEventListener('keydown', e => { if (e.key === 'Enter') adminLogin(); });
 </script>
 </body>
 </html>

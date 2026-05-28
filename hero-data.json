@@ -12,5 +12,21 @@
     "title": "Sarvah Dance Academy",
     "isDefault": true,
     "uploadedAt": "2026-05-27T06:15:45.730Z"
+  },
+  {
+    "id": 1779904279508,
+    "url": "https://res.cloudinary.com/dccp0sxme/image/upload/v1779904279/sarvah-dance-academy/hero/qtayni8f8pwheumqaxs6.png",
+    "public_id": "sarvah-dance-academy/hero/qtayni8f8pwheumqaxs6",
+    "title": "Hero Image",
+    "uploadedAt": "2026-05-27T17:51:19.508Z",
+    "isDefault": false
+  },
+  {
+    "id": 1779905572810,
+    "url": "https://res.cloudinary.com/dccp0sxme/image/upload/v1779905573/sarvah-dance-academy/hero/n6txi5agwyobbnzt9og7.png",
+    "public_id": "sarvah-dance-academy/hero/n6txi5agwyobbnzt9og7",
+    "title": "Hero Image",
+    "uploadedAt": "2026-05-27T18:12:52.810Z",
+    "isDefault": false
   }
 ]
