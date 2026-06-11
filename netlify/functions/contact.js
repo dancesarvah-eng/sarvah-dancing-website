@@ -31,29 +31,17 @@ exports.handler = async (event) => {
 
     const toCompany = {
         from: `"Sarvah Website" <${EMAIL_USER}>`,
-        to: COMPANY_EMAIL,
-        subject: `📩 New Enquiry: ${name} - Sarvah Dance Academy`,
-        html: `
-        <!DOCTYPE html><html><head><meta charset="UTF-8"></head>
-        <body style="font-family:Georgia,serif;max-width:600px;margin:0 auto;">
-          <div style="background:#6B1A0A;padding:20px;text-align:center;color:white;">
-            <h2 style="margin:0;">🕉️ Sarvah Dance Academy</h2>
-            <p style="margin:5px 0 0;">New Enquiry / Registration Form Submission</p>
-          </div>
-          <div style="background:#F7F0E3;padding:30px;border:1px solid #E8D9BB;">
-            <table style="width:100%;border-collapse:collapse;">
-              <tr><td style="padding:10px;background:#EDE3CC;width:120px;"><strong>Name:</strong></td><td style="padding:10px;">${name}</td></tr>
-              <tr><td style="padding:10px;background:#EDE3CC;"><strong>Email:</strong></td><td style="padding:10px;"><a href="mailto:${email}">${email}</a></td></tr>
-              <tr><td style="padding:10px;background:#EDE3CC;"><strong>Phone:</strong></td><td style="padding:10px;">${phone || 'Not provided'}</td></tr>
-              <tr><td style="padding:10px;background:#EDE3CC;vertical-align:top;"><strong>Message:</strong></td><td style="padding:10px;">${message.replace(/\n/g, '<br>')}</td></tr>
-            </table>
-            <hr style="border:none;border-top:1px solid #C09448;margin:20px 0;">
-            <p style="color:#6B5040;font-size:12px;text-align:center;">
-              Submitted from Sarvah Dance Academy Website<br>
-              Time: ${new Date().toLocaleString()}
-            </p>
-          </div>
-        </body></html>`
+            to: COMPANY_EMAIL,
+            subject: `📩 New Enquiry: ${name}`,
+            html: `<div style="font-family:Georgia,serif;max-width:600px">
+                <div style="background:#6B1A0A;padding:20px;color:white;text-align:center"><h2>🕉️ Sarvah Dance Academy</h2></div>
+                <div style="background:#F7F0E3;padding:30px;border:1px solid #E8D9BB">
+                    <p><strong>Name:</strong> ${name}</p>
+                    <p><strong>Email:</strong> ${email}</p>
+                    <p><strong>Phone:</strong> ${phone || 'Not provided'}</p>
+                    <p><strong>Message:</strong><br>${message.replace(/\n/g,'<br>')}</p>
+                    <hr><p style="color:#999;font-size:11px">IP: ${req.ip} | ${new Date().toLocaleString()}</p>
+                </div></div>`
     };
 
     const toUser = {
