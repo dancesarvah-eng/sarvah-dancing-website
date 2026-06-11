@@ -5,6 +5,11 @@
 [functions]
   node_bundler = "esbuild"
 
+[[headers]]
+  for = "/.netlify/functions/*"
+  [headers.values]
+    Access-Control-Allow-Origin = "*"
+
 # Increase timeout and memory for upload functions
 [functions."gallery-upload"]
   timeout = 30
@@ -54,7 +59,7 @@
   from = "/api/hero/upload"
   to = "/.netlify/functions/hero-upload"
   status = 200
-  
+
 [[redirects]]
   from = "/api/hero/delete"
   to = "/.netlify/functions/hero-delete"
