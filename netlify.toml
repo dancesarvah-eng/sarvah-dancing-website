@@ -5,9 +5,20 @@
 [functions]
   node_bundler = "esbuild"
 
-# Increase body size limit for image uploads (10MB)
+# Increase timeout and memory for upload functions
 [functions."gallery-upload"]
+  timeout = 30
   included_files = []
+
+[functions."hero-upload"]
+  timeout = 30
+  included_files = []
+
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/:splat"
+  status = 200
+  force = true
 
 [[redirects]]
   from = "/api/contact"
@@ -32,4 +43,19 @@
 [[redirects]]
   from = "/api/gallery/delete"
   to = "/.netlify/functions/gallery-delete"
+  status = 200
+
+[[redirects]]
+  from = "/api/hero"
+  to = "/.netlify/functions/hero"
+  status = 200
+
+[[redirects]]
+  from = "/api/hero/upload"
+  to = "/.netlify/functions/hero-upload"
+  status = 200
+  
+[[redirects]]
+  from = "/api/hero/delete"
+  to = "/.netlify/functions/hero-delete"
   status = 200

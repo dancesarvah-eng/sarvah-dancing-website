@@ -16,19 +16,19 @@ exports.handler = async (event) => {
     let body;
     try { body = JSON.parse(event.body || '{}'); }
     catch { return { statusCode: 400, headers, body: JSON.stringify({ success: false, message: 'Invalid JSON' }) }; }
-    const { password, id } = body;
+    const { password, public_id } = body;
     if (password !== ADMIN_PASSWORD) {
         return { statusCode: 401, headers, body: JSON.stringify({ success: false, message: 'Invalid password' }) };
     }
-    if (!id) {
-        return { statusCode: 400, headers, body: JSON.stringify({ success: false, message: 'No image ID provided' }) };
+    if (!public_id) {
+        return { statusCode: 400, headers, body: JSON.stringify({ success: false, message: 'No public_id provided' }) };
     }
     try {
-        const result = await cloudinary.uploader.destroy(id);
-        console.log('Deleted from Cloudinary:', id, '→', result.result);
+        const result = await cloudinary.uploader.destroy(public_id);
+        console.log('Deleted hero slide:', public_id, '→', result.result);
         return { statusCode: 200, headers, body: JSON.stringify({ success: true }) };
     } catch (err) {
-        console.error('Cloudinary delete error:', err.message);
+        console.error('Hero delete error:', err.message);
         return { statusCode: 500, headers, body: JSON.stringify({ success: false, message: err.message }) };
     }
 };

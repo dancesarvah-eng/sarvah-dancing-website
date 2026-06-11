@@ -8,9 +8,13 @@ const headers = {
 
 exports.handler = async (event) => {
     if (event.httpMethod === 'OPTIONS') return { statusCode: 200, headers, body: '' };
+    if (event.httpMethod !== 'POST') return { statusCode: 405, headers, body: JSON.stringify({ success: false }) };
 
-    const { password } = JSON.parse(event.body || '{}');
+    let body;
+    try { body = JSON.parse(event.body || '{}'); }
+    catch { return { statusCode: 400, headers, body: JSON.stringify({ success: false, message: 'Invalid request' }) }; }
 
+    const { password } = body;
     if (password === ADMIN_PASSWORD) {
         return { statusCode: 200, headers, body: JSON.stringify({ success: true }) };
     }

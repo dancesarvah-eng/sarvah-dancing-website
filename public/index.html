@@ -84,7 +84,7 @@ nav.scrolled .hamburger span{background:var(--text)}
    HERO
    ══════════════════════════════ */
 #hero{
-  position:relative;height:100vh;min-height:700px;
+  position:relative;height:100vh;min-height:600px;max-height:950px;
   display:flex;align-items:center;overflow:hidden;
 }
 .hero-carousel-wrap{
@@ -94,13 +94,40 @@ nav.scrolled .hamburger span{background:var(--text)}
   position:absolute;inset:0;opacity:0;transition:opacity 1.2s ease;
 }
 .hero-carousel-slide.active{opacity:1;}
+
+/* ── MOBILE & TABLET: full-width cover, show face at top ── */
 .hero-carousel-slide img{
-  width:100%;height:100%;object-fit:cover;object-position:center top;display:block;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  object-position:center top;
+  display:block;
 }
+
+/* ── DESKTOP: clip image to right half so it never touches text ── */
+@media(min-width:901px){
+  .hero-carousel-slide img{
+    position:absolute;
+    left:42%;           /* starts from 42% across — safely past the text block */
+    top:0;
+    width:58%;          /* fills the remaining right portion */
+    height:100%;
+    object-fit:cover;
+    object-position:center top;
+  }
+}
+
 .hero-carousel-slide::after{
   content:'';position:absolute;inset:0;
-  background:linear-gradient(105deg,rgba(26,8,0,0.88) 0%,rgba(26,8,0,0.6) 45%,rgba(26,8,0,0.25) 100%);
+  background:linear-gradient(
+    100deg,
+    rgba(26,8,0,0.95) 0%,
+    rgba(26,8,0,0.85) 38%,
+    rgba(26,8,0,0.40) 55%,
+    rgba(26,8,0,0.10) 100%
+  );
 }
+
 .hero-cdots{
   position:absolute;bottom:2.8rem;left:50%;transform:translateX(-50%);
   display:flex;flex-direction:row;gap:0.55rem;z-index:3;
@@ -111,6 +138,7 @@ nav.scrolled .hamburger span{background:var(--text)}
   transition:all 0.4s;padding:0;
 }
 .hero-cdot.active{background:var(--gold);width:26px;border-radius:4px;}
+
 .hero-glow{
   position:absolute;left:40%;top:50%;transform:translate(-50%,-50%);
   width:600px;height:600px;
@@ -118,7 +146,7 @@ nav.scrolled .hamburger span{background:var(--text)}
   border-radius:50%;pointer-events:none;z-index:1;
 }
 .hero-content{
-  position:relative;z-index:2;padding:0 5rem 4rem;max-width:640px;
+  position:relative;z-index:2;padding:0 5rem 4rem;max-width:580px;
 }
 .hero-title{
   font-family:'Cormorant Garamond',serif;
@@ -143,7 +171,6 @@ nav.scrolled .hamburger span{background:var(--text)}
   background:linear-gradient(to bottom,rgba(255,255,255,0.4),transparent);
 }
 @keyframes scrollBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}
-
 /* Buttons */
 .btn-primary{
   display:inline-block;font-family:'Josefin Sans',sans-serif;font-size:0.7rem;font-weight:600;
@@ -1272,6 +1299,7 @@ function handleHeroFileSelect(input) {
 }
 
 // ══ HERO UPLOAD — sanitizes filename before sending ══
+// ══ HERO UPLOAD — sends base64 JSON to match server.js ══
 async function addHeroSlides() {
   if (!heroSelectedFiles.length) return;
   const pass = sessionStorage.getItem('adminAuth') || ADMIN_PASS;
@@ -1282,47 +1310,37 @@ async function addHeroSlides() {
 
   for (const file of heroSelectedFiles) {
     try {
-      // Sanitize filename: remove spaces, parentheses, special chars
-      const safeName = file.name
-        .replace(/\s+/g, '_')
-        .replace(/[()[\]{}'",!@#$%^&*+=|\\/<>?`~]/g, '')
-        .replace(/_{2,}/g, '_')
-        .toLowerCase();
-
-      // Create a new File object with the sanitized name
-      const safeFile = new File([file], safeName, { type: file.type });
-
-      const formData = new FormData();
-      formData.append('image', safeFile);
-      formData.append('password', pass);
-      formData.append('title', 'Hero Image');
-
-      console.log(`Uploading hero: ${safeName} (${(file.size/1024).toFixed(0)}KB)`);
+      // Convert file to base64
+      const base64 = await new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result); // includes data:image/...;base64,
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
 
       const response = await fetch(`${API}/api/hero/upload`, {
         method: 'POST',
-        body: formData
-        // DO NOT set Content-Type header — browser sets multipart boundary automatically
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          password: pass,
+          title: 'Hero Image',
+          imageData: base64
+        })
       });
 
-      // Parse response safely
       const text = await response.text();
       let result;
       try { result = JSON.parse(text); }
-      catch(e) { throw new Error(`Server returned non-JSON: ${text.substring(0,200)}`); }
+      catch(e) { throw new Error(`Server error: ${text.substring(0,200)}`); }
 
       if (result.success) {
         success++;
-        // Add image to carousel immediately without re-fetching
         heroImages.push(result.image.url);
         heroDataFromServer.push(result.image);
         buildHeroCarousel();
         renderHeroAdmin();
-        console.log('✅ Hero uploaded:', result.image.url);
       } else {
-        const errMsg = result.message || 'Unknown error';
-        console.error('Hero upload failed:', errMsg, result.debug || '');
-        showToast(`❌ Failed: ${errMsg}`, 'error', 6000);
+        showToast(`❌ Failed: ${result.message || 'Unknown error'}`, 'error', 6000);
       }
     } catch (e) {
       console.error('Hero upload exception:', e);
@@ -1386,40 +1404,37 @@ if (heroUploadZone) {
   });
 }
 
-// ══ GALLERY UPLOAD — sanitizes filename before sending ══
+
+// ══ GALLERY UPLOAD — sends base64 JSON to match server.js ══
 async function uploadImages() {
   if (!selectedGalleryFiles.length) return;
   const btn   = document.getElementById('uploadBtn');
   const title = document.getElementById('uploadTitle').value || 'Sarvah Dance Performance';
   const pass  = sessionStorage.getItem('adminAuth') || ADMIN_PASS;
-  btn.innerHTML = '<span class="spinner"></span>Uploading...'; btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span>Uploading...';
+  btn.disabled = true;
   let success = 0;
 
   for (const file of selectedGalleryFiles) {
     try {
-      // Sanitize filename
-      const safeName = file.name
-        .replace(/\s+/g, '_')
-        .replace(/[()[\]{}'",!@#$%^&*+=|\\/<>?`~]/g, '')
-        .replace(/_{2,}/g, '_')
-        .toLowerCase();
-
-      const safeFile = new File([file], safeName, { type: file.type });
-
-      const formData = new FormData();
-      formData.append('image', safeFile);
-      formData.append('password', pass);
-      formData.append('title', title);
-
-      console.log(`Uploading gallery: ${safeName} (${(file.size/1024).toFixed(0)}KB)`);
+      // Convert file to base64
+      const base64 = await new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
 
       const response = await fetch(`${API}/api/gallery/upload`, {
         method: 'POST',
-        body: formData
-        // DO NOT set Content-Type header
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          password: pass,
+          title: title,
+          imageData: base64
+        })
       });
 
-      // Parse response safely — catches HTML error pages too
       const text = await response.text();
       let result;
       try { result = JSON.parse(text); }
@@ -1432,11 +1447,8 @@ async function uploadImages() {
         setTimeout(updateGalleryDots, 200);
         renderAdminGallery();
         updateStats();
-        console.log('✅ Gallery uploaded:', result.image.url);
       } else {
-        const errMsg = result.message || 'Unknown error';
-        console.error('Gallery upload failed:', errMsg, result.debug || '');
-        showToast(`❌ Failed: ${errMsg}`, 'error', 6000);
+        showToast(`❌ Failed: ${result.message || 'Unknown error'}`, 'error', 6000);
       }
     } catch(e) {
       console.error('Gallery upload exception:', e);
@@ -1444,11 +1456,13 @@ async function uploadImages() {
     }
   }
 
-  btn.innerHTML = 'Upload to Gallery'; btn.disabled = false;
+  btn.innerHTML = 'Upload to Gallery';
+  btn.disabled = false;
   document.getElementById('uploadPreview').innerHTML = '';
   document.getElementById('galleryFileInput').value = '';
   document.getElementById('uploadTitle').value = '';
-  btn.style.display = 'none'; selectedGalleryFiles = [];
+  btn.style.display = 'none';
+  selectedGalleryFiles = [];
   if (success > 0) showToast(`✅ ${success} photo(s) uploaded!`, 'success');
 }
 
