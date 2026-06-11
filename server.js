@@ -305,14 +305,13 @@ const app = express();
 // ============ MIDDLEWARE ============
 app.use(cors());
 app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
-// Debug middleware - log all requests
 app.use((req, res, next) => {
-    console.log(`${new Date().toISOString()} - ${req.method} ${req.url}`);
+    console.log(`${new Date().toISOString()} - ${req.method} ${req.url} [content-type: ${req.headers['content-type'] || 'none'}]`);
     next();
 });
 
-// ✅ Serve your website files
 app.use(express.static(path.join(__dirname, 'public')));
 
 // ============ CONFIGURATION ============
@@ -322,420 +321,308 @@ const COMPANY_EMAIL  = process.env.COMPANY_EMAIL  || 'dancesarvah@gmail.com';
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'sarvah123';
 const PORT           = process.env.PORT           || 3000;
 
-// ============ CLOUDINARY CONFIGURATION ============
-cloudinary.config({
-    cloud_name: process.env.CLOUDINARY_CLOUD_NAME || 'dccp0sxme',
-    api_key:    process.env.CLOUDINARY_API_KEY    || '471949222774489',
-    api_secret: process.env.CLOUDINARY_API_SECRET || 'TN60PQPNSqiCkzBJ7bgBEizq4EQ',
-});
+// ============ CLOUDINARY ============
+const CLOUD_NAME = process.env.CLOUDINARY_CLOUD_NAME || 'dccp0sxme';
+const CLOUD_KEY  = process.env.CLOUDINARY_API_KEY    || '471949222774489';
+const CLOUD_SEC  = process.env.CLOUDINARY_API_SECRET || 'TN60PQPNSqiCkzBJ7bgBEizq4EQ';
+
+cloudinary.config({ cloud_name: CLOUD_NAME, api_key: CLOUD_KEY, api_secret: CLOUD_SEC });
+console.log(`☁️  Cloudinary: ${CLOUD_NAME} | key: ...${CLOUD_KEY.slice(-4)}`);
+
+// ============ SANITIZE FILENAME ============
+// Removes special chars (parentheses, spaces, etc.) that cause upload failures
+function sanitizeFilename(originalname) {
+    return originalname
+        .replace(/\s+/g, '_')           // spaces → underscore
+        .replace(/[()[\]{}'",!@#$%^&*+=|\\/<>?`~]/g, '') // strip special chars
+        .replace(/_{2,}/g, '_')         // collapse multiple underscores
+        .toLowerCase();
+}
 
 // ============ CLOUDINARY STORAGE — GALLERY ============
 const galleryStorage = new CloudinaryStorage({
     cloudinary,
-    params: {
+    params: async (req, file) => ({
         folder: 'sarvah-dance-academy/gallery',
+        public_id: `gallery_${Date.now()}_${sanitizeFilename(path.parse(file.originalname).name)}`,
         allowed_formats: ['jpg', 'jpeg', 'png', 'webp', 'gif'],
         transformation: [{ quality: 'auto', fetch_format: 'auto' }]
-    }
+    })
 });
 
 const galleryUpload = multer({
     storage: galleryStorage,
-    limits: { fileSize: 10 * 1024 * 1024 } // 10MB
+    limits: { fileSize: 10 * 1024 * 1024 },
+    fileFilter: (req, file, cb) => {
+        const allowed = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif'];
+        if (allowed.includes(file.mimetype)) {
+            cb(null, true);
+        } else {
+            cb(new Error(`File type not allowed: ${file.mimetype}`));
+        }
+    }
 });
 
 // ============ CLOUDINARY STORAGE — HERO ============
 const heroStorage = new CloudinaryStorage({
     cloudinary,
-    params: {
+    params: async (req, file) => ({
         folder: 'sarvah-dance-academy/hero',
+        public_id: `hero_${Date.now()}_${sanitizeFilename(path.parse(file.originalname).name)}`,
         allowed_formats: ['jpg', 'jpeg', 'png', 'webp'],
         transformation: [{ quality: 'auto', fetch_format: 'auto' }]
-    }
+    })
 });
 
 const heroUpload = multer({
     storage: heroStorage,
-    limits: { fileSize: 10 * 1024 * 1024 } // 10MB
+    limits: { fileSize: 10 * 1024 * 1024 },
+    fileFilter: (req, file, cb) => {
+        const allowed = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+        if (allowed.includes(file.mimetype)) {
+            cb(null, true);
+        } else {
+            cb(new Error(`File type not allowed: ${file.mimetype}`));
+        }
+    }
 });
 
-// ============ DATA FILES (used as optional local backup) ============
+// ============ DATA FILES ============
 const GALLERY_DATA_FILE = path.join(__dirname, 'gallery-data.json');
-
 function loadGallery() {
     if (!fs.existsSync(GALLERY_DATA_FILE)) return [];
-    try {
-        return JSON.parse(fs.readFileSync(GALLERY_DATA_FILE, 'utf8'));
-    } catch (e) {
-        console.error('Error loading gallery images:', e);
-        return [];
-    }
+    try { return JSON.parse(fs.readFileSync(GALLERY_DATA_FILE, 'utf8')); }
+    catch (e) { return []; }
+}
+function saveGallery(g) {
+    try { fs.writeFileSync(GALLERY_DATA_FILE, JSON.stringify(g, null, 2)); }
+    catch (e) { console.warn('gallery-data.json save failed (non-fatal):', e.message); }
 }
 
-function saveGallery(gallery) {
-    try {
-        fs.writeFileSync(GALLERY_DATA_FILE, JSON.stringify(gallery, null, 2));
-        console.log(`✅ Saved ${gallery.length} gallery images to file`);
-    } catch (e) {
-        console.error('Error saving gallery images:', e);
-    }
-}
-
-// ============ EMAIL TRANSPORTER ============
+// ============ EMAIL ============
 const transporter = nodemailer.createTransport({
     service: 'gmail',
-    auth: {
-        user: EMAIL_USER,
-        pass: EMAIL_PASS
-    }
+    auth: { user: EMAIL_USER, pass: EMAIL_PASS }
+});
+transporter.verify(err => {
+    if (err) console.error('❌ Email error:', err.message);
+    else console.log('✅ Email ready');
 });
 
-transporter.verify((error, success) => {
-    if (error) {
-        console.error('❌ Email configuration error:', error);
-    } else {
-        console.log('✅ Email service is ready to send emails');
-    }
+// ============ DEBUG ============
+app.get('/api/debug', async (req, res) => {
+    let ping = 'FAILED';
+    try { await cloudinary.api.ping(); ping = 'OK'; } catch (e) { ping = e.message; }
+    res.json({
+        status: 'running',
+        cloudinary_ping: ping,
+        cloud_name: CLOUD_NAME,
+        key_last4: CLOUD_KEY.slice(-4),
+        node_env: process.env.NODE_ENV || 'not set',
+        timestamp: new Date().toISOString()
+    });
 });
 
-// ============ ADMIN PASSWORD VERIFY ============
+// ============ ADMIN VERIFY ============
 app.post('/api/admin/verify', (req, res) => {
     const { password } = req.body;
-    if (password === ADMIN_PASSWORD) {
-        res.json({ success: true });
-    } else {
-        res.status(401).json({ success: false, message: 'Invalid admin password' });
-    }
+    if (password === ADMIN_PASSWORD) res.json({ success: true });
+    else res.status(401).json({ success: false, message: 'Invalid password' });
 });
 
-// ============ CONTACT FORM API ============
+// ============ CONTACT ============
 app.post('/api/contact', async (req, res) => {
     const { name, email, phone, message } = req.body;
-
-    console.log(`📧 Contact form submission from: ${name} (${email})`);
-
-    if (!name || !email || !message) {
-        return res.status(400).json({
-            success: false,
-            message: 'Name, email, and message are required'
-        });
-    }
-
-    const companyMailOptions = {
-        from: `"Sarvah Website" <${EMAIL_USER}>`,
-        to: COMPANY_EMAIL,
-        subject: `📩 New Enquiry: ${name} - Sarvah Dance Academy`,
-        html: `
-            <!DOCTYPE html>
-            <html>
-            <head><meta charset="UTF-8"></head>
-            <body style="font-family: Georgia, serif; line-height: 1.6; max-width: 600px; margin: 0 auto;">
-                <div style="background: #6B1A0A; padding: 20px; text-align: center; color: white;">
-                    <h2 style="margin: 0;">🕉️ Sarvah Dance Academy</h2>
-                    <p style="margin: 5px 0 0;">New Enquiry / Registration Form Submission</p>
-                </div>
-                <div style="background: #F7F0E3; padding: 30px; border: 1px solid #E8D9BB;">
-                    <table style="width: 100%; border-collapse: collapse;">
-                        <tr>
-                            <td style="padding: 10px; background: #EDE3CC; width: 120px;"><strong>Name:</strong></td>
-                            <td style="padding: 10px;">${name}</td>
-                        </tr>
-                        <tr>
-                            <td style="padding: 10px; background: #EDE3CC;"><strong>Email:</strong></td>
-                            <td style="padding: 10px;"><a href="mailto:${email}">${email}</a></td>
-                        </tr>
-                        <tr>
-                            <td style="padding: 10px; background: #EDE3CC;"><strong>Phone:</strong></td>
-                            <td style="padding: 10px;">${phone || 'Not provided'}</td>
-                        </tr>
-                        <tr>
-                            <td style="padding: 10px; background: #EDE3CC; vertical-align: top;"><strong>Message:</strong></td>
-                            <td style="padding: 10px;">${message.replace(/\n/g, '<br>')}</td>
-                        </tr>
-                    </table>
-                    <hr style="border: none; border-top: 1px solid #C09448; margin: 20px 0;">
-                    <p style="color: #6B5040; font-size: 12px; text-align: center;">
-                        Submitted from Sarvah Dance Academy Website<br>
-                        IP: ${req.ip} | Time: ${new Date().toLocaleString()}
-                    </p>
-                </div>
-            </body>
-            </html>
-        `
-    };
-
-    const userMailOptions = {
-        from: `"Smt. Gayatri Inaayat – Sarvah Dance Academy" <${EMAIL_USER}>`,
-        to: email,
-        subject: '🙏 Namaste! Thank you for contacting Sarvah Dance Academy',
-        html: `
-            <!DOCTYPE html>
-            <html>
-            <head><meta charset="UTF-8"></head>
-            <body style="font-family: Georgia, serif; line-height: 1.6; max-width: 600px; margin: 0 auto;">
-                <div style="background: #6B1A0A; padding: 20px; text-align: center; color: white;">
-                    <h2 style="margin: 0;">🕉️ Sarvah Dance Academy</h2>
-                    <p style="margin: 5px 0 0;">Preserving the Art of Bharatanatyam</p>
-                </div>
-                <div style="background: #F7F0E3; padding: 30px; border: 1px solid #E8D9BB;">
-                    <h3 style="color: #B84A1A; margin-top: 0;">Namaste ${name}! 🙏</h3>
-                    <p>Thank you for reaching out to <strong>Sarvah Dance Academy</strong>.</p>
-                    <p>We have received your message and are truly honoured by your interest in learning Bharatanatyam.</p>
-                    <p>Our team will review your inquiry and get back to you within <strong>24–48 hours</strong>.</p>
-                    <div style="background: #FFFDF8; padding: 15px; margin: 20px 0; border-left: 4px solid #C09448;">
-                        <p style="margin: 0; font-style: italic;">"Dance is the hidden language of the soul."</p>
-                        <p style="margin: 5px 0 0; color: #6B5040;">– Martha Graham</p>
-                    </div>
-                    <hr style="border: none; border-top: 1px solid #E8D9BB; margin: 20px 0;">
-                    <p style="margin: 0;">Warm regards,</p>
-                    <p style="margin: 5px 0 0; font-weight: bold;">Smt. Gayatri Inaayat</p>
-                    <p style="margin: 0; color: #6B5040;">Founder &amp; Artistic Director<br>Sarvah Dance Academy, London, Ontario</p>
-                    <div style="margin-top: 16px;">
-                        <a href="https://wa.me/19055971808" style="display:inline-block;background:#25D366;color:#fff;padding:8px 16px;text-decoration:none;font-size:0.8rem;border-radius:4px;margin-right:8px;">💬 WhatsApp</a>
-                        <a href="mailto:sarvahdance@gmail.com" style="display:inline-block;background:#6B1A0A;color:#fff;padding:8px 16px;text-decoration:none;font-size:0.8rem;border-radius:4px;">✉️ Email Us</a>
-                    </div>
-                    <hr style="border: none; border-top: 1px solid #E8D9BB; margin: 20px 0;">
-                    <p style="color: #999; font-size: 11px; text-align: center;">
-                        📍 London, Ontario, Canada<br>
-                        📧 ${EMAIL_USER}<br>
-                        This is an automated confirmation. Please do not reply directly to this email.
-                    </p>
-                </div>
-            </body>
-            </html>
-        `
-    };
+    if (!name || !email || !message)
+        return res.status(400).json({ success: false, message: 'Missing required fields' });
 
     try {
-        await transporter.sendMail(companyMailOptions);
-        console.log(`✅ Email sent to company: ${COMPANY_EMAIL}`);
-        await transporter.sendMail(userMailOptions);
-        console.log(`✅ Confirmation email sent to: ${email}`);
-        res.json({ success: true, message: 'Emails sent successfully!' });
-    } catch (error) {
-        console.error('❌ Email error:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Failed to send email. Please try again later.'
+        await transporter.sendMail({
+            from: `"Sarvah Website" <${EMAIL_USER}>`,
+            to: COMPANY_EMAIL,
+            subject: `📩 New Enquiry: ${name}`,
+            html: `<div style="font-family:Georgia,serif;max-width:600px">
+                <div style="background:#6B1A0A;padding:20px;color:white;text-align:center"><h2>🕉️ Sarvah Dance Academy</h2></div>
+                <div style="background:#F7F0E3;padding:30px;border:1px solid #E8D9BB">
+                    <p><strong>Name:</strong> ${name}</p>
+                    <p><strong>Email:</strong> ${email}</p>
+                    <p><strong>Phone:</strong> ${phone || 'Not provided'}</p>
+                    <p><strong>Message:</strong><br>${message.replace(/\n/g,'<br>')}</p>
+                    <hr><p style="color:#999;font-size:11px">IP: ${req.ip} | ${new Date().toLocaleString()}</p>
+                </div></div>`
         });
+        await transporter.sendMail({
+            from: `"Smt. Gayatri Inaayat – Sarvah Dance Academy" <${EMAIL_USER}>`,
+            to: email,
+            subject: '🙏 Namaste! Thank you for contacting Sarvah Dance Academy',
+            html: `<div style="font-family:Georgia,serif;max-width:600px">
+                <div style="background:#6B1A0A;padding:20px;color:white;text-align:center"><h2>🕉️ Sarvah Dance Academy</h2></div>
+                <div style="background:#F7F0E3;padding:30px;border:1px solid #E8D9BB">
+                    <h3 style="color:#B84A1A">Namaste ${name}! 🙏</h3>
+                    <p>Thank you for your interest in Sarvah Dance Academy. We'll be in touch within <strong>24–48 hours</strong>.</p>
+                    <div style="margin-top:16px">
+                        <a href="https://wa.me/19055971808" style="background:#25D366;color:#fff;padding:8px 16px;text-decoration:none;border-radius:4px;margin-right:8px">💬 WhatsApp</a>
+                        <a href="mailto:sarvahdance@gmail.com" style="background:#6B1A0A;color:#fff;padding:8px 16px;text-decoration:none;border-radius:4px">✉️ Email</a>
+                    </div>
+                    <p style="color:#999;font-size:11px;margin-top:20px">📍 London, Ontario, Canada</p>
+                </div></div>`
+        });
+        res.json({ success: true });
+    } catch (e) {
+        console.error('❌ Email error:', e.message);
+        res.status(500).json({ success: false, message: 'Email failed' });
     }
 });
 
-// ============ HERO SECTION ENDPOINTS ============
-
-// GET all hero images — reads from Cloudinary directly so it persists across deploys
+// ============ HERO — GET ============
 app.get('/api/hero', async (req, res) => {
-    // These two local images are always included as defaults
     const defaults = [
-        {
-            id: 1,
-            url: '/sarvah/photos/IMG_0512.JPEG',
-            title: 'Traditional Bharatanatyam Performance',
-            isDefault: true,
-            uploadedAt: new Date().toISOString()
-        },
-        {
-            id: 2,
-            url: '/sarvah/photos/IMG_0511.JPEG',
-            title: 'Sarvah Dance Academy',
-            isDefault: true,
-            uploadedAt: new Date().toISOString()
-        }
+        { id: 'default-1', url: '/sarvah/photos/IMG_0512.JPEG', title: 'Traditional Bharatanatyam Performance', isDefault: true, uploadedAt: new Date().toISOString() },
+        { id: 'default-2', url: '/sarvah/photos/IMG_0511.JPEG', title: 'Sarvah Dance Academy', isDefault: true, uploadedAt: new Date().toISOString() }
     ];
-
     try {
-        // Query Cloudinary for any uploaded hero images
-        const result = await cloudinary.search
-            .expression('folder:sarvah-dance-academy/hero')
-            .sort_by('created_at', 'asc')
-            .max_results(30)
-            .execute();
-
-        const cloudinaryImages = (result.resources || []).map(r => ({
-            id: r.asset_id,
-            url: r.secure_url,
-            public_id: r.public_id,
-            title: 'Hero Image',
-            uploadedAt: r.created_at,
-            isDefault: false
+        const result = await cloudinary.api.resources({
+            type: 'upload', prefix: 'sarvah-dance-academy/hero',
+            max_results: 30, resource_type: 'image'
+        });
+        const images = (result.resources || []).map(r => ({
+            id: r.asset_id, url: r.secure_url, public_id: r.public_id,
+            title: 'Hero Image', uploadedAt: r.created_at, isDefault: false
         }));
-
-        console.log(`✅ Hero: ${defaults.length} defaults + ${cloudinaryImages.length} from Cloudinary`);
-        res.json([...defaults, ...cloudinaryImages]);
+        console.log(`✅ Hero: ${defaults.length} defaults + ${images.length} custom`);
+        res.json([...defaults, ...images]);
     } catch (e) {
-        console.error('❌ Cloudinary search error:', e.message);
-        // If Cloudinary search fails, just return the two defaults
+        console.error('❌ Hero GET error:', e.message);
         res.json(defaults);
     }
 });
 
-// POST upload new hero image — uses multipart/form-data (fixes body-size limit on hosting platforms)
-app.post('/api/hero/upload', heroUpload.single('image'), async (req, res) => {
-    const { password, title } = req.body;
+// ============ HERO — UPLOAD ============
+app.post('/api/hero/upload', (req, res) => {
+    heroUpload.single('image')(req, res, (err) => {
+        // Multer or Cloudinary error
+        if (err) {
+            console.error('❌ Hero upload error:', err.message);
+            return res.status(400).json({ success: false, message: err.message });
+        }
 
-    if (password !== ADMIN_PASSWORD) {
-        return res.status(401).json({ success: false, message: 'Invalid admin password' });
-    }
+        // Password check (comes from FormData body)
+        const { password, title } = req.body;
+        if (password !== ADMIN_PASSWORD)
+            return res.status(401).json({ success: false, message: 'Invalid password' });
 
-    if (!req.file) {
-        return res.status(400).json({ success: false, message: 'No image file received' });
-    }
+        // No file (proxy stripped the body)
+        if (!req.file) {
+            console.error('❌ Hero upload: no file. ContentType:', req.headers['content-type'], 'Body keys:', Object.keys(req.body));
+            return res.status(400).json({
+                success: false,
+                message: 'No file received. The server did not get the image.',
+                debug: { contentType: req.headers['content-type'], bodyKeys: Object.keys(req.body) }
+            });
+        }
 
-    const newImage = {
-        id: Date.now(),
-        url: req.file.path,           // Cloudinary secure URL set by multer-storage-cloudinary
-        public_id: req.file.filename, // Cloudinary public_id
-        title: title || 'Hero Image',
-        uploadedAt: new Date().toISOString(),
-        isDefault: false
-    };
-
-    console.log(`✅ Hero image uploaded to Cloudinary: ${newImage.url}`);
-    res.json({ success: true, image: newImage });
+        const newImage = {
+            id: Date.now(),
+            url: req.file.path,
+            public_id: req.file.filename,
+            title: title || 'Hero Image',
+            uploadedAt: new Date().toISOString(),
+            isDefault: false
+        };
+        console.log(`✅ Hero uploaded: ${newImage.url}`);
+        res.json({ success: true, image: newImage });
+    });
 });
 
-// POST delete hero image from Cloudinary
+// ============ HERO — DELETE ============
 app.post('/api/hero/delete', async (req, res) => {
     const { password, public_id } = req.body;
-
-    if (password !== ADMIN_PASSWORD) {
-        return res.status(401).json({ success: false, message: 'Invalid admin password' });
-    }
-
-    if (!public_id) {
-        return res.status(400).json({ success: false, message: 'No public_id provided' });
-    }
-
+    if (password !== ADMIN_PASSWORD)
+        return res.status(401).json({ success: false, message: 'Invalid password' });
     try {
         await cloudinary.uploader.destroy(public_id);
-        console.log(`🗑️ Deleted hero image from Cloudinary: ${public_id}`);
-        res.json({ success: true, message: 'Hero image deleted successfully' });
+        res.json({ success: true });
     } catch (e) {
-        console.error('❌ Cloudinary delete error:', e.message);
         res.status(500).json({ success: false, message: e.message });
     }
 });
 
-// ============ GALLERY SECTION ENDPOINTS ============
-
-// GET all gallery images — reads from Cloudinary directly so it persists across deploys
+// ============ GALLERY — GET ============
 app.get('/api/gallery', async (req, res) => {
     try {
-        const result = await cloudinary.search
-            .expression('folder:sarvah-dance-academy/gallery')
-            .sort_by('created_at', 'desc')
-            .max_results(50)
-            .execute();
-
+        const result = await cloudinary.api.resources({
+            type: 'upload', prefix: 'sarvah-dance-academy/gallery',
+            max_results: 50, resource_type: 'image', context: true
+        });
         const images = (result.resources || []).map(r => ({
-            id: r.asset_id,
-            url: r.secure_url,
-            public_id: r.public_id,
-            title: r.context?.caption || 'Sarvah Dance Performance',
+            id: r.asset_id, url: r.secure_url, public_id: r.public_id,
+            title: r.context?.custom?.caption || 'Sarvah Dance Performance',
             uploadedAt: r.created_at
-        }));
-
-        console.log(`✅ Gallery: ${images.length} images from Cloudinary`);
+        })).sort((a, b) => new Date(b.uploadedAt) - new Date(a.uploadedAt));
+        console.log(`✅ Gallery: ${images.length} images`);
         res.json(images);
     } catch (e) {
-        console.error('❌ Cloudinary gallery search error:', e.message);
-        // Fallback to local JSON if Cloudinary search fails
+        console.error('❌ Gallery GET error:', e.message);
         res.json(loadGallery());
     }
 });
 
-// POST upload new gallery image — uses multipart/form-data
-app.post('/api/gallery/upload', galleryUpload.single('image'), async (req, res) => {
-    const { password, title } = req.body;
+// ============ GALLERY — UPLOAD ============
+app.post('/api/gallery/upload', (req, res) => {
+    galleryUpload.single('image')(req, res, (err) => {
+        if (err) {
+            console.error('❌ Gallery upload error:', err.message);
+            return res.status(400).json({ success: false, message: err.message });
+        }
 
-    if (password !== ADMIN_PASSWORD) {
-        return res.status(401).json({ success: false, message: 'Invalid admin password' });
-    }
+        const { password, title } = req.body;
+        if (password !== ADMIN_PASSWORD)
+            return res.status(401).json({ success: false, message: 'Invalid password' });
 
-    if (!req.file) {
-        return res.status(400).json({ success: false, message: 'No image file received' });
-    }
+        if (!req.file) {
+            console.error('❌ Gallery upload: no file. ContentType:', req.headers['content-type'], 'Body:', req.body);
+            return res.status(400).json({
+                success: false,
+                message: 'No file received by server.',
+                debug: { contentType: req.headers['content-type'], bodyKeys: Object.keys(req.body) }
+            });
+        }
 
-    const newImage = {
-        id: Date.now(),
-        url: req.file.path,
-        public_id: req.file.filename,
-        title: title || 'Sarvah Dance Performance',
-        uploadedAt: new Date().toISOString()
-    };
-
-    // Also save to local JSON as backup
-    try {
-        const gallery = loadGallery();
-        gallery.unshift(newImage);
-        saveGallery(gallery);
-    } catch (e) {
-        console.warn('Could not save to gallery-data.json (non-fatal):', e.message);
-    }
-
-    console.log(`✅ Gallery image uploaded: ${newImage.title}`);
-    res.json({ success: true, image: newImage });
+        const newImage = {
+            id: Date.now(),
+            url: req.file.path,
+            public_id: req.file.filename,
+            title: title || 'Sarvah Dance Performance',
+            uploadedAt: new Date().toISOString()
+        };
+        try { const g = loadGallery(); g.unshift(newImage); saveGallery(g); } catch(e) {}
+        console.log(`✅ Gallery uploaded: ${newImage.title} | ${newImage.url}`);
+        res.json({ success: true, image: newImage });
+    });
 });
 
-// POST delete gallery image from Cloudinary
+// ============ GALLERY — DELETE ============
 app.post('/api/gallery/delete', async (req, res) => {
     const { password, id } = req.body;
-
-    if (password !== ADMIN_PASSWORD) {
-        return res.status(401).json({ success: false, message: 'Invalid admin password' });
-    }
-
-    if (!id) {
-        return res.status(400).json({ success: false, message: 'No public_id provided' });
-    }
-
+    if (password !== ADMIN_PASSWORD)
+        return res.status(401).json({ success: false, message: 'Invalid password' });
     try {
         await cloudinary.uploader.destroy(id);
-        console.log(`🗑️ Deleted gallery image from Cloudinary: ${id}`);
-
-        // Also remove from local JSON if it exists
-        try {
-            const gallery = loadGallery();
-            const updated = gallery.filter(img => img.public_id !== id);
-            saveGallery(updated);
-        } catch (e) { /* non-fatal */ }
-
-        res.json({ success: true, message: 'Gallery image deleted successfully' });
+        try { saveGallery(loadGallery().filter(i => i.public_id !== id)); } catch(e) {}
+        res.json({ success: true });
     } catch (e) {
-        console.error('❌ Cloudinary delete error:', e.message);
         res.status(500).json({ success: false, message: e.message });
     }
 });
 
-// ============ DEBUG ENDPOINT ============
-app.get('/api/debug/files', async (req, res) => {
-    try {
-        const heroResult = await cloudinary.search
-            .expression('folder:sarvah-dance-academy/hero')
-            .max_results(5)
-            .execute();
-        const galleryResult = await cloudinary.search
-            .expression('folder:sarvah-dance-academy/gallery')
-            .max_results(5)
-            .execute();
-        res.json({
-            hero: { count: heroResult.total_count },
-            gallery: { count: galleryResult.total_count }
-        });
-    } catch (e) {
-        res.status(500).json({ error: e.message });
-    }
-});
-
-// ============ SERVE STATIC FILES ============
+// ============ STATIC / CATCH-ALL ============
 app.use('/images', express.static(path.join(__dirname, 'public', 'images')));
-
-// ✅ Catch-all: serve index.html for client-side routing
 app.get('*', (req, res) => {
-    if (!req.path.startsWith('/api')) {
+    if (!req.path.startsWith('/api'))
         res.sendFile(path.join(__dirname, 'public', 'index.html'));
-    }
 });
+
+// app.listen(PORT, () => console.log(`\n🕉️  Sarvah — port ${PORT} — Cloudinary: ${CLOUD_NAME}\n`));
 
 // ============ START SERVER ============
 app.listen(PORT, () => {
