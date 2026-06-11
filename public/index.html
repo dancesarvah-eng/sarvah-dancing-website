@@ -975,6 +975,12 @@ Today, Sarvah Dance Academy continues to provide authentic Bharatanatyam educati
 <div class="toast" id="toast"></div>
 
 <script>
+// ══════════════════════════════════════════════════════════
+//  REPLACE the entire <script> block in your index.html
+//  with this. Only the upload functions changed — everything
+//  else (nav, reveal, carousel, gallery slider) is identical.
+// ══════════════════════════════════════════════════════════
+
 const API = '';
 const ADMIN_PASS = 'sarvah123';
 
@@ -1003,7 +1009,6 @@ let heroIdx = 0;
 let heroTimer = null;
 let heroDataFromServer = [];
 
-// Two default images — must match server defaults exactly
 const HERO_DEFAULTS = [
   'sarvah/photos/IMG_0512.JPEG',
   'sarvah/photos/IMG_0511.JPEG'
@@ -1014,7 +1019,6 @@ async function fetchHeroSlides() {
     const response = await fetch(`${API}/api/hero`);
     if (!response.ok) throw new Error('HTTP ' + response.status);
     const slides = await response.json();
-
     if (slides && slides.length > 0) {
       heroDataFromServer = slides;
       heroImages = slides.map(slide => slide.url);
@@ -1023,10 +1027,8 @@ async function fetchHeroSlides() {
     }
   } catch (error) {
     console.error('Hero fetch error:', error.message);
-    // Fallback: same 2 defaults as the server
     heroImages = [...HERO_DEFAULTS];
   }
-
   buildHeroCarousel();
   if (document.getElementById('adminDashboard').style.display !== 'none') {
     renderHeroAdmin();
@@ -1219,13 +1221,10 @@ function renderHeroAdmin() {
   }
 
   list.innerHTML = heroImages.map((src, i) => {
-    // A slide is "default" if it came from local sarvah/photos (not a Cloudinary URL)
     const isDefault = !src.startsWith('http');
     const fileName  = src.split('/').pop();
-    // Find public_id from server data for Cloudinary images
     const serverObj = heroDataFromServer.find(s => s.url === src);
     const publicId  = serverObj ? serverObj.public_id : null;
-
     return `<div class="gallery-manage-item">
       <img src="${src}" style="width:50px;height:38px;object-fit:cover;flex-shrink:0" onerror="this.style.background='#ccc'"/>
       <div class="gm-info">
@@ -1272,7 +1271,7 @@ function handleHeroFileSelect(input) {
   document.getElementById('heroUploadBtn').style.display = heroSelectedFiles.length ? 'block' : 'none';
 }
 
-// ── HERO UPLOAD — uses FormData (multipart) to avoid body-size limits on hosting ──
+// ══ HERO UPLOAD — sanitizes filename before sending ══
 async function addHeroSlides() {
   if (!heroSelectedFiles.length) return;
   const pass = sessionStorage.getItem('adminAuth') || ADMIN_PASS;
@@ -1283,27 +1282,51 @@ async function addHeroSlides() {
 
   for (const file of heroSelectedFiles) {
     try {
+      // Sanitize filename: remove spaces, parentheses, special chars
+      const safeName = file.name
+        .replace(/\s+/g, '_')
+        .replace(/[()[\]{}'",!@#$%^&*+=|\\/<>?`~]/g, '')
+        .replace(/_{2,}/g, '_')
+        .toLowerCase();
+
+      // Create a new File object with the sanitized name
+      const safeFile = new File([file], safeName, { type: file.type });
+
       const formData = new FormData();
-      formData.append('image', file);       // key must match heroUpload.single('image')
+      formData.append('image', safeFile);
       formData.append('password', pass);
       formData.append('title', 'Hero Image');
-      // NOTE: Do NOT set Content-Type header — browser sets it with the correct multipart boundary
+
+      console.log(`Uploading hero: ${safeName} (${(file.size/1024).toFixed(0)}KB)`);
 
       const response = await fetch(`${API}/api/hero/upload`, {
         method: 'POST',
         body: formData
+        // DO NOT set Content-Type header — browser sets multipart boundary automatically
       });
 
-      const result = await response.json();
+      // Parse response safely
+      const text = await response.text();
+      let result;
+      try { result = JSON.parse(text); }
+      catch(e) { throw new Error(`Server returned non-JSON: ${text.substring(0,200)}`); }
+
       if (result.success) {
         success++;
-        console.log('Hero upload OK:', result.image.url);
+        // Add image to carousel immediately without re-fetching
+        heroImages.push(result.image.url);
+        heroDataFromServer.push(result.image);
+        buildHeroCarousel();
+        renderHeroAdmin();
+        console.log('✅ Hero uploaded:', result.image.url);
       } else {
-        showToast(`❌ Upload failed: ${result.message || 'Unknown error'}`, 'error');
+        const errMsg = result.message || 'Unknown error';
+        console.error('Hero upload failed:', errMsg, result.debug || '');
+        showToast(`❌ Failed: ${errMsg}`, 'error', 6000);
       }
     } catch (e) {
-      console.error('Hero upload error:', e);
-      showToast(`❌ Failed: ${file.name}`, 'error');
+      console.error('Hero upload exception:', e);
+      showToast(`❌ Upload error: ${e.message}`, 'error', 6000);
     }
   }
 
@@ -1311,9 +1334,8 @@ async function addHeroSlides() {
   btn.disabled  = false;
 
   if (success > 0) {
-    await fetchHeroSlides();
     updateStats();
-    showToast(`✅ ${success} slide(s) uploaded!`, 'success');
+    showToast(`✅ ${success} slide(s) added!`, 'success');
   }
 
   document.getElementById('heroUploadPreview').innerHTML = '';
@@ -1335,7 +1357,7 @@ function handleFileSelect(input) {
   document.getElementById('uploadBtn').style.display = selectedGalleryFiles.length ? 'block' : 'none';
 }
 
-// Drag-and-drop for gallery
+// Drag-and-drop
 const uploadZone = document.getElementById('uploadZone');
 if (uploadZone) {
   uploadZone.addEventListener('dragover', e => { e.preventDefault(); uploadZone.classList.add('dragover'); });
@@ -1350,7 +1372,6 @@ if (uploadZone) {
   });
 }
 
-// Drag-and-drop for hero
 const heroUploadZone = document.getElementById('heroUploadZone');
 if (heroUploadZone) {
   heroUploadZone.addEventListener('dragover', e => { e.preventDefault(); heroUploadZone.classList.add('dragover'); });
@@ -1365,7 +1386,7 @@ if (heroUploadZone) {
   });
 }
 
-// ── GALLERY UPLOAD — uses FormData (multipart) ──
+// ══ GALLERY UPLOAD — sanitizes filename before sending ══
 async function uploadImages() {
   if (!selectedGalleryFiles.length) return;
   const btn   = document.getElementById('uploadBtn');
@@ -1376,25 +1397,50 @@ async function uploadImages() {
 
   for (const file of selectedGalleryFiles) {
     try {
+      // Sanitize filename
+      const safeName = file.name
+        .replace(/\s+/g, '_')
+        .replace(/[()[\]{}'",!@#$%^&*+=|\\/<>?`~]/g, '')
+        .replace(/_{2,}/g, '_')
+        .toLowerCase();
+
+      const safeFile = new File([file], safeName, { type: file.type });
+
       const formData = new FormData();
-      formData.append('image', file);
+      formData.append('image', safeFile);
       formData.append('password', pass);
       formData.append('title', title);
 
-      const res  = await fetch(`${API}/api/gallery/upload`, { method: 'POST', body: formData });
-      const json = await res.json();
-      if (json.success) {
+      console.log(`Uploading gallery: ${safeName} (${(file.size/1024).toFixed(0)}KB)`);
+
+      const response = await fetch(`${API}/api/gallery/upload`, {
+        method: 'POST',
+        body: formData
+        // DO NOT set Content-Type header
+      });
+
+      // Parse response safely — catches HTML error pages too
+      const text = await response.text();
+      let result;
+      try { result = JSON.parse(text); }
+      catch(e) { throw new Error(`Server error (${response.status}): ${text.substring(0,300)}`); }
+
+      if (result.success) {
         success++;
-        galleryImages.unshift(json.image);
+        galleryImages.unshift(result.image);
         renderGalleryAdditions();
         setTimeout(updateGalleryDots, 200);
         renderAdminGallery();
         updateStats();
+        console.log('✅ Gallery uploaded:', result.image.url);
       } else {
-        showToast(`❌ ${json.message || 'Upload failed'}`, 'error');
+        const errMsg = result.message || 'Unknown error';
+        console.error('Gallery upload failed:', errMsg, result.debug || '');
+        showToast(`❌ Failed: ${errMsg}`, 'error', 6000);
       }
     } catch(e) {
-      showToast(`❌ Failed: ${file.name}`, 'error');
+      console.error('Gallery upload exception:', e);
+      showToast(`❌ Error: ${e.message}`, 'error', 6000);
     }
   }
 
@@ -1403,7 +1449,7 @@ async function uploadImages() {
   document.getElementById('galleryFileInput').value = '';
   document.getElementById('uploadTitle').value = '';
   btn.style.display = 'none'; selectedGalleryFiles = [];
-  if (success > 0) { showToast(`✅ ${success} photo(s) uploaded!`, 'success'); await loadGallery(); }
+  if (success > 0) showToast(`✅ ${success} photo(s) uploaded!`, 'success');
 }
 
 function renderAdminGallery() {
@@ -1461,7 +1507,7 @@ function updateStats() {
   document.getElementById('statTotal').textContent = galleryImages.length;
   document.getElementById('statHero').textContent  = heroImages.length;
   const last = galleryImages.length ? new Date(galleryImages[0].uploadedAt) : null;
-  document.getElementById('statLast').textContent  = last
+  document.getElementById('statLast').textContent = last
     ? last.toLocaleDateString('en-CA', { month:'short', day:'numeric', year:'numeric' })
     : 'No uploads yet';
   document.getElementById('progressFill').style.width = `${Math.min((galleryImages.length / 20) * 100, 100)}%`;
