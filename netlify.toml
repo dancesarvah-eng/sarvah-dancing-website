@@ -5,34 +5,19 @@
 [functions]
   node_bundler = "esbuild"
 
-[[headers]]
-  for = "/.netlify/functions/*"
-  [headers.values]
-    Access-Control-Allow-Origin = "*"
-
-# Increase timeout and memory for upload functions
-[functions."gallery-upload"]
-  timeout = 30
-  included_files = []
-
-[functions."hero-upload"]
-  timeout = 30
-  included_files = []
-
 [[redirects]]
-  from = "/api/*"
-  to = "/.netlify/functions/:splat"
-  status = 200
-  force = true
-
-[[redirects]]
-  from = "/api/contact"
-  to = "/.netlify/functions/contact"
+  from = "/api/hero"
+  to = "/.netlify/functions/hero"
   status = 200
 
 [[redirects]]
-  from = "/api/admin/verify"
-  to = "/.netlify/functions/admin-verify"
+  from = "/api/hero/upload"
+  to = "/.netlify/functions/hero-upload"
+  status = 200
+
+[[redirects]]
+  from = "/api/hero/delete"
+  to = "/.netlify/functions/hero-delete"
   status = 200
 
 [[redirects]]
@@ -51,16 +36,16 @@
   status = 200
 
 [[redirects]]
-  from = "/api/hero"
-  to = "/.netlify/functions/hero"
+  from = "/api/admin/verify"
+  to = "/.netlify/functions/admin-verify"
   status = 200
 
 [[redirects]]
-  from = "/api/hero/upload"
-  to = "/.netlify/functions/hero-upload"
+  from = "/api/contact"
+  to = "/.netlify/functions/contact"
   status = 200
 
 [[redirects]]
-  from = "/api/hero/delete"
-  to = "/.netlify/functions/hero-delete"
+  from = "/*"
+  to = "/index.html"
   status = 200
