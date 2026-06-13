@@ -1,8 +1,8 @@
 const nodemailer = require('nodemailer');
 
-const EMAIL_USER    = process.env.EMAIL_USER    || 'dancesarvah@gmail.com';
+const EMAIL_USER    = process.env.EMAIL_USER    || 'sarvahdance@gmail.com';
 const EMAIL_PASS    = process.env.EMAIL_PASS    || '';
-const COMPANY_EMAIL = process.env.COMPANY_EMAIL || 'dancesarvah@gmail.com';
+const COMPANY_EMAIL = process.env.COMPANY_EMAIL || 'sarvahdance@gmail.com';
 
 const headers = {
     'Access-Control-Allow-Origin': '*',
@@ -31,17 +31,17 @@ exports.handler = async (event) => {
 
     const toCompany = {
         from: `"Sarvah Website" <${EMAIL_USER}>`,
-            to: COMPANY_EMAIL,
-            subject: `📩 New Enquiry: ${name}`,
-            html: `<div style="font-family:Georgia,serif;max-width:600px">
-                <div style="background:#6B1A0A;padding:20px;color:white;text-align:center"><h2>🕉️ Sarvah Dance Academy</h2></div>
-                <div style="background:#F7F0E3;padding:30px;border:1px solid #E8D9BB">
-                    <p><strong>Name:</strong> ${name}</p>
-                    <p><strong>Email:</strong> ${email}</p>
-                    <p><strong>Phone:</strong> ${phone || 'Not provided'}</p>
-                    <p><strong>Message:</strong><br>${message.replace(/\n/g,'<br>')}</p>
-                    <hr><p style="color:#999;font-size:11px">IP: ${req.ip} | ${new Date().toLocaleString()}</p>
-                </div></div>`
+        to: COMPANY_EMAIL,
+        subject: `📩 New Enquiry: ${name}`,
+        html: `<div style="font-family:Georgia,serif;max-width:600px">
+            <div style="background:#6B1A0A;padding:20px;color:white;text-align:center"><h2>🕉️ Sarvah Dance Academy</h2></div>
+            <div style="background:#F7F0E3;padding:30px;border:1px solid #E8D9BB">
+                <p><strong>Name:</strong> ${name}</p>
+                <p><strong>Email:</strong> ${email}</p>
+                <p><strong>Phone:</strong> ${phone || 'Not provided'}</p>
+                <p><strong>Message:</strong><br>${message.replace(/\n/g,'<br>')}</p>
+                <hr><p style="color:#999;font-size:11px">Submitted at: ${new Date().toLocaleString()}</p>
+            </div></div>`
     };
 
     const toUser = {
