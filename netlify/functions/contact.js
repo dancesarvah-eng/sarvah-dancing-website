@@ -69,7 +69,7 @@ exports.handler = async (event) => {
             <p style="margin:5px 0 0;font-weight:bold;">Smt. Gayatri Inaayat</p>
             <p style="margin:0;color:#6B5040;">Founder & Artistic Director<br>Sarvah Dance Academy, London, Ontario</p>
             <div style="margin-top:16px;">
-              <a href="https://wa.me/19055971808" style="display:inline-block;background:#25D366;color:#fff;padding:8px 16px;text-decoration:none;border-radius:4px;margin-right:8px;font-size:0.8rem;">💬 WhatsApp</a>
+              <a href="https://wa.me/19055871808" style="display:inline-block;background:#25D366;color:#fff;padding:8px 16px;text-decoration:none;border-radius:4px;margin-right:8px;font-size:0.8rem;">💬 WhatsApp</a>
               <a href="mailto:sarvahdance@gmail.com" style="display:inline-block;background:#6B1A0A;color:#fff;padding:8px 16px;text-decoration:none;border-radius:4px;font-size:0.8rem;">✉️ Email Us</a>
             </div>
             <hr style="border:none;border-top:1px solid #E8D9BB;margin:20px 0;">
