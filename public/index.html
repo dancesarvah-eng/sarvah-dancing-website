@@ -24,6 +24,7 @@
   --nav-h:80px;
 }
 html{scroll-behavior:smooth}
+[id]{scroll-margin-top:var(--nav-h)}
 body{
   font-family:'Crimson Pro',Georgia,serif;
   background:var(--cream);
@@ -316,6 +317,80 @@ section{padding:7rem 0}
 .event-card p{font-size:0.95rem;line-height:1.75;color:var(--text-light)}
 .event-card .event-detail{margin-top:1.2rem;display:flex;align-items:center;gap:0.5rem;font-family:'Josefin Sans',sans-serif;font-size:0.65rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:var(--rust);}
 
+/* ─── UPCOMING EVENTS ─── */
+#upcoming-events{background:var(--white)}
+.ue-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2rem;}
+.ue-card{background:var(--white);border:1px solid var(--parchment);overflow:hidden;position:relative;transition:transform 0.3s,box-shadow 0.3s;display:flex;flex-direction:column;}
+.ue-card:hover{transform:translateY(-4px);box-shadow:0 20px 50px rgba(107,26,10,0.12);}
+.ue-image{width:100%;height:200px;object-fit:cover;display:block;background:linear-gradient(135deg,var(--burgundy),var(--rust));}
+.ue-image-placeholder{width:100%;height:200px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--burgundy),var(--rust));font-size:2.5rem;}
+.ue-date-badge{
+  position:absolute;top:1rem;left:1rem;background:var(--white);color:var(--burgundy);
+  padding:0.5rem 0.7rem;text-align:center;box-shadow:0 4px 15px rgba(0,0,0,0.15);
+  font-family:'Josefin Sans',sans-serif;line-height:1.15;min-width:64px;
+}
+.ue-date-badge .ue-day{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:700;display:block}
+.ue-date-badge .ue-month{font-size:0.5rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;display:block;white-space:nowrap}
+.ue-body{padding:1.8rem;display:flex;flex-direction:column;flex:1}
+.ue-body h3{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:500;color:var(--burgundy);margin-bottom:0.6rem;}
+.ue-body p{font-size:0.9rem;line-height:1.7;color:var(--text-light);margin-bottom:0.3rem;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}
+.ue-readmore{display:inline-block;background:none;border:none;padding:0;font-family:'Josefin Sans',sans-serif;font-size:0.68rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--rust);cursor:pointer;margin-bottom:1.2rem;text-align:left}
+.ue-readmore:hover{color:var(--burgundy);text-decoration:underline}
+.ue-quickmeta{display:flex;flex-direction:column;gap:0.35rem;margin-bottom:1rem;flex:1}
+.ue-quickmeta span{font-size:0.8rem;color:var(--text-light);display:flex;align-items:center;gap:0.5rem}
+.ue-meta{display:flex;flex-direction:column;gap:0.2rem;margin-bottom:1.2rem;padding-top:1rem;border-top:1px solid var(--parchment);}
+.ue-price-label{font-family:'Josefin Sans',sans-serif;font-size:0.58rem;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--text-light);}
+.ue-price{font-family:'Cormorant Garamond',serif;font-size:1.7rem;font-weight:700;color:var(--rust);line-height:1.15;}
+.ue-price-cad{font-family:'Josefin Sans',sans-serif;font-size:0.62rem;font-weight:600;letter-spacing:0.08em;color:var(--text-light);vertical-align:middle;}
+.ue-cta{
+  display:block;width:100%;text-align:center;font-family:'Josefin Sans',sans-serif;font-size:0.68rem;font-weight:600;
+  letter-spacing:0.15em;text-transform:uppercase;padding:0.8rem;background:var(--rust);color:var(--white);
+  text-decoration:none;border:none;cursor:pointer;transition:background 0.3s;
+}
+.ue-cta:hover{background:var(--burgundy)}
+.ue-empty{text-align:center;padding:4rem 2rem;color:var(--text-light);font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-style:italic;}
+
+/* ─── REGISTRATION / EVENT DETAIL PAGE (Stripe checkout) ─── */
+.reg-modal-overlay{position:fixed;inset:0;background:rgba(26,8,0,0.92);z-index:3000;display:none;overflow-y:auto;padding:0}
+.reg-modal-overlay.open{display:block}
+.reg-modal{background:var(--white);max-width:1000px;width:100%;min-height:100vh;margin:0 auto;border-left:1px solid var(--parchment);border-right:1px solid var(--parchment)}
+.reg-modal-header{background:var(--burgundy);padding:1.5rem 2rem;color:var(--white);position:sticky;top:0;z-index:5;display:flex;align-items:center;justify-content:space-between}
+.reg-modal-header h3{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:400}
+.reg-modal-close{background:none;border:none;color:var(--white);font-size:1.6rem;cursor:pointer;opacity:0.8;line-height:1}
+.reg-modal-close:hover{opacity:1}
+.reg-modal-body{padding:0 0 3rem}
+.reg-hero-image{width:100%;height:340px;object-fit:cover;display:block}
+.reg-hero-image-placeholder{width:100%;height:280px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--burgundy),var(--rust));font-size:3.5rem}
+.reg-page-inner{padding:2.5rem 3rem;max-width:760px;margin:0 auto}
+.reg-event-title{font-family:'Cormorant Garamond',serif;font-size:2.4rem;font-weight:500;color:var(--burgundy);margin-bottom:1.5rem}
+.reg-detail-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;margin-bottom:2rem;border:1px solid var(--parchment);background:var(--cream);padding:1.5rem}
+.reg-detail-item{display:flex;gap:0.8rem;align-items:flex-start}
+.reg-detail-icon{font-size:1.2rem;flex-shrink:0;width:28px;text-align:center}
+.reg-detail-label{font-family:'Josefin Sans',sans-serif;font-size:0.6rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-light);display:block;margin-bottom:0.15rem}
+.reg-detail-value{font-size:0.98rem;color:var(--text);font-weight:600}
+.reg-description{font-size:1rem;line-height:1.8;color:var(--text-light);margin-bottom:2rem}
+.reg-instructions{background:rgba(192,148,72,0.1);border:1px solid var(--gold);padding:1.2rem 1.5rem;margin-bottom:2rem}
+.reg-instructions strong{display:block;font-family:'Josefin Sans',sans-serif;font-size:0.62rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--rust);margin-bottom:0.5rem}
+.reg-instructions p{font-size:0.92rem;line-height:1.7;color:var(--text)}
+.reg-form-section{border-top:2px solid var(--parchment);padding-top:2rem}
+.reg-form-section h4{font-family:'Cormorant Garamond',serif;font-size:1.5rem;color:var(--burgundy);margin-bottom:1.2rem;font-weight:500}
+.reg-qty-row{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.2rem;background:var(--cream);border:1px solid var(--parchment);margin-bottom:1.5rem}
+.reg-qty-controls{display:flex;align-items:center;gap:1rem}
+.reg-qty-btn{width:32px;height:32px;border-radius:50%;border:1px solid var(--gold);background:var(--white);color:var(--burgundy);font-size:1rem;cursor:pointer}
+.reg-qty-num{font-family:'Cormorant Garamond',serif;font-size:1.4rem;min-width:24px;text-align:center}
+.reg-total-row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:1.5rem}
+.reg-total-row span:first-child{font-family:'Josefin Sans',sans-serif;font-size:0.68rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:var(--text-light)}
+.reg-total-row span:last-child{font-family:'Cormorant Garamond',serif;font-size:1.8rem;color:var(--burgundy)}
+.reg-form-group{margin-bottom:1.2rem}
+.reg-form-group label{display:block;font-family:'Josefin Sans',sans-serif;font-size:0.62rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:var(--text);margin-bottom:0.4rem;}
+.reg-form-group input{width:100%;padding:0.8rem 1rem;border:1px solid var(--parchment);background:var(--cream);font-family:'Crimson Pro',serif;font-size:0.95rem;color:var(--text);outline:none}
+.reg-error{background:#fdecec;border:1px solid #e0a0a0;color:#a33;padding:0.8rem 1rem;font-size:0.85rem;margin-bottom:1rem;display:none}
+@media(max-width:640px){
+  .reg-page-inner{padding:1.8rem 1.3rem}
+  .reg-detail-grid{grid-template-columns:1fr}
+  .reg-event-title{font-size:1.9rem}
+}
+
 /* ─── TESTIMONIALS ─── */
 #testimonials{background:linear-gradient(135deg,var(--burgundy),#2D0508);padding:8rem 0;position:relative;overflow:hidden;}
 #testimonials::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Ccircle cx='30' cy='30' r='1' fill='rgba(192,148,72,0.15)'/%3E%3C/svg%3E");}
@@ -397,8 +472,9 @@ footer{background:var(--black);padding:4rem 0 2rem;color:rgba(255,255,255,0.6);}
 /* ─── ADMIN ─── */
 .admin-overlay{position:fixed;inset:0;background:rgba(26,8,0,0.85);z-index:2000;display:flex;align-items:stretch;visibility:hidden;opacity:0;transition:all 0.3s}
 .admin-overlay.open{visibility:visible;opacity:1}
-.admin-sidebar{width:400px;background:var(--white);display:flex;flex-direction:column;transform:translateX(-100%);transition:transform 0.4s cubic-bezier(0.34,1.56,0.64,1);overflow-y:auto}
-.admin-overlay.open .admin-sidebar{transform:translateX(0)}
+.admin-sidebar{width:100%;max-width:100%;background:var(--white);display:flex;flex-direction:column;transform:translateY(-2%);transition:transform 0.4s cubic-bezier(0.34,1.56,0.64,1);overflow-y:auto}
+.admin-overlay.open .admin-sidebar{transform:translateY(0)}
+.admin-body{max-width:900px;margin:0 auto;width:100%}
 .admin-header{background:var(--burgundy);padding:2rem;color:var(--white);display:flex;justify-content:space-between;align-items:center}
 .admin-header h2{font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:400}
 .admin-header p{font-family:'Josefin Sans',sans-serif;font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;opacity:0.7;margin-top:0.2rem}
@@ -447,6 +523,56 @@ footer{background:var(--black);padding:4rem 0 2rem;color:rgba(255,255,255,0.6);}
 .admin-tab-content{display:none}
 .admin-tab-content.active{display:block}
 
+/* ─── ADMIN: UPCOMING EVENTS TAB ─── */
+.toggle-row{display:flex;align-items:center;justify-content:space-between;padding:1rem;background:var(--cream);border:1px solid var(--parchment);margin-bottom:1.5rem;}
+.toggle-row-label{font-family:'Josefin Sans',sans-serif;font-size:0.72rem;font-weight:600;color:var(--text);}
+.toggle-row-sub{font-size:0.7rem;color:var(--text-light);margin-top:0.2rem;font-family:'Josefin Sans',sans-serif;letter-spacing:0.02em;}
+.switch{position:relative;display:inline-block;width:46px;height:26px;flex-shrink:0}
+.switch input{opacity:0;width:0;height:0}
+.switch-slider{position:absolute;cursor:pointer;inset:0;background-color:#c9bda3;transition:0.3s;border-radius:26px}
+.switch-slider::before{position:absolute;content:"";height:20px;width:20px;left:3px;bottom:3px;background-color:white;transition:0.3s;border-radius:50%}
+.switch input:checked + .switch-slider{background-color:var(--rust)}
+.switch input:checked + .switch-slider::before{transform:translateX(20px)}
+.ue-admin-item{display:flex;gap:0.8rem;padding:0.8rem;background:var(--cream);border:1px solid var(--parchment);align-items:center}
+.ue-admin-item img{width:56px;height:56px;object-fit:cover;flex-shrink:0}
+.ue-admin-item .ue-admin-noimg{width:56px;height:56px;flex-shrink:0;background:linear-gradient(135deg,var(--burgundy),var(--rust));display:flex;align-items:center;justify-content:center;font-size:1.2rem}
+.ue-admin-info{flex:1;min-width:0}
+.ue-admin-title{font-size:0.85rem;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:600}
+.ue-admin-date{font-family:'Josefin Sans',sans-serif;font-size:0.58rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--rust);margin-top:0.15rem}
+.ue-admin-price{font-family:'Josefin Sans',sans-serif;font-size:0.58rem;color:var(--text-light);margin-top:0.1rem}
+.ue-admin-actions{display:flex;gap:0.4rem;flex-shrink:0}
+.ue-edit,.ue-delete{background:none;border:none;cursor:pointer;font-size:1rem;padding:0.3rem;transition:transform 0.2s}
+.ue-edit:hover,.ue-delete:hover{transform:scale(1.2)}
+.ue-delete{color:#c0392b}
+.ue-edit{color:var(--rust)}
+
+/* ─── ADMIN: CHECK-IN TAB ─── */
+.checkin-mode-tabs{display:flex;gap:0.5rem;margin-bottom:1.2rem}
+.checkin-mode-tab{flex:1;padding:0.7rem;text-align:center;background:var(--cream);border:1px solid var(--parchment);font-family:'Josefin Sans',sans-serif;font-size:0.6rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;color:var(--text-light)}
+.checkin-mode-tab.active{background:var(--burgundy);color:var(--white);border-color:var(--burgundy)}
+#ci-qr-reader{width:100%;max-width:420px;margin:0 auto;border:1px solid var(--parchment);background:#000;overflow:hidden}
+.checkin-scan-hint{text-align:center;font-size:0.8rem;color:var(--text-light);margin:0.8rem 0 1.2rem;font-style:italic}
+.checkin-camera-error{background:#fdecec;border:1px solid #e0a0a0;color:#a33;padding:1rem;font-size:0.82rem;text-align:center;display:none;margin-bottom:1rem}
+.checkin-manual-row{display:flex;gap:0.6rem}
+.checkin-manual-row input{flex:1}
+.checkin-result-panel{display:none;margin-top:1.2rem;border:2px solid;padding:1.5rem;text-align:center;background:var(--cream)}
+.checkin-result-panel.valid{border-color:#2E7D32}
+.checkin-result-panel.already_used{border-color:#B8860B}
+.checkin-result-panel.not_found,.checkin-result-panel.invalid,.checkin-result-panel.unauthorized{border-color:#C0392B}
+.checkin-result-panel.wrong_event{border-color:#B84A1A}
+.checkin-result-icon{font-size:2.4rem;margin-bottom:0.5rem}
+.checkin-result-status{font-family:'Josefin Sans',sans-serif;font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.8rem}
+.checkin-result-panel.valid .checkin-result-status{color:#2E7D32}
+.checkin-result-panel.already_used .checkin-result-status{color:#B8860B}
+.checkin-result-panel.not_found .checkin-result-status,.checkin-result-panel.invalid .checkin-result-status,.checkin-result-panel.unauthorized .checkin-result-status{color:#C0392B}
+.checkin-result-panel.wrong_event .checkin-result-status{color:#B84A1A}
+.checkin-result-detail{text-align:left;font-size:0.88rem;line-height:1.8;color:var(--text);border-top:1px solid var(--parchment);padding-top:0.8rem;margin-top:0.5rem}
+.checkin-result-detail b{color:var(--burgundy)}
+.checkin-stats-row{display:flex;gap:0.8rem;margin-bottom:1.5rem}
+.checkin-stat-box{flex:1;background:var(--cream);border:1px solid var(--parchment);padding:0.9rem;text-align:center}
+.checkin-stat-box .num{font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:var(--burgundy);font-weight:600}
+.checkin-stat-box .lbl{font-family:'Josefin Sans',sans-serif;font-size:0.55rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-light)}
+
 /* ─── RESPONSIVE ─── */
 @media(max-width:900px){
   nav{padding:0 1.5rem}
@@ -461,6 +587,7 @@ footer{background:var(--black);padding:4rem 0 2rem;color:rgba(255,255,255,0.6);}
   .vision-divider{display:none}
   .classes-grid{grid-template-columns:1fr}
   .events-grid{grid-template-columns:1fr}
+  .ue-grid{grid-template-columns:1fr}
   .footer-grid{grid-template-columns:1fr}
   .container{padding:0 1.5rem}
   .gallery-slider-container{padding:0 1.5rem}
@@ -470,6 +597,9 @@ footer{background:var(--black);padding:4rem 0 2rem;color:rgba(255,255,255,0.6);}
   .whatsapp-btn{bottom:1rem;right:1rem;padding:0.6rem 1rem}
   .admin-sidebar{width:100vw}
   .gallery-slide{flex:0 0 160px;height:210px;}
+}
+@media(max-width:1100px) and (min-width:901px){
+  .ue-grid{grid-template-columns:repeat(2,1fr)}
 }
 @media(max-width:480px){
   .hero-title{font-size:2.8rem}
@@ -495,6 +625,7 @@ footer{background:var(--black);padding:4rem 0 2rem;color:rgba(255,255,255,0.6);}
     <li><a href="#faculty">Faculty</a></li>
     <li><a href="#gallery">Gallery</a></li>
     <li><a href="#events">Events</a></li>
+    <!-- Upcoming Events nav link is injected here dynamically when enabled -->
     <li><a href="#testimonials">Reviews</a></li>
     <li><a href="#contact">Contact</a></li>
     <li><a href="#" onclick="openAdmin();return false;" style="color:var(--gold);">🔐 Admin</a></li>
@@ -527,7 +658,7 @@ footer{background:var(--black);padding:4rem 0 2rem;color:rgba(255,255,255,0.6);}
     <div class="about-grid">
       <div class="about-image-wrap reveal">
         <div class="about-image-frame">
-          <img src="sarvah/photos/IMG_0512.JPEG" alt="Sarvah Dance Academy"/>
+          <img src="sarvah/photos/IMG_0512.JPEG" alt="Sarvah Dance Academy" loading="lazy"/>
           <div class="about-badge">
             <span class="num">100+</span>
             <span class="label">Students Trained</span>
@@ -627,7 +758,7 @@ Today, Sarvah Dance Academy continues to provide authentic Bharatanatyam educati
     <div class="faculty-grid">
       <div class="faculty-image reveal">
         <div class="faculty-portrait">
-          <img src="sarvah/photos/IMG_0511.JPEG" alt="Smt. Gayatri Inaayat"/>
+          <img src="sarvah/photos/IMG_0511.JPEG" alt="Smt. Gayatri Inaayat" loading="lazy"/>
         </div>
         <div class="faculty-accent"></div>
         <div class="faculty-accent2"></div>
@@ -664,23 +795,23 @@ Today, Sarvah Dance Academy continues to provide authentic Bharatanatyam educati
   <div class="gallery-slider-container">
     <div class="gallery-slider" id="gallerySlider">
       <div class="gallery-slide">
-        <img src="sarvah/photos/IMG_0511.JPEG" alt="Dance performance"/>
+        <img src="sarvah/photos/IMG_0511.JPEG" alt="Dance performance" loading="lazy"/>
         <div class="gallery-slide-overlay"><p>Bharatanatyam Performance</p></div>
       </div>
       <div class="gallery-slide">
-        <img src="sarvah/photos/IMG_0512.JPEG" alt="Dance performance"/>
+        <img src="sarvah/photos/IMG_0512.JPEG" alt="Dance performance" loading="lazy"/>
         <div class="gallery-slide-overlay"><p>Classical Dance</p></div>
       </div>
       <div class="gallery-slide">
-        <img src="sarvah/photos/2.jpeg" alt="Dance performance"/>
+        <img src="sarvah/photos/2.jpeg" alt="Dance performance" loading="lazy"/>
         <div class="gallery-slide-overlay"><p>Grace &amp; Expression</p></div>
       </div>
       <div class="gallery-slide">
-        <img src="sarvah/photos/1.JPEG" alt="Dance performance"/>
+        <img src="sarvah/photos/1.jpeg" alt="Dance performance" loading="lazy"/>
         <div class="gallery-slide-overlay"><p>Kalakshetra Style</p></div>
       </div>
       <div class="gallery-slide">
-        <img src="sarvah/photos/13.JPEG" alt="Dance performance"/>
+        <img src="sarvah/photos/13.jpeg" alt="Dance performance" loading="lazy"/>
         <div class="gallery-slide-overlay"><p>Stage Performance</p></div>
       </div>
     </div>
@@ -736,6 +867,21 @@ Today, Sarvah Dance Academy continues to provide authentic Bharatanatyam educati
   </div>
 </section>
 
+<!-- ─── UPCOMING EVENTS (dynamic, admin-controlled) ─── -->
+<section id="upcoming-events" style="display:none">
+  <div class="container">
+    <div class="reveal" style="max-width:600px;margin-bottom:3rem">
+      <div class="section-label">What's Next</div>
+      <h2 class="section-title">Upcoming <em>Events</em></h2>
+      <p style="font-size:1.02rem;color:var(--text-light);line-height:1.7;margin-top:0.5rem">Reserve your spot at our upcoming workshops, showcases, and special performances.</p>
+      <p style="font-size:0.85rem;color:var(--text-light);margin-top:0.6rem">Already booked but forgot to download your ticket? <a href="/retrieve-ticket.html" style="color:var(--rust);text-decoration:underline">Click here to get it again</a>.</p>
+    </div>
+    <div class="ue-grid" id="upcomingEventsGrid">
+      <!-- populated by JS -->
+    </div>
+  </div>
+</section>
+
 <!-- ─── TESTIMONIALS ─── -->
 <section id="testimonials">
   <div class="container testimonials-wrap">
@@ -784,7 +930,7 @@ Today, Sarvah Dance Academy continues to provide authentic Bharatanatyam educati
         <div class="info-item"><span class="info-icon">👶</span><span class="info-text">Open to all ages — no age bar</span></div>
         <div class="info-item"><span class="info-icon">📅</span><span class="info-text">1-hour classes per week, offline in London ON</span></div>
         <div style="margin-top:2rem">
-          <a href="https://wa.me/19055871808" target="_blank" class="btn-primary" style="display:inline-flex;align-items:center;gap:0.5rem">
+          <a href="https://wa.me/19055971808" target="_blank" class="btn-primary" style="display:inline-flex;align-items:center;gap:0.5rem">
             <span>💬</span> Chat on WhatsApp
           </a>
         </div>
@@ -850,7 +996,7 @@ Today, Sarvah Dance Academy continues to provide authentic Bharatanatyam educati
   <div class="container">
     <div class="footer-grid">
       <div class="footer-brand">
-        <img src="sarvah/logos/1.png" class="footer-logo" alt="Sarvah Dance Academy"/>
+        <img src="sarvah/logos/1.png" class="footer-logo" alt="Sarvah Dance Academy" loading="lazy"/>
         <p>Professional Bharatanatyam training in the Kalakshetra tradition. Inspiring the next generation of classical dancers in London, Ontario since 2022.</p>
       </div>
       <div class="footer-col">
@@ -871,7 +1017,7 @@ Today, Sarvah Dance Academy continues to provide authentic Bharatanatyam educati
           <li><a href="https://youtube.com/@sarvahdanceacademycanada" target="_blank">YouTube</a></li>
           <li><a href="mailto:sarvahdance@gmail.com">sarvahdance@gmail.com</a></li>
           <li><a href="tel:+19055871808">+1 905-587-1808</a></li>
-          <li><a href="https://wa.me/19055871808" target="_blank">WhatsApp</a></li>
+          <li><a href="https://wa.me/19055971808" target="_blank">WhatsApp</a></li>
         </ul>
       </div>
     </div>
@@ -883,9 +1029,80 @@ Today, Sarvah Dance Academy continues to provide authentic Bharatanatyam educati
 </footer>
 
 <!-- ─── WHATSAPP ─── -->
-<a href="https://wa.me/19055871808" target="_blank" class="whatsapp-btn">
+<a href="https://wa.me/19055971808" target="_blank" class="whatsapp-btn">
   <span class="whatsapp-icon">💬</span> WhatsApp Us
 </a>
+
+<!-- ─── EVENT DETAIL / REGISTRATION PAGE ─── -->
+<div class="reg-modal-overlay" id="regModalOverlay">
+  <div class="reg-modal">
+    <div class="reg-modal-header">
+      <h3 id="regModalTitle">Event Details</h3>
+      <button class="reg-modal-close" onclick="closeRegModal()">✕</button>
+    </div>
+    <div class="reg-modal-body">
+      <!-- Hero image -->
+      <div id="regHeroImage"><!-- populated by JS --></div>
+
+      <div class="reg-page-inner">
+        <div class="reg-error" id="regError"></div>
+
+        <h2 class="reg-event-title" id="regEventTitleText"></h2>
+
+        <!-- Clear detail grid: date, time, location, price -->
+        <div class="reg-detail-grid" id="regDetailGrid">
+          <!-- populated by JS -->
+        </div>
+
+        <p class="reg-description" id="regEventDescription"></p>
+
+        <!-- Special instructions (optional) -->
+        <div class="reg-instructions" id="regInstructionsBox" style="display:none">
+          <strong>📌 Special Instructions</strong>
+          <p id="regInstructionsText"></p>
+        </div>
+
+        <div class="reg-form-section">
+          <h4>Register &amp; Pay</h4>
+          <div class="reg-qty-row" id="regQtyRow">
+            <div class="reg-qty-controls">
+              <button class="reg-qty-btn" type="button" onclick="changeRegQty(-1)">−</button>
+              <span class="reg-qty-num" id="regQtyNum">1</span>
+              <button class="reg-qty-btn" type="button" onclick="changeRegQty(1)">+</button>
+            </div>
+            <div id="regUnitPrice" style="font-family:'Josefin Sans',sans-serif;font-size:0.85rem;color:var(--text-light)"></div>
+          </div>
+          <div class="reg-total-row">
+            <span>Total</span>
+            <span id="regTotalPrice">$0.00 CAD</span>
+          </div>
+          <form id="regForm" onsubmit="submitRegistration(event)">
+            <div class="reg-form-group">
+              <label>Full Name *</label>
+              <input type="text" id="regName" required placeholder="Your name">
+            </div>
+            <div class="reg-form-group">
+              <label>Email *</label>
+              <input type="email" id="regEmail" required placeholder="you@email.com">
+            </div>
+            <div class="reg-form-group">
+              <label>Phone *</label>
+              <input type="tel" id="regPhone" required placeholder="+1 000 000 0000">
+            </div>
+            <div class="reg-form-group">
+              <label>Location *</label>
+              <input type="text" id="regLocation" required placeholder="City, Province">
+            </div>
+            <button type="submit" class="btn-primary" id="regSubmitBtn" style="width:100%;justify-content:center;display:flex">Continue to Payment</button>
+          </form>
+          <p style="margin-top:1rem;font-size:0.78rem;color:var(--text-light);text-align:center">
+            Secure payment via Stripe. Your e-ticket with QR code will be emailed immediately.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- ─── ADMIN PANEL ─── -->
 <div class="admin-overlay" id="adminOverlay">
@@ -907,6 +1124,9 @@ Today, Sarvah Dance Academy continues to provide authentic Bharatanatyam educati
         <div class="admin-tabs">
           <button class="admin-tab active" onclick="switchTab('gallery')">🖼 Gallery</button>
           <button class="admin-tab" onclick="switchTab('hero')">🎭 Hero</button>
+          <button class="admin-tab" onclick="switchTab('upcoming')">📅 Events</button>
+          <button class="admin-tab" onclick="switchTab('checkin')">✅ Check-In</button>
+          <button class="admin-tab" onclick="switchTab('tickets')">🎟️ Tickets</button>
           <button class="admin-tab" onclick="switchTab('stats')">📊 Stats</button>
           <button class="admin-tab" onclick="switchTab('settings')">⚙️ Settings</button>
         </div>
@@ -962,12 +1182,166 @@ Today, Sarvah Dance Academy continues to provide authentic Bharatanatyam educati
           </div>
         </div>
 
+        <!-- UPCOMING EVENTS TAB -->
+        <div class="admin-tab-content" id="tab-upcoming">
+          <div class="toggle-row">
+            <div>
+              <div class="toggle-row-label">Show Upcoming Events on website</div>
+              <div class="toggle-row-sub">Adds an "Upcoming Events" tab to the site nav</div>
+            </div>
+            <label class="switch">
+              <input type="checkbox" id="upcomingToggleInput" onchange="toggleUpcomingEvents(this.checked)">
+              <span class="switch-slider"></span>
+            </label>
+          </div>
+
+          <div class="admin-section">
+            <h4 id="ueFormTitle">Add Event</h4>
+            <div class="upload-zone" id="ueUploadZone">
+              <input type="file" id="ueFileInput" accept="image/*" onchange="handleUeFileSelect(this)"/>
+              <div class="upload-icon">🖼️</div>
+              <p>Click or drag an image here (optional)</p>
+            </div>
+            <div class="upload-preview" id="ueUploadPreview"></div>
+
+            <div class="form-group" style="margin-top:1rem">
+              <label style="font-family:'Josefin Sans',sans-serif;font-size:0.6rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;display:block;margin-bottom:0.4rem">Event Name *</label>
+              <input type="text" class="admin-input" id="ueTitle" placeholder="e.g. Navarasa 2026"/>
+            </div>
+            <div class="form-group">
+              <label style="font-family:'Josefin Sans',sans-serif;font-size:0.6rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;display:block;margin-bottom:0.4rem">Description</label>
+              <textarea class="admin-input" id="ueDescription" style="height:80px;resize:vertical" placeholder="Short description of the event"></textarea>
+            </div>
+            <div class="form-group">
+              <label style="font-family:'Josefin Sans',sans-serif;font-size:0.6rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;display:block;margin-bottom:0.4rem">Event Date *</label>
+              <input type="date" class="admin-input" id="ueDate"/>
+            </div>
+            <div class="form-group">
+              <label style="font-family:'Josefin Sans',sans-serif;font-size:0.6rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;display:block;margin-bottom:0.4rem">Event Time</label>
+              <input type="text" class="admin-input" id="ueTime" placeholder="e.g. 6:00 PM – 9:00 PM"/>
+            </div>
+            <div class="form-group">
+              <label style="font-family:'Josefin Sans',sans-serif;font-size:0.6rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;display:block;margin-bottom:0.4rem">Location</label>
+              <input type="text" class="admin-input" id="ueLocation" placeholder="e.g. Wolf Performance Hall, London ON"/>
+            </div>
+            <div class="form-group">
+              <label style="font-family:'Josefin Sans',sans-serif;font-size:0.6rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;display:block;margin-bottom:0.4rem">Special Instructions (optional)</label>
+              <textarea class="admin-input" id="ueInstructions" style="height:70px;resize:vertical" placeholder="e.g. Please arrive 30 minutes early. Parking available at..."></textarea>
+            </div>
+            <div class="form-group">
+              <label style="font-family:'Josefin Sans',sans-serif;font-size:0.6rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;display:block;margin-bottom:0.4rem">Price Label (shown on the card)</label>
+              <input type="text" class="admin-input" id="uePrice" placeholder="e.g. $45"/>
+            </div>
+            <div class="form-group">
+              <label style="font-family:'Josefin Sans',sans-serif;font-size:0.6rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;display:block;margin-bottom:0.4rem">Ticket Price for Checkout (CAD) *</label>
+              <input type="number" class="admin-input" id="uePriceAmount" placeholder="45.00" min="0.50" step="0.01"/>
+              <p style="font-size:0.72rem;color:var(--text-light);margin-top:0.3rem">Every event now requires payment through Stripe — enter an amount greater than $0.</p>
+            </div>
+            <button class="admin-btn" onclick="saveUpcomingEvent()" id="ueSaveBtn" style="margin-top:0.8rem">Add Event</button>
+            <button class="admin-btn" onclick="cancelUeEdit()" id="ueCancelBtn" style="display:none;margin-top:0.5rem;background:var(--text-light)">Cancel Edit</button>
+          </div>
+
+          <div class="admin-divider"></div>
+
+          <div class="admin-section">
+            <h4>Manage Events (<span id="ueCount">0</span>)</h4>
+            <div class="gallery-manage" id="ueManageList">
+              <p style="color:var(--text-light);font-size:0.9rem;text-align:center;padding:1rem">No events yet.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- CHECK-IN TAB -->
+        <div class="admin-tab-content" id="tab-checkin">
+          <div class="admin-section">
+            <h4>Door Check-In</h4>
+
+            <div class="form-group" style="margin-bottom:1.2rem">
+              <label style="font-family:'Josefin Sans',sans-serif;font-size:0.6rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;display:block;margin-bottom:0.4rem">Checking In For</label>
+              <select class="admin-input" id="ciEventSelect" onchange="ciOnEventChange()">
+                <option value="">— Select an event —</option>
+              </select>
+            </div>
+
+            <div class="checkin-stats-row">
+              <div class="checkin-stat-box"><div class="num" id="ciStatTotal">—</div><div class="lbl">Total Tickets</div></div>
+              <div class="checkin-stat-box"><div class="num" id="ciStatChecked">—</div><div class="lbl">Checked In</div></div>
+              <div class="checkin-stat-box"><div class="num" id="ciStatRemaining">—</div><div class="lbl">Remaining</div></div>
+            </div>
+
+            <div class="checkin-mode-tabs">
+              <div class="checkin-mode-tab active" id="ciTabScan" onclick="ciSwitchMode('scan')">📷 Scan QR</div>
+              <div class="checkin-mode-tab" id="ciTabManual" onclick="ciSwitchMode('manual')">⌨️ Manual Entry</div>
+            </div>
+
+            <div id="ciScanMode">
+              <div id="ci-qr-reader"></div>
+              <p class="checkin-scan-hint">Point the camera at the guest's QR code</p>
+              <div class="checkin-camera-error" id="ciCameraError"></div>
+            </div>
+
+            <div id="ciManualMode" style="display:none">
+              <div class="checkin-manual-row">
+                <input type="text" class="admin-input" id="ciManualTicketId" placeholder="e.g. SDA-M1X2Y3-AB12" onkeydown="if(event.key==='Enter')ciVerifyManual()" style="text-transform:uppercase">
+                <button class="admin-btn" style="width:auto;padding:0 1.2rem" onclick="ciVerifyManual()">Verify</button>
+              </div>
+            </div>
+
+            <div class="checkin-result-panel" id="ciResultPanel">
+              <div class="checkin-result-icon" id="ciResultIcon"></div>
+              <div class="checkin-result-status" id="ciResultStatus"></div>
+              <div class="checkin-result-detail" id="ciResultDetail"></div>
+              <button class="admin-btn" style="margin-top:1rem" onclick="ciScanNext()">Scan Next Guest</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- TICKETS TAB -->
+        <div class="admin-tab-content" id="tab-tickets">
+          <div class="admin-section">
+            <h4>All Bookings</h4>
+            <p style="font-size:0.8rem;color:var(--text-light);margin-bottom:1rem;line-height:1.5">
+              Every ticket ever booked — ticket ID, name, when it was booked, and amount paid.
+            </p>
+
+            <div class="form-group">
+              <label style="font-family:'Josefin Sans',sans-serif;font-size:0.6rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;display:block;margin-bottom:0.4rem">Filter by Event</label>
+              <select class="admin-input" id="ticketsEventFilter" onchange="loadTicketsList()">
+                <option value="">All Events</option>
+              </select>
+            </div>
+
+            <button class="admin-btn" onclick="exportTicketsCSV()" style="margin:1rem 0">⬇️ Export CSV</button>
+
+            <div style="overflow-x:auto;border:1px solid var(--parchment)">
+              <table style="width:100%;border-collapse:collapse;font-size:0.78rem">
+                <thead>
+                  <tr style="text-align:left;background:var(--cream)">
+                    <th style="padding:0.6rem 0.5rem;white-space:nowrap">Ticket ID</th>
+                    <th style="padding:0.6rem 0.5rem">Name</th>
+                    <th style="padding:0.6rem 0.5rem;white-space:nowrap">Phone</th>
+                    <th style="padding:0.6rem 0.5rem">Location</th>
+                    <th style="padding:0.6rem 0.5rem">Event</th>
+                    <th style="padding:0.6rem 0.5rem;white-space:nowrap">Booked At</th>
+                    <th style="padding:0.6rem 0.5rem;white-space:nowrap">Paid</th>
+                    <th style="padding:0.6rem 0.5rem;white-space:nowrap">Status</th>
+                  </tr>
+                </thead>
+                <tbody id="ticketsTableBody">
+                  <tr><td colspan="8" style="padding:1rem;text-align:center;color:var(--text-light)">Loading…</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
         <!-- STATS TAB -->
         <div class="admin-tab-content" id="tab-stats">
           <div class="admin-section">
             <h4>Overview</h4>
             <div class="admin-stat-row"><span class="admin-stat-label">Gallery Photos</span><span class="admin-stat-val" id="statTotal">—</span></div>
             <div class="admin-stat-row"><span class="admin-stat-label">Hero Slides</span><span class="admin-stat-val" id="statHero">—</span></div>
+            <div class="admin-stat-row"><span class="admin-stat-label">Upcoming Events</span><span class="admin-stat-val" id="statEvents">—</span></div>
             <div class="admin-stat-row"><span class="admin-stat-label">Last Upload</span><span class="admin-stat-val" id="statLast" style="font-size:0.9rem">—</span></div>
             <div style="margin-top:1rem">
               <div style="font-family:'Josefin Sans',sans-serif;font-size:0.6rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-light);margin-bottom:0.4rem">Gallery Fill</div>
@@ -1002,13 +1376,7 @@ Today, Sarvah Dance Academy continues to provide authentic Bharatanatyam educati
 <div class="toast" id="toast"></div>
 
 <script>
-// ══════════════════════════════════════════════════════════
-//  REPLACE the entire <script> block in your index.html
-//  with this. Only the upload functions changed — everything
-//  else (nav, reveal, carousel, gallery slider) is identical.
-// ══════════════════════════════════════════════════════════
-
-const API = '';
+const API = 'https://sarvah-dance-website.onrender.com';
 const ADMIN_PASS = 'sarvah123';
 
 /* ── NAV ── */
@@ -1016,6 +1384,20 @@ const navbar = document.getElementById('navbar');
 window.addEventListener('scroll', () => navbar.classList.toggle('scrolled', window.scrollY > 60));
 function toggleNav(){ document.getElementById('navLinks').classList.toggle('open'); }
 document.querySelectorAll('.nav-links a').forEach(a => a.addEventListener('click', () => document.getElementById('navLinks').classList.remove('open')));
+
+/* ── CLEAN URLS: scroll to sections without leaving a # in the address bar ── */
+document.addEventListener('click', (e) => {
+  const link = e.target.closest('a[href^="#"]');
+  if (!link) return;
+  const hash = link.getAttribute('href');
+  if (hash === '#' || hash.length < 2) return; // let no-op links (e.g. Admin) behave normally
+  const target = document.getElementById(hash.slice(1));
+  if (!target) return;
+  e.preventDefault();
+  target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  // Keep the current URL clean instead of appending the hash.
+  history.replaceState(null, '', window.location.pathname + window.location.search);
+});
 
 /* ── REVEAL ── */
 const ro = new IntersectionObserver(entries => entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); }), {threshold:0.12});
@@ -1042,21 +1424,26 @@ const HERO_DEFAULTS = [
 ];
 
 async function fetchHeroSlides() {
+  // Paint immediately with the defaults so the hero is never blank while we wait on the network.
+  if (!heroImages.length) {
+    heroImages = [...HERO_DEFAULTS];
+    buildHeroCarousel();
+  }
   try {
     const response = await fetch(`${API}/api/hero`);
     if (!response.ok) throw new Error('HTTP ' + response.status);
     const slides = await response.json();
     if (slides && slides.length > 0) {
       heroDataFromServer = slides;
-      heroImages = slides.map(slide => slide.url);
-    } else {
-      heroImages = [...HERO_DEFAULTS];
+      const newImages = slides.map(slide => slide.url);
+      if (JSON.stringify(newImages) !== JSON.stringify(heroImages)) {
+        heroImages = newImages;
+        buildHeroCarousel();
+      }
     }
   } catch (error) {
     console.error('Hero fetch error:', error.message);
-    heroImages = [...HERO_DEFAULTS];
   }
-  buildHeroCarousel();
   if (document.getElementById('adminDashboard').style.display !== 'none') {
     renderHeroAdmin();
   }
@@ -1172,6 +1559,439 @@ function renderGalleryAdditions() {
 }
 
 /* ══════════════════════════════════════
+   UPCOMING EVENTS
+   ══════════════════════════════════════ */
+let upcomingEvents = [];
+let upcomingEnabled = false;
+let ueSelectedFile = null;
+let ueEditingId = null;
+
+const MONTHS_SHORT = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+
+async function fetchUpcomingSettings() {
+  try {
+    const r = await fetch(`${API}/api/settings`);
+    const j = await r.json();
+    upcomingEnabled = !!j.upcomingEventsEnabled;
+  } catch (e) {
+    console.warn('Settings fetch error:', e.message);
+    upcomingEnabled = false;
+  }
+  applyUpcomingVisibility();
+  const toggleInput = document.getElementById('upcomingToggleInput');
+  if (toggleInput) toggleInput.checked = upcomingEnabled;
+}
+
+async function fetchUpcomingEvents() {
+  try {
+    const r = await fetch(`${API}/api/events`);
+    upcomingEvents = await r.json();
+  } catch (e) {
+    console.warn('Events fetch error:', e.message);
+    upcomingEvents = [];
+  }
+  renderUpcomingEvents();
+  if (document.getElementById('adminDashboard').style.display !== 'none') renderUeAdminList();
+}
+
+function applyUpcomingVisibility() {
+  const section = document.getElementById('upcoming-events');
+  const navLinks = document.getElementById('navLinks');
+  let navLink = document.getElementById('upcomingNavLink');
+
+  if (upcomingEnabled) {
+    section.style.display = '';
+    if (!navLink) {
+      navLink = document.createElement('li');
+      navLink.id = 'upcomingNavLink';
+      navLink.innerHTML = '<a href="#upcoming-events">Upcoming Events</a>';
+      const eventsLi = Array.from(navLinks.children).find(li => li.querySelector('a[href="#events"]'));
+      if (eventsLi) eventsLi.after(navLink);
+      else navLinks.insertBefore(navLink, navLinks.lastElementChild);
+      navLink.querySelector('a').addEventListener('click', () => navLinks.classList.remove('open'));
+    }
+  } else {
+    section.style.display = 'none';
+    if (navLink) navLink.remove();
+  }
+}
+
+function renderUpcomingEvents() {
+  const grid = document.getElementById('upcomingEventsGrid');
+  if (!grid) return;
+  if (!upcomingEvents.length) {
+    grid.innerHTML = '<div class="ue-empty" style="grid-column:1/-1">New events coming soon.</div>';
+    return;
+  }
+  const sorted = [...upcomingEvents].filter(ev => ev.active !== false).sort((a,b) => new Date(a.eventDate) - new Date(b.eventDate));
+  grid.innerHTML = sorted.map(ev => {
+    const d = ev.eventDate ? new Date(ev.eventDate + 'T00:00:00') : null;
+    const day = d ? d.getDate() : '--';
+    const month = d ? MONTHS_SHORT[d.getMonth()] : '';
+    const year = d ? d.getFullYear() : '';
+    const amt = Number(ev.priceAmount) || 0;
+    const priceDisplay = amt > 0
+      ? `$${amt.toFixed(2)} <span class="ue-price-cad">CAD</span>`
+      : escHtml(ev.price || 'TBA');
+    const imageBlock = ev.imageUrl
+      ? `<img class="ue-image" src="${ev.imageUrl}" alt="${escHtml(ev.title)}" loading="lazy"/>`
+      : `<div class="ue-image-placeholder">🎭</div>`;
+    return `<div class="ue-card reveal visible">
+      <div style="position:relative">
+        ${imageBlock}
+        <div class="ue-date-badge"><span class="ue-day">${day}</span><span class="ue-month">${month} ${year}</span></div>
+      </div>
+      <div class="ue-body">
+        <h3>${escHtml(ev.title)}</h3>
+        <p>${escHtml(ev.description || '')}</p>
+        <button class="ue-readmore" onclick="openRegModal('${ev.id}')">Read More →</button>
+        <div class="ue-quickmeta">
+          ${ev.eventTime ? `<span>🕐 ${escHtml(ev.eventTime)}</span>` : ''}
+          ${ev.location ? `<span>📍 ${escHtml(ev.location)}</span>` : ''}
+        </div>
+        <div class="ue-meta">
+          <span class="ue-price-label">Ticket price</span>
+          <span class="ue-price">${priceDisplay}</span>
+        </div>
+        <button class="ue-cta" onclick="openRegModal('${ev.id}')">Register &amp; Pay</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+/* ══════════════════════════════════════
+   REGISTRATION MODAL — Stripe checkout
+   ══════════════════════════════════════ */
+let regCurrentEvent = null;
+let regQty = 1;
+
+function openRegModal(eventId) {
+  const ev = upcomingEvents.find(e => e.id === eventId);
+  if (!ev) return;
+  regCurrentEvent = ev;
+  regQty = 1;
+  document.getElementById('regModalTitle').textContent = 'Event Details';
+  document.getElementById('regQtyNum').textContent = 1;
+  document.getElementById('regError').style.display = 'none';
+  document.getElementById('regForm').reset();
+
+  // Hero image
+  document.getElementById('regHeroImage').innerHTML = ev.imageUrl
+    ? `<img class="reg-hero-image" src="${ev.imageUrl}" alt="${escHtml(ev.title)}"/>`
+    : `<div class="reg-hero-image-placeholder">🎭</div>`;
+
+  document.getElementById('regEventTitleText').textContent = ev.title || '';
+
+  const d = ev.eventDate ? new Date(ev.eventDate + 'T00:00:00') : null;
+  const dateLabel = d ? d.toLocaleDateString('en-CA', { weekday:'long', year:'numeric', month:'long', day:'numeric' }) : 'Date TBA';
+  const priceAmount = Number(ev.priceAmount) || 0;
+  const priceLabel = ev.price || (priceAmount > 0 ? `$${priceAmount.toFixed(2)} CAD` : 'TBA');
+
+  // Clear detail grid: date, time, location, price
+  const details = [
+    { icon: '📅', label: 'Date', value: dateLabel },
+    { icon: '🕐', label: 'Time', value: ev.eventTime || 'TBA' },
+    { icon: '📍', label: 'Location', value: ev.location || 'TBA' },
+    { icon: '💰', label: 'Price', value: priceLabel }
+  ];
+  document.getElementById('regDetailGrid').innerHTML = details.map(d => `
+    <div class="reg-detail-item">
+      <div class="reg-detail-icon">${d.icon}</div>
+      <div>
+        <span class="reg-detail-label">${d.label}</span>
+        <span class="reg-detail-value">${escHtml(d.value)}</span>
+      </div>
+    </div>
+  `).join('');
+
+  document.getElementById('regEventDescription').textContent = ev.description || '';
+
+  const instrBox = document.getElementById('regInstructionsBox');
+  if (ev.specialInstructions && ev.specialInstructions.trim()) {
+    document.getElementById('regInstructionsText').textContent = ev.specialInstructions;
+    instrBox.style.display = 'block';
+  } else {
+    instrBox.style.display = 'none';
+  }
+
+  document.getElementById('regQtyRow').style.display = 'flex';
+  document.getElementById('regUnitPrice').textContent = `$${priceAmount.toFixed(2)} CAD each`;
+  updateRegTotal();
+  document.getElementById('regModalOverlay').classList.add('open');
+  document.getElementById('regModalOverlay').scrollTop = 0;
+}
+
+function closeRegModal() {
+  document.getElementById('regModalOverlay').classList.remove('open');
+  regCurrentEvent = null;
+}
+
+function changeRegQty(delta) {
+  regQty = Math.max(1, regQty + delta);
+  document.getElementById('regQtyNum').textContent = regQty;
+  updateRegTotal();
+}
+
+function updateRegTotal() {
+  if (!regCurrentEvent) return;
+  const priceAmount = Number(regCurrentEvent.priceAmount) || 0;
+  const total = priceAmount * regQty;
+  document.getElementById('regTotalPrice').textContent = `$${total.toFixed(2)} CAD`;
+}
+
+async function submitRegistration(e) {
+  e.preventDefault();
+  if (!regCurrentEvent) return;
+  const name = document.getElementById('regName').value.trim();
+  const email = document.getElementById('regEmail').value.trim();
+  const phone = document.getElementById('regPhone').value.trim();
+  const location = document.getElementById('regLocation').value.trim();
+  const errBox = document.getElementById('regError');
+  const btn = document.getElementById('regSubmitBtn');
+
+  errBox.style.display = 'none';
+  btn.disabled = true;
+  btn.textContent = 'Redirecting to payment…';
+
+  try {
+    const res = await fetch(`${API}/api/events/checkout`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ eventId: regCurrentEvent.id, name, email, phone, location, quantity: regQty })
+    });
+    const data = await res.json();
+
+    if (data.success && data.url) {
+      // Always go to Stripe Checkout to complete payment
+      window.location.href = data.url;
+    } else {
+      throw new Error(data.message || 'Could not start payment');
+    }
+  } catch (err) {
+    errBox.textContent = '❌ ' + err.message;
+    errBox.style.display = 'block';
+    btn.disabled = false;
+    btn.textContent = 'Continue to Payment';
+  }
+}
+
+/* ── Upcoming Events Admin ── */
+async function toggleUpcomingEvents(checked) {
+  const pass = sessionStorage.getItem('adminAuth') || ADMIN_PASS;
+  try {
+    const r = await fetch(`${API}/api/settings/toggle`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password: pass, upcomingEventsEnabled: checked })
+    });
+    const j = await r.json();
+    if (j.success) {
+      upcomingEnabled = checked;
+      applyUpcomingVisibility();
+      showToast(checked ? '✅ Upcoming Events shown on site' : 'Upcoming Events hidden', 'info');
+    } else {
+      document.getElementById('upcomingToggleInput').checked = !checked;
+      showToast('❌ Failed to update setting', 'error');
+    }
+  } catch (e) {
+    document.getElementById('upcomingToggleInput').checked = !checked;
+    showToast('❌ Error: ' + e.message, 'error');
+  }
+}
+
+function handleUeFileSelect(input) {
+  ueSelectedFile = input.files[0] || null;
+  const pv = document.getElementById('ueUploadPreview');
+  pv.innerHTML = '';
+  if (ueSelectedFile) {
+    const img = document.createElement('img');
+    img.src = URL.createObjectURL(ueSelectedFile);
+    pv.appendChild(img);
+  }
+}
+
+async function saveUpcomingEvent() {
+  const title = document.getElementById('ueTitle').value.trim();
+  const description = document.getElementById('ueDescription').value.trim();
+  const eventDate = document.getElementById('ueDate').value;
+  const eventTime = document.getElementById('ueTime').value.trim();
+  const location = document.getElementById('ueLocation').value.trim();
+  const specialInstructions = document.getElementById('ueInstructions').value.trim();
+  const price = document.getElementById('uePrice').value.trim();
+  const priceAmount = parseFloat(document.getElementById('uePriceAmount').value) || 0;
+
+  if (!title || !eventDate) {
+    showToast('❌ Event name and date are required', 'error');
+    return;
+  }
+  if (!priceAmount || priceAmount <= 0) {
+    showToast('❌ Ticket price must be greater than $0 — all events require payment', 'error');
+    return;
+  }
+
+  const btn = document.getElementById('ueSaveBtn');
+  btn.innerHTML = '<span class="spinner"></span>Saving...';
+  btn.disabled = true;
+
+  const pass = sessionStorage.getItem('adminAuth') || ADMIN_PASS;
+  let imageData = null;
+  if (ueSelectedFile) {
+    imageData = await new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsDataURL(ueSelectedFile);
+    });
+  }
+
+  const endpoint = ueEditingId ? '/api/events/update' : '/api/events/upload';
+  const payload = { password: pass, title, description, eventDate, eventTime, location, specialInstructions, price, priceAmount, imageData };
+  if (ueEditingId) payload.id = ueEditingId;
+
+  try {
+    const r = await fetch(`${API}${endpoint}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    const j = await r.json();
+    if (j.success) {
+      showToast(ueEditingId ? '✅ Event updated' : '✅ Event added', 'success');
+      resetUeForm();
+      await fetchUpcomingEvents();
+    } else {
+      showToast('❌ Failed: ' + (j.message || ''), 'error');
+    }
+  } catch (e) {
+    showToast('❌ Error: ' + e.message, 'error');
+  }
+
+  btn.innerHTML = ueEditingId ? 'Save Changes' : 'Add Event';
+  btn.disabled = false;
+}
+
+function resetUeForm() {
+  document.getElementById('ueTitle').value = '';
+  document.getElementById('ueDescription').value = '';
+  document.getElementById('ueDate').value = '';
+  document.getElementById('ueTime').value = '';
+  document.getElementById('ueLocation').value = '';
+  document.getElementById('ueInstructions').value = '';
+  document.getElementById('uePrice').value = '';
+  document.getElementById('uePriceAmount').value = '';
+  document.getElementById('ueUploadPreview').innerHTML = '';
+  document.getElementById('ueFileInput').value = '';
+  ueSelectedFile = null;
+  ueEditingId = null;
+  document.getElementById('ueFormTitle').textContent = 'Add Event';
+  document.getElementById('ueSaveBtn').textContent = 'Add Event';
+  document.getElementById('ueCancelBtn').style.display = 'none';
+}
+
+function cancelUeEdit() {
+  resetUeForm();
+}
+
+function editUpcomingEvent(id) {
+  const ev = upcomingEvents.find(e => e.id === id);
+  if (!ev) return;
+  ueEditingId = id;
+  document.getElementById('ueTitle').value = ev.title || '';
+  document.getElementById('ueDescription').value = ev.description || '';
+  document.getElementById('ueDate').value = ev.eventDate || '';
+  document.getElementById('ueTime').value = ev.eventTime || '';
+  document.getElementById('ueLocation').value = ev.location || '';
+  document.getElementById('ueInstructions').value = ev.specialInstructions || '';
+  document.getElementById('uePrice').value = ev.price || '';
+  document.getElementById('uePriceAmount').value = ev.priceAmount || 0;
+  document.getElementById('ueFormTitle').textContent = 'Edit Event';
+  document.getElementById('ueSaveBtn').textContent = 'Save Changes';
+  document.getElementById('ueCancelBtn').style.display = 'block';
+  document.getElementById('tab-upcoming').scrollIntoView({ behavior: 'smooth' });
+}
+
+async function deleteUpcomingEvent(id) {
+  if (!confirm('Delete this event?')) return;
+  const pass = sessionStorage.getItem('adminAuth') || ADMIN_PASS;
+  try {
+    const r = await fetch(`${API}/api/events/delete`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password: pass, id })
+    });
+    const j = await r.json();
+    if (j.success) {
+      showToast('🗑️ Event deleted', 'info');
+      await fetchUpcomingEvents();
+      updateStats();
+    } else {
+      showToast('❌ Delete failed: ' + (j.message || ''), 'error');
+    }
+  } catch (e) {
+    showToast('❌ Delete failed: ' + e.message, 'error');
+  }
+}
+
+async function toggleEventActive(id, active) {
+  const pass = sessionStorage.getItem('adminAuth') || ADMIN_PASS;
+  try {
+    const r = await fetch(`${API}/api/events/toggle`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password: pass, id, active })
+    });
+    const j = await r.json();
+    if (j.success) {
+      const ev = upcomingEvents.find(e => e.id === id);
+      if (ev) ev.active = active;
+      renderUpcomingEvents();
+      renderUeAdminList();
+      showToast(active ? '✅ Event now visible on website' : '🚫 Event hidden from website', 'info');
+    } else {
+      showToast('❌ Failed: ' + (j.message || ''), 'error');
+      renderUeAdminList(); // revert the toggle visually
+    }
+  } catch (e) {
+    showToast('❌ Error: ' + e.message, 'error');
+    renderUeAdminList();
+  }
+}
+
+function renderUeAdminList() {
+  const list = document.getElementById('ueManageList');
+  const cnt = document.getElementById('ueCount');
+  if (!list) return;
+  if (cnt) cnt.textContent = upcomingEvents.length;
+  if (!upcomingEvents.length) {
+    list.innerHTML = '<p style="color:var(--text-light);font-size:0.9rem;text-align:center;padding:1rem">No events yet.</p>';
+    return;
+  }
+  const sorted = [...upcomingEvents].sort((a,b) => new Date(a.eventDate) - new Date(b.eventDate));
+  list.innerHTML = sorted.map(ev => {
+    const dateLabel = ev.eventDate ? new Date(ev.eventDate + 'T00:00:00').toLocaleDateString('en-CA', {year:'numeric',month:'short',day:'numeric'}) : '';
+    const imgBlock = ev.imageUrl ? `<img src="${ev.imageUrl}" alt=""/>` : `<div class="ue-admin-noimg">🎭</div>`;
+    const soldLabel = ev.ticketsSold ? ` · ${ev.ticketsSold} sold` : '';
+    const isActive = ev.active !== false;
+    return `<div class="ue-admin-item" style="${isActive ? '' : 'opacity:0.55'}">
+      ${imgBlock}
+      <div class="ue-admin-info">
+        <div class="ue-admin-title">${escHtml(ev.title)}${!isActive ? ' <em style="color:var(--text-light);font-size:0.7rem">(hidden)</em>' : ''}</div>
+        <div class="ue-admin-date">${dateLabel}</div>
+        <div class="ue-admin-price">${escHtml(ev.price || 'TBA')}${soldLabel}</div>
+      </div>
+      <div class="ue-admin-actions">
+        <label class="switch" style="transform:scale(0.7);margin-right:-0.3rem" title="${isActive ? 'Visible on website — click to hide' : 'Hidden — click to show'}">
+          <input type="checkbox" ${isActive ? 'checked' : ''} onchange="toggleEventActive('${ev.id}', this.checked)">
+          <span class="switch-slider"></span>
+        </label>
+        <button class="ue-edit" onclick="editUpcomingEvent('${ev.id}')">✏️</button>
+        <button class="ue-delete" onclick="deleteUpcomingEvent('${ev.id}')">🗑️</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+/* ══════════════════════════════════════
    ADMIN
    ══════════════════════════════════════ */
 let adminAuthenticated = false;
@@ -1179,7 +1999,7 @@ let selectedGalleryFiles = [];
 let heroSelectedFiles    = [];
 
 function openAdmin()  { document.getElementById('adminOverlay').classList.add('open'); document.body.style.overflow = 'hidden'; }
-function closeAdmin() { document.getElementById('adminOverlay').classList.remove('open'); document.body.style.overflow = ''; }
+function closeAdmin() { document.getElementById('adminOverlay').classList.remove('open'); document.body.style.overflow = ''; ciStopScanner(); }
 
 function adminLogin() {
   const pass = document.getElementById('adminPasswordInput').value;
@@ -1212,6 +2032,9 @@ function showAdminDashboard() {
   document.getElementById('adminDashboard').style.display = 'block';
   renderAdminGallery();
   renderHeroAdmin();
+  renderUeAdminList();
+  const toggleInput = document.getElementById('upcomingToggleInput');
+  if (toggleInput) toggleInput.checked = upcomingEnabled;
   updateStats();
 }
 
@@ -1227,12 +2050,16 @@ function adminLogout() {
 }
 
 function switchTab(tab) {
-  const tabs = ['gallery', 'hero', 'stats', 'settings'];
+  const tabs = ['gallery', 'hero', 'upcoming', 'checkin', 'tickets', 'stats', 'settings'];
   document.querySelectorAll('.admin-tab').forEach((b, i) => b.classList.toggle('active', tabs[i] === tab));
   document.querySelectorAll('.admin-tab-content').forEach(c => c.classList.remove('active'));
   document.getElementById(`tab-${tab}`).classList.add('active');
   if (tab === 'stats') updateStats();
   if (tab === 'hero')  renderHeroAdmin();
+  if (tab === 'upcoming') renderUeAdminList();
+  if (tab === 'checkin') { ciPopulateEventSelect(); ciLoadStats(); ciSwitchMode(ciCurrentMode); }
+  else { ciStopScanner(); }
+  if (tab === 'tickets') { populateTicketsEventFilter(); loadTicketsList(); }
 }
 
 /* ── Hero Admin ── */
@@ -1298,8 +2125,6 @@ function handleHeroFileSelect(input) {
   document.getElementById('heroUploadBtn').style.display = heroSelectedFiles.length ? 'block' : 'none';
 }
 
-// ══ HERO UPLOAD — sanitizes filename before sending ══
-// ══ HERO UPLOAD — sends base64 JSON to match server.js ══
 async function addHeroSlides() {
   if (!heroSelectedFiles.length) return;
   const pass = sessionStorage.getItem('adminAuth') || ADMIN_PASS;
@@ -1310,10 +2135,9 @@ async function addHeroSlides() {
 
   for (const file of heroSelectedFiles) {
     try {
-      // Convert file to base64
       const base64 = await new Promise((resolve, reject) => {
         const reader = new FileReader();
-        reader.onload = () => resolve(reader.result); // includes data:image/...;base64,
+        reader.onload = () => resolve(reader.result);
         reader.onerror = reject;
         reader.readAsDataURL(file);
       });
@@ -1375,7 +2199,6 @@ function handleFileSelect(input) {
   document.getElementById('uploadBtn').style.display = selectedGalleryFiles.length ? 'block' : 'none';
 }
 
-// Drag-and-drop
 const uploadZone = document.getElementById('uploadZone');
 if (uploadZone) {
   uploadZone.addEventListener('dragover', e => { e.preventDefault(); uploadZone.classList.add('dragover'); });
@@ -1404,8 +2227,22 @@ if (heroUploadZone) {
   });
 }
 
+const ueUploadZone = document.getElementById('ueUploadZone');
+if (ueUploadZone) {
+  ueUploadZone.addEventListener('dragover', e => { e.preventDefault(); ueUploadZone.classList.add('dragover'); });
+  ueUploadZone.addEventListener('dragleave', () => ueUploadZone.classList.remove('dragover'));
+  ueUploadZone.addEventListener('drop', e => {
+    e.preventDefault(); ueUploadZone.classList.remove('dragover');
+    const files = Array.from(e.dataTransfer.files).filter(f => f.type.startsWith('image/'));
+    if (files.length) {
+      const dt = new DataTransfer();
+      dt.items.add(files[0]);
+      document.getElementById('ueFileInput').files = dt.files;
+      handleUeFileSelect({ files: dt.files });
+    }
+  });
+}
 
-// ══ GALLERY UPLOAD — sends base64 JSON to match server.js ══
 async function uploadImages() {
   if (!selectedGalleryFiles.length) return;
   const btn   = document.getElementById('uploadBtn');
@@ -1417,7 +2254,6 @@ async function uploadImages() {
 
   for (const file of selectedGalleryFiles) {
     try {
-      // Convert file to base64
       const base64 = await new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.onload = () => resolve(reader.result);
@@ -1520,6 +2356,8 @@ async function deleteImage(publicId) {
 function updateStats() {
   document.getElementById('statTotal').textContent = galleryImages.length;
   document.getElementById('statHero').textContent  = heroImages.length;
+  const statEvents = document.getElementById('statEvents');
+  if (statEvents) statEvents.textContent = upcomingEvents.length;
   const last = galleryImages.length ? new Date(galleryImages[0].uploadedAt) : null;
   document.getElementById('statLast').textContent = last
     ? last.toLocaleDateString('en-CA', { month:'short', day:'numeric', year:'numeric' })
@@ -1559,9 +2397,287 @@ async function submitEnquiry(e) {
   }
 }
 
+/* ══════════════════════════════════════
+   ADMIN: CHECK-IN (scan / manual verify)
+   ══════════════════════════════════════ */
+let ciHtml5QrCode = null;
+let ciScannerRunning = false;
+let ciCurrentMode = 'scan';
+let ciSelectedEventId = '';
+
+function ciPopulateEventSelect() {
+  const sel = document.getElementById('ciEventSelect');
+  if (!sel) return;
+  const prevValue = ciSelectedEventId || sel.value;
+  const sorted = [...upcomingEvents].sort((a,b) => new Date(a.eventDate) - new Date(b.eventDate));
+  sel.innerHTML = '<option value="">— Select an event —</option>' + sorted.map(ev => {
+    const dateLabel = ev.eventDate ? new Date(ev.eventDate + 'T00:00:00').toLocaleDateString('en-CA', {year:'numeric',month:'short',day:'numeric'}) : '';
+    return `<option value="${ev.id}">${escHtml(ev.title)} — ${dateLabel}</option>`;
+  }).join('');
+
+  // Restore previous selection if it still exists, otherwise default to the soonest event
+  if (prevValue && sorted.some(ev => ev.id === prevValue)) {
+    sel.value = prevValue;
+    ciSelectedEventId = prevValue;
+  } else if (sorted.length) {
+    sel.value = sorted[0].id;
+    ciSelectedEventId = sorted[0].id;
+  } else {
+    ciSelectedEventId = '';
+  }
+}
+
+function ciOnEventChange() {
+  ciSelectedEventId = document.getElementById('ciEventSelect').value;
+  document.getElementById('ciResultPanel').style.display = 'none';
+  ciLoadStats();
+}
+
+function ciSwitchMode(mode) {
+  ciCurrentMode = mode;
+  document.getElementById('ciTabScan').classList.toggle('active', mode === 'scan');
+  document.getElementById('ciTabManual').classList.toggle('active', mode === 'manual');
+  document.getElementById('ciScanMode').style.display = mode === 'scan' ? 'block' : 'none';
+  document.getElementById('ciManualMode').style.display = mode === 'manual' ? 'block' : 'none';
+  document.getElementById('ciResultPanel').style.display = 'none';
+  if (mode === 'scan') ciStartScanner(); else ciStopScanner();
+}
+
+let ciQrLibPromise = null;
+function ciLoadQrLib() {
+  if (typeof Html5Qrcode !== 'undefined') return Promise.resolve();
+  if (ciQrLibPromise) return ciQrLibPromise;
+  ciQrLibPromise = new Promise((resolve, reject) => {
+    const s = document.createElement('script');
+    s.src = 'https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js';
+    s.onload = resolve;
+    s.onerror = () => { ciQrLibPromise = null; reject(new Error('Scanner library failed to load')); };
+    document.head.appendChild(s);
+  });
+  return ciQrLibPromise;
+}
+
+function ciStartScanner() {
+  if (ciScannerRunning || ciCurrentMode !== 'scan') return;
+  ciLoadQrLib().then(() => {
+    if (typeof Html5Qrcode === 'undefined') { ciShowCameraError({message:'Scanner library failed to load'}); return; }
+    ciHtml5QrCode = new Html5Qrcode("ci-qr-reader");
+    Html5Qrcode.getCameras().then(cameras => {
+      if (!cameras || !cameras.length) throw new Error('No camera found on this device');
+      ciHtml5QrCode.start(
+        { facingMode: "environment" },
+        { fps: 10, qrbox: { width: 240, height: 240 } },
+        ciOnScanSuccess,
+        () => {}
+      ).then(() => {
+        ciScannerRunning = true;
+        document.getElementById('ciCameraError').style.display = 'none';
+      }).catch(err => ciShowCameraError(err));
+    }).catch(err => ciShowCameraError(err));
+  }).catch(err => ciShowCameraError(err));
+}
+
+function ciStopScanner() {
+  if (ciHtml5QrCode && ciScannerRunning) {
+    ciHtml5QrCode.stop().then(() => { ciScannerRunning = false; }).catch(() => { ciScannerRunning = false; });
+  }
+}
+
+function ciShowCameraError(err) {
+  const box = document.getElementById('ciCameraError');
+  if (!box) return;
+  box.textContent = '⚠️ Camera unavailable (' + (err.message || err) + '). Use Manual Entry instead.';
+  box.style.display = 'block';
+}
+
+function ciOnScanSuccess(decodedText) {
+  if (!ciScannerRunning) return;
+  ciHtml5QrCode.pause(true);
+  ciScannerRunning = false;
+  ciVerifyTicket(decodedText);
+}
+
+function ciVerifyManual() {
+  const id = document.getElementById('ciManualTicketId').value.trim();
+  if (!id) return;
+  ciVerifyTicket(id);
+}
+
+async function ciVerifyTicket(ticketId) {
+  const pass = sessionStorage.getItem('adminAuth') || ADMIN_PASS;
+  try {
+    const r = await fetch(`${API}/api/checkin/verify`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password: pass, ticketId, eventId: ciSelectedEventId || undefined })
+    });
+    const j = await r.json();
+    ciShowResult(j);
+  } catch (e) {
+    ciShowResult({ status: 'invalid', message: 'Network error — try again.' });
+  }
+}
+
+function ciShowResult(res) {
+  const panel  = document.getElementById('ciResultPanel');
+  const icon   = document.getElementById('ciResultIcon');
+  const status = document.getElementById('ciResultStatus');
+  const detail = document.getElementById('ciResultDetail');
+
+  panel.className = 'checkin-result-panel ' + (res.status || 'invalid');
+  panel.style.display = 'block';
+
+  const t = res.ticket || {};
+  const detailHtml = res.ticket ? `
+    <b>Name:</b> ${escHtml(t.name || '—')}<br>
+    <b>Event:</b> ${escHtml(t.eventTitle || '—')}<br>
+    <b>Date:</b> ${escHtml(t.eventDate || '—')} ${t.eventTime ? '· ' + escHtml(t.eventTime) : ''}<br>
+    <b>Quantity:</b> ${t.quantity || 1}<br>
+    <b>Ticket ID:</b> ${escHtml(t.ticketId || '—')}
+    ${res.status === 'already_used' && t.checkedInAt ? `<br><b>First checked in:</b> ${new Date(t.checkedInAt).toLocaleString()}` : ''}
+  ` : '';
+
+  if (res.status === 'valid') { icon.textContent = '✅'; status.textContent = 'Valid — Checked In'; }
+  else if (res.status === 'already_used') { icon.textContent = '⚠️'; status.textContent = 'Already Checked In'; }
+  else if (res.status === 'wrong_event') { icon.textContent = '🔀'; status.textContent = 'Wrong Event'; }
+  else if (res.status === 'not_found') { icon.textContent = '❌'; status.textContent = 'Ticket Not Found'; }
+  else if (res.status === 'unauthorized') { icon.textContent = '🔒'; status.textContent = 'Session Expired'; }
+  else { icon.textContent = '❌'; status.textContent = 'Error'; }
+
+  detail.innerHTML = detailHtml || escHtml(res.message || '');
+
+  if (res.status === 'valid' || res.status === 'already_used') ciLoadStats();
+}
+
+function ciScanNext() {
+  document.getElementById('ciResultPanel').style.display = 'none';
+  const manualInput = document.getElementById('ciManualTicketId');
+  if (manualInput) manualInput.value = '';
+  if (ciCurrentMode === 'scan') {
+    if (ciHtml5QrCode && ciHtml5QrCode.getState && ciHtml5QrCode.getState() === 2 /* PAUSED */) {
+      ciHtml5QrCode.resume();
+      ciScannerRunning = true;
+    } else {
+      ciStartScanner();
+    }
+  }
+}
+
+async function ciLoadStats() {
+  if (!ciSelectedEventId) {
+    document.getElementById('ciStatTotal').textContent = '—';
+    document.getElementById('ciStatChecked').textContent = '—';
+    document.getElementById('ciStatRemaining').textContent = '—';
+    return;
+  }
+  const pass = sessionStorage.getItem('adminAuth') || ADMIN_PASS;
+  try {
+    const r = await fetch(`${API}/api/checkin/stats`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password: pass, eventId: ciSelectedEventId })
+    });
+    const j = await r.json();
+    if (j.success) {
+      document.getElementById('ciStatTotal').textContent = j.totalTickets;
+      document.getElementById('ciStatChecked').textContent = j.checkedInCount;
+      document.getElementById('ciStatRemaining').textContent = Math.max(0, j.totalTickets - j.checkedInCount);
+    }
+  } catch (e) { console.warn('Check-in stats error:', e.message); }
+}
+
+/* ══════════════════════════════════════
+   ADMIN: TICKETS (full booking list + CSV export)
+   ══════════════════════════════════════ */
+let ticketsListCache = [];
+
+function populateTicketsEventFilter() {
+  const sel = document.getElementById('ticketsEventFilter');
+  if (!sel) return;
+  const prev = sel.value;
+  const sorted = [...upcomingEvents].sort((a,b) => new Date(a.eventDate) - new Date(b.eventDate));
+  sel.innerHTML = '<option value="">All Events</option>' + sorted.map(ev =>
+    `<option value="${ev.id}">${escHtml(ev.title)}</option>`
+  ).join('');
+  if (prev) sel.value = prev;
+}
+
+async function loadTicketsList() {
+  const pass = sessionStorage.getItem('adminAuth') || ADMIN_PASS;
+  const eventId = document.getElementById('ticketsEventFilter').value;
+  const tbody = document.getElementById('ticketsTableBody');
+  tbody.innerHTML = '<tr><td colspan="8" style="padding:1rem;text-align:center;color:var(--text-light)">Loading…</td></tr>';
+  try {
+    const r = await fetch(`${API}/api/registrations/list`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password: pass, eventId: eventId || undefined })
+    });
+    const j = await r.json();
+    if (!j.success) throw new Error(j.message || 'Failed to load');
+    ticketsListCache = j.registrations || [];
+    renderTicketsTable();
+  } catch (e) {
+    tbody.innerHTML = `<tr><td colspan="8" style="padding:1rem;text-align:center;color:#c0392b">Error: ${escHtml(e.message)}</td></tr>`;
+  }
+}
+
+function renderTicketsTable() {
+  const tbody = document.getElementById('ticketsTableBody');
+  if (!ticketsListCache.length) {
+    tbody.innerHTML = '<tr><td colspan="8" style="padding:1rem;text-align:center;color:var(--text-light)">No tickets yet.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = ticketsListCache.map(t => {
+    const bookedAt = t.createdAt ? new Date(t.createdAt).toLocaleString('en-CA', { year:'numeric', month:'short', day:'numeric', hour:'2-digit', minute:'2-digit' }) : '—';
+    const paid = t.amountPaidCents ? `$${(t.amountPaidCents / 100).toFixed(2)} CAD` : 'Free';
+    const status = t.checkedIn ? '✅ Checked In' : '⏳ Not yet';
+    return `<tr style="border-bottom:1px solid var(--parchment)">
+      <td style="padding:0.5rem;font-family:monospace;white-space:nowrap">${escHtml(t.ticketId || '—')}</td>
+      <td style="padding:0.5rem">${escHtml(t.name || '—')}</td>
+      <td style="padding:0.5rem;white-space:nowrap">${escHtml(t.phone || '—')}</td>
+      <td style="padding:0.5rem">${escHtml(t.customerLocation || '—')}</td>
+      <td style="padding:0.5rem">${escHtml(t.eventTitle || '—')}</td>
+      <td style="padding:0.5rem;white-space:nowrap">${bookedAt}</td>
+      <td style="padding:0.5rem;white-space:nowrap">${paid}</td>
+      <td style="padding:0.5rem;white-space:nowrap">${status}</td>
+    </tr>`;
+  }).join('');
+}
+
+function exportTicketsCSV() {
+  if (!ticketsListCache.length) { showToast('No tickets to export', 'error'); return; }
+  const headers = ['Ticket ID','Name','Email','Phone','Location','Event','Booked At','Amount Paid (CAD)','Checked In','Checked In At'];
+  const rows = ticketsListCache.map(t => [
+    t.ticketId || '',
+    t.name || '',
+    t.email || '',
+    t.phone || '',
+    t.customerLocation || '',
+    t.eventTitle || '',
+    t.createdAt ? new Date(t.createdAt).toLocaleString('en-CA') : '',
+    t.amountPaidCents ? (t.amountPaidCents / 100).toFixed(2) : '0.00',
+    t.checkedIn ? 'Yes' : 'No',
+    t.checkedInAt ? new Date(t.checkedInAt).toLocaleString('en-CA') : ''
+  ]);
+  const csv = [headers, ...rows]
+    .map(row => row.map(v => `"${String(v).replace(/"/g, '""')}"`).join(','))
+    .join('\n');
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `sarvah-tickets-${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast('⬇️ CSV downloaded', 'success');
+}
+
 /* ── INIT ── */
 fetchHeroSlides();
 loadGallery();
+fetchUpcomingSettings();
+fetchUpcomingEvents();
 setTimeout(updateGalleryDots, 500);
 if (sessionStorage.getItem('adminAuth')) adminAuthenticated = true;
 document.getElementById('adminPasswordInput').addEventListener('keydown', e => { if (e.key === 'Enter') adminLogin(); });

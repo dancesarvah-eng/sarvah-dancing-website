@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Check-In — Sarvah Dance Academy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700&family=Josefin+Sans:wght@400;600;700&family=Crimson+Pro:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --cream:#F7F0E3; --parchment:#E8D9BB; --rust:#B84A1A; --burgundy:#6B1A0A;
+  --gold:#C09448; --gold-light:#D4B060; --text:#2C1A0E; --text-light:#6B5040; --white:#FFFDF8;
+  --green:#2E7D32; --red:#C0392B;
+}
+body{font-family:'Crimson Pro',Georgia,serif;background:var(--cream);color:var(--text);min-height:100vh}
+.topbar{background:var(--burgundy);color:var(--white);padding:1.1rem 1.5rem;display:flex;align-items:center;justify-content:space-between}
+.topbar h1{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:500}
+.topbar span{font-family:'Josefin Sans',sans-serif;font-size:0.62rem;letter-spacing:0.1em;text-transform:uppercase;opacity:0.75}
+.wrap{max-width:480px;margin:0 auto;padding:1.5rem}
+
+/* ── LOGIN ── */
+.login-box{background:var(--white);border:1px solid var(--parchment);padding:2.5rem 2rem;margin-top:3rem;text-align:center}
+.login-box h2{font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:var(--burgundy);margin-bottom:0.5rem;font-weight:500}
+.login-box p{color:var(--text-light);font-size:0.9rem;margin-bottom:1.5rem}
+.login-box input{width:100%;padding:0.9rem 1rem;border:1px solid var(--parchment);background:var(--cream);font-family:'Crimson Pro',serif;font-size:1rem;margin-bottom:1rem;outline:none}
+.login-box input:focus{border-color:var(--gold)}
+.login-error{color:var(--red);font-size:0.85rem;margin-bottom:1rem;display:none}
+.btn{width:100%;padding:0.9rem;background:var(--rust);color:var(--white);border:none;font-family:'Josefin Sans',sans-serif;font-size:0.72rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;transition:background 0.25s}
+.btn:hover{background:var(--burgundy)}
+.btn:disabled{opacity:0.6;cursor:default}
+
+/* ── APP ── */
+#app{display:none}
+.mode-tabs{display:flex;gap:0.5rem;margin-bottom:1.2rem}
+.mode-tab{flex:1;padding:0.7rem;text-align:center;background:var(--white);border:1px solid var(--parchment);font-family:'Josefin Sans',sans-serif;font-size:0.65rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;color:var(--text-light)}
+.mode-tab.active{background:var(--burgundy);color:var(--white);border-color:var(--burgundy)}
+
+#qr-reader{width:100%;border:1px solid var(--parchment);background:#000;overflow:hidden}
+#qr-reader img{display:none} /* hide default html5-qrcode camera-switch icon clutter */
+.scan-hint{text-align:center;font-size:0.82rem;color:var(--text-light);margin:0.8rem 0 1.2rem;font-style:italic}
+.camera-error{background:#fdecec;border:1px solid #e0a0a0;color:#a33;padding:1rem;font-size:0.85rem;text-align:center;display:none;margin-bottom:1rem}
+
+.manual-box{background:var(--white);border:1px solid var(--parchment);padding:1.5rem}
+.manual-box label{display:block;font-family:'Josefin Sans',sans-serif;font-size:0.62rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-light);margin-bottom:0.5rem}
+.manual-box input{width:100%;padding:0.9rem 1rem;border:1px solid var(--parchment);background:var(--cream);font-family:'Crimson Pro',serif;font-size:1.1rem;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:1rem;outline:none}
+.manual-box input:focus{border-color:var(--gold)}
+
+/* ── RESULT PANEL ── */
+.result-panel{display:none;margin-top:1.2rem;border:2px solid;padding:1.8rem;text-align:center;background:var(--white)}
+.result-panel.valid{border-color:var(--green)}
+.result-panel.already_used{border-color:#B8860B}
+.result-panel.not_found,.result-panel.invalid,.result-panel.unauthorized{border-color:var(--red)}
+.result-icon{font-size:2.6rem;margin-bottom:0.6rem}
+.result-status{font-family:'Josefin Sans',sans-serif;font-size:0.75rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;margin-bottom:1rem}
+.result-panel.valid .result-status{color:var(--green)}
+.result-panel.already_used .result-status{color:#B8860B}
+.result-panel.not_found .result-status,.result-panel.invalid .result-status,.result-panel.unauthorized .result-status{color:var(--red)}
+.result-detail{text-align:left;font-size:0.92rem;line-height:1.9;color:var(--text);border-top:1px solid var(--parchment);padding-top:1rem;margin-top:0.5rem}
+.result-detail b{color:var(--burgundy)}
+.scan-next-btn{margin-top:1.2rem}
+
+.stats-row{display:flex;gap:0.8rem;margin-top:1.5rem}
+.stat-box{flex:1;background:var(--white);border:1px solid var(--parchment);padding:1rem;text-align:center}
+.stat-box .num{font-family:'Cormorant Garamond',serif;font-size:1.8rem;color:var(--burgundy);font-weight:600}
+.stat-box .lbl{font-family:'Josefin Sans',sans-serif;font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-light)}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <h1>🕉️ Sarvah Check-In</h1>
+  <span>Door Staff</span>
+</div>
+
+<div class="wrap">
+
+  <!-- LOGIN -->
+  <div class="login-box" id="loginBox">
+    <h2>Staff Login</h2>
+    <p>Enter the admin password to start checking in guests.</p>
+    <input type="password" id="pwInput" placeholder="Password" onkeydown="if(event.key==='Enter')doLogin()">
+    <div class="login-error" id="loginError">❌ Incorrect password</div>
+    <button class="btn" onclick="doLogin()">Enter</button>
+  </div>
+
+  <!-- APP -->
+  <div id="app">
+    <div class="mode-tabs">
+      <div class="mode-tab active" id="tabScan" onclick="switchMode('scan')">📷 Scan QR</div>
+      <div class="mode-tab" id="tabManual" onclick="switchMode('manual')">⌨️ Manual Entry</div>
+    </div>
+
+    <div id="scanMode">
+      <div id="qr-reader"></div>
+      <p class="scan-hint">Point the camera at the guest's QR code</p>
+      <div class="camera-error" id="cameraError"></div>
+    </div>
+
+    <div id="manualMode" style="display:none">
+      <div class="manual-box">
+        <label>Ticket ID</label>
+        <input type="text" id="manualTicketId" placeholder="e.g. SDA-M1X2Y3-AB12" onkeydown="if(event.key==='Enter')verifyManual()">
+        <button class="btn" onclick="verifyManual()">Verify Ticket</button>
+      </div>
+    </div>
+
+    <div class="result-panel" id="resultPanel">
+      <div class="result-icon" id="resultIcon"></div>
+      <div class="result-status" id="resultStatus"></div>
+      <div class="result-detail" id="resultDetail"></div>
+      <button class="btn scan-next-btn" onclick="scanNext()">Scan Next Guest</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+let PASSWORD = '';
+let html5QrCode = null;
+let scannerRunning = false;
+let currentMode = 'scan';
+
+function doLogin() {
+  const pw = document.getElementById('pwInput').value;
+  if (!pw) return;
+  fetch('https://sarvah-dance-website.onrender.com/api/admin/verify', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ password: pw })
+  }).then(r => r.json()).then(j => {
+    if (j.success) {
+      PASSWORD = pw;
+      sessionStorage.setItem('checkinAuth', pw);
+      document.getElementById('loginBox').style.display = 'none';
+      document.getElementById('app').style.display = 'block';
+      startScanner();
+    } else {
+      document.getElementById('loginError').style.display = 'block';
+    }
+  }).catch(() => {
+    document.getElementById('loginError').textContent = '❌ Could not reach server';
+    document.getElementById('loginError').style.display = 'block';
+  });
+}
+
+function switchMode(mode) {
+  currentMode = mode;
+  document.getElementById('tabScan').classList.toggle('active', mode === 'scan');
+  document.getElementById('tabManual').classList.toggle('active', mode === 'manual');
+  document.getElementById('scanMode').style.display = mode === 'scan' ? 'block' : 'none';
+  document.getElementById('manualMode').style.display = mode === 'manual' ? 'block' : 'none';
+  document.getElementById('resultPanel').style.display = 'none';
+  if (mode === 'scan') startScanner(); else stopScanner();
+}
+
+function startScanner() {
+  if (scannerRunning || currentMode !== 'scan') return;
+  html5QrCode = new Html5Qrcode("qr-reader");
+  Html5Qrcode.getCameras().then(cameras => {
+    if (!cameras || !cameras.length) throw new Error('No camera found on this device');
+    html5QrCode.start(
+      { facingMode: "environment" },
+      { fps: 10, qrbox: { width: 250, height: 250 } },
+      onScanSuccess,
+      () => {} // ignore per-frame "no code found" errors
+    ).then(() => {
+      scannerRunning = true;
+      document.getElementById('cameraError').style.display = 'none';
+    }).catch(err => showCameraError(err));
+  }).catch(err => showCameraError(err));
+}
+
+function stopScanner() {
+  if (html5QrCode && scannerRunning) {
+    html5QrCode.stop().then(() => { scannerRunning = false; }).catch(() => {});
+  }
+}
+
+function showCameraError(err) {
+  const box = document.getElementById('cameraError');
+  box.textContent = '⚠️ Camera unavailable (' + (err.message || err) + '). Use Manual Entry instead.';
+  box.style.display = 'block';
+}
+
+function onScanSuccess(decodedText) {
+  if (!scannerRunning) return;
+  html5QrCode.pause(true);
+  scannerRunning = false;
+  verifyTicket(decodedText);
+}
+
+function verifyManual() {
+  const id = document.getElementById('manualTicketId').value.trim();
+  if (!id) return;
+  verifyTicket(id);
+}
+
+function verifyTicket(ticketId) {
+  fetch('https://sarvah-dance-website.onrender.com/api/checkin/verify', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ password: PASSWORD, ticketId })
+  }).then(r => r.json()).then(showResult).catch(() => {
+    showResult({ status: 'invalid', message: 'Network error — try again.' });
+  });
+}
+
+function showResult(res) {
+  const panel = document.getElementById('resultPanel');
+  const icon = document.getElementById('resultIcon');
+  const status = document.getElementById('resultStatus');
+  const detail = document.getElementById('resultDetail');
+
+  panel.className = 'result-panel ' + (res.status || 'invalid');
+  panel.style.display = 'block';
+
+  const t = res.ticket || {};
+  const detailHtml = res.ticket ? `
+    <b>Name:</b> ${escHtml(t.name || '—')}<br>
+    <b>Event:</b> ${escHtml(t.eventTitle || '—')}<br>
+    <b>Date:</b> ${escHtml(t.eventDate || '—')} ${t.eventTime ? '· ' + escHtml(t.eventTime) : ''}<br>
+    <b>Quantity:</b> ${t.quantity || 1}<br>
+    <b>Ticket ID:</b> ${escHtml(t.ticketId || '—')}
+    ${res.status === 'already_used' ? `<br><b>First checked in:</b> ${new Date(t.checkedInAt).toLocaleString()}` : ''}
+  ` : '';
+
+  if (res.status === 'valid') {
+    icon.textContent = '✅';
+    status.textContent = 'Valid — Checked In';
+  } else if (res.status === 'already_used') {
+    icon.textContent = '⚠️';
+    status.textContent = 'Already Checked In';
+  } else if (res.status === 'not_found') {
+    icon.textContent = '❌';
+    status.textContent = 'Ticket Not Found';
+  } else {
+    icon.textContent = '❌';
+    status.textContent = 'Error';
+  }
+  detail.innerHTML = detailHtml || escHtml(res.message || '');
+}
+
+function scanNext() {
+  document.getElementById('resultPanel').style.display = 'none';
+  document.getElementById('manualTicketId').value = '';
+  if (currentMode === 'scan') {
+    if (html5QrCode) {
+      html5QrCode.resume();
+      scannerRunning = true;
+    } else {
+      startScanner();
+    }
+  }
+}
+
+function escHtml(s) {
+  if (!s) return '';
+  return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+}
+
+// Auto-login if a session password is already stored
+const saved = sessionStorage.getItem('checkinAuth');
+if (saved) {
+  document.getElementById('pwInput').value = saved;
+  doLogin();
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,158 @@
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Registration Confirmed — Sarvah Dance Academy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,600&family=Josefin+Sans:wght@200;300;400;600&family=Crimson+Pro:ital,wght@0,300;0,400;1,400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --cream:#F7F0E3; --parchment:#E8D9BB; --rust:#B84A1A; --burgundy:#6B1A0A;
+  --gold:#C09448; --gold-light:#D4B060; --text:#2C1A0E; --text-light:#6B5040; --white:#FFFDF8;
+}
+body{font-family:'Crimson Pro',Georgia,serif;background:var(--cream);color:var(--text);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:2rem}
+.card{max-width:520px;width:100%;background:var(--white);border:1px solid var(--parchment);text-align:center;overflow:hidden}
+.gopuram-border{height:12px;background:repeating-linear-gradient(45deg,var(--gold) 0 10px,var(--gold-light) 10px 20px)}
+.body-pad{padding:3rem 2.5rem}
+.checkmark{font-size:3rem;margin-bottom:1rem}
+h1{font-family:'Cormorant Garamond',serif;font-size:2.2rem;font-weight:400;color:var(--burgundy);margin-bottom:0.6rem}
+p{color:var(--text-light);font-size:1rem;line-height:1.7;margin-bottom:1.5rem}
+.detail-row{display:flex;justify-content:space-between;padding:0.7rem 0;border-bottom:1px solid var(--parchment);font-size:0.92rem;text-align:left}
+.detail-row span:first-child{color:var(--text-light)}
+.detail-row span:last-child{font-weight:600;color:var(--burgundy);text-align:right}
+a.home-link{display:inline-block;margin-top:1.2rem;padding:0.8rem 2rem;background:var(--burgundy);color:var(--white);text-decoration:none;font-family:'Josefin Sans',sans-serif;font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase}
+.loading{color:var(--text-light);font-family:'Josefin Sans',sans-serif;letter-spacing:0.1em;text-transform:uppercase;font-size:0.75rem}
+.qr-note{background:rgba(107,26,10,0.06);border:1px solid var(--gold);padding:1rem;font-size:0.85rem;margin-top:1.5rem;text-align:left}
+
+.ticket-block{border:1px solid var(--parchment);background:var(--white);padding:1.4rem;margin:1.2rem 0;text-align:left}
+.ticket-block .tnum{font-family:'Josefin Sans',sans-serif;font-size:0.7rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--rust);margin-bottom:0.6rem}
+.ticket-block img{display:block;margin:1rem auto;width:180px;height:180px;border:1px solid var(--parchment)}
+.ticket-id{font-family:monospace;font-size:0.95rem;text-align:center;letter-spacing:0.05em;color:var(--burgundy);font-weight:600}
+
+.btn-download{display:inline-flex;align-items:center;gap:0.5rem;margin-top:1rem;padding:0.9rem 1.8rem;background:var(--rust);color:var(--white);border:none;text-decoration:none;font-family:'Josefin Sans',sans-serif;font-size:0.72rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer}
+.btn-download:hover{background:var(--burgundy)}
+.btn-download:disabled{opacity:0.6;cursor:default}
+
+.forgot-note{font-size:0.82rem;color:var(--text-light);margin-top:1.5rem}
+.forgot-note a{color:var(--rust);text-decoration:underline}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="gopuram-border"></div>
+  <div class="body-pad" id="content">
+    <p class="loading">Confirming your payment…</p>
+  </div>
+</div>
+
+<script>
+let currentSessionId = null;
+
+async function verify() {
+  const params = new URLSearchParams(window.location.search);
+  const sessionId = params.get('session_id');
+  currentSessionId = sessionId;
+  const content = document.getElementById('content');
+
+  if (!sessionId) {
+    content.innerHTML = '<h1>No session found</h1><p>We could not find your payment details.</p><a class="home-link" href="/">Return Home</a>';
+    return;
+  }
+
+  try {
+    const res = await fetch('https://sarvah-dance-website.onrender.com/api/events/verify/' + sessionId);
+    const data = await res.json();
+
+    if (data.success && data.paid) {
+      content.innerHTML = `
+        <div class="checkmark">✅</div>
+        <h1>Thank You, ${escHtml(data.name) || 'Guest'}!</h1>
+        <p>Your registration is confirmed for <strong>${escHtml(data.eventTitle) || 'the event'}</strong>.</p>
+        <div class="detail-row"><span>Tickets</span><span>${data.quantity || 1}</span></div>
+        <div class="detail-row"><span>Amount Paid</span><span>CAD $${((data.amountTotal || 0) / 100).toFixed(2)}</span></div>
+        <div id="ticketsArea"><p class="loading" style="margin-top:1.5rem">Loading your ticket…</p></div>
+        <button class="btn-download" id="downloadBtn" onclick="downloadPdf()" disabled>⬇ Download PDF Ticket</button>
+        <p class="forgot-note">Lost this page before downloading? <a href="/retrieve-ticket.html">Retrieve your ticket here</a> anytime using your email + phone.</p>
+        <a class="home-link" href="/">Return Home</a>
+      `;
+      loadTickets(sessionId);
+    } else {
+      content.innerHTML = '<h1>Payment Not Completed</h1><p>It looks like this payment did not go through. Please try again or contact us.</p><a class="home-link" href="/">Return Home</a>';
+    }
+  } catch (e) {
+    content.innerHTML = '<h1>Something Went Wrong</h1><p>' + escHtml(e.message) + '</p><a class="home-link" href="/">Return Home</a>';
+  }
+}
+
+// Ticket creation happens in the background after the webhook fires, so it
+// may not be ready the instant this page loads — poll briefly if needed.
+async function loadTickets(sessionId, attempt = 1) {
+  const area = document.getElementById('ticketsArea');
+  try {
+    const res = await fetch('https://sarvah-dance-website.onrender.com/api/tickets/by-session/' + encodeURIComponent(sessionId));
+    const data = await res.json();
+
+    if (data.success && data.tickets && data.tickets.length) {
+      area.innerHTML = data.tickets.map((t, i) => `
+        <div class="ticket-block">
+          ${data.tickets.length > 1 ? `<div class="tnum">Ticket ${t.ticketNumber} of ${t.ticketCount}</div>` : ''}
+          <img src="${t.qrDataUrl}" alt="QR code for ticket ${escHtml(t.ticketId)}">
+          <div class="ticket-id">${escHtml(t.ticketId)}</div>
+        </div>
+      `).join('');
+      document.getElementById('downloadBtn').disabled = false;
+    } else if (attempt < 6) {
+      // ticket may still be generating in the background — retry a few times
+      setTimeout(() => loadTickets(sessionId, attempt + 1), 2000);
+    } else {
+      area.innerHTML = '<p style="color:var(--text-light);font-size:0.85rem">Your ticket is still being prepared. You can retrieve it anytime from the link below.</p>';
+    }
+  } catch (e) {
+    if (attempt < 6) {
+      setTimeout(() => loadTickets(sessionId, attempt + 1), 2000);
+    } else {
+      area.innerHTML = '<p style="color:var(--text-light);font-size:0.85rem">Could not load your ticket right now. Use the retrieval link below instead.</p>';
+    }
+  }
+}
+
+async function downloadPdf() {
+  const btn = document.getElementById('downloadBtn');
+  btn.disabled = true;
+  btn.textContent = 'Preparing PDF…';
+  try {
+    const res = await fetch('https://sarvah-dance-website.onrender.com/api/tickets/pdf', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ sessionId: currentSessionId })
+    });
+    if (!res.ok) throw new Error('Could not generate PDF');
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'sarvah-ticket.pdf';
+    a.click();
+    URL.revokeObjectURL(url);
+  } catch (e) {
+    alert('Could not download PDF: ' + e.message);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '⬇ Download PDF Ticket';
+  }
+}
+
+function escHtml(s) {
+  if (!s) return '';
+  return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+}
+
+verify();
+</script>
+</body>
+</html>
