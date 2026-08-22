@@ -1385,18 +1385,39 @@ window.addEventListener('scroll', () => navbar.classList.toggle('scrolled', wind
 function toggleNav(){ document.getElementById('navLinks').classList.toggle('open'); }
 document.querySelectorAll('.nav-links a').forEach(a => a.addEventListener('click', () => document.getElementById('navLinks').classList.remove('open')));
 
-/* ── CLEAN URLS: scroll to sections without leaving a # in the address bar ── */
+/* ── CLEAN URLS: /about, /classes, etc. instead of #about ──
+   This is still a single-page site — every section lives on the same
+   page — we're just changing what shows in the address bar and letting
+   people land directly on a section via a shareable link or refresh. */
 document.addEventListener('click', (e) => {
   const link = e.target.closest('a[href^="#"]');
   if (!link) return;
   const hash = link.getAttribute('href');
   if (hash === '#' || hash.length < 2) return; // let no-op links (e.g. Admin) behave normally
-  const target = document.getElementById(hash.slice(1));
+  const sectionId = hash.slice(1);
+  const target = document.getElementById(sectionId);
   if (!target) return;
   e.preventDefault();
   target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  // Keep the current URL clean instead of appending the hash.
-  history.replaceState(null, '', window.location.pathname + window.location.search);
+  // Show a clean path like /about instead of a #hash.
+  history.pushState({ sectionId }, '', '/' + sectionId + window.location.search);
+});
+
+// Handle browser Back/Forward buttons so they still scroll to the right section.
+window.addEventListener('popstate', () => {
+  const sectionId = window.location.pathname.replace(/^\//, '');
+  const target = sectionId ? document.getElementById(sectionId) : null;
+  if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  else window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+// On first page load, if someone landed directly on a clean URL like
+// /about (shared link, bookmark, or refresh), scroll straight to it.
+window.addEventListener('load', () => {
+  const sectionId = window.location.pathname.replace(/^\//, '');
+  if (!sectionId) return;
+  const target = document.getElementById(sectionId);
+  if (target) setTimeout(() => target.scrollIntoView({ behavior: 'instant', block: 'start' }), 50);
 });
 
 /* ── REVEAL ── */
