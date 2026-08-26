@@ -45,7 +45,7 @@
 //     };
 
 //     const toUser = {
-//         from: `"Smt. Gayatri Inaayat – Sarvah Dance Academy" <${EMAIL_USER}>`,
+//         from: `"Ms. Gayatri Inaayat – Sarvah Dance Academy" <${EMAIL_USER}>`,
 //         to: email,
 //         subject: '🙏 Namaste! Thank you for contacting Sarvah Dance Academy',
 //         html: `
@@ -66,7 +66,7 @@
 //             </div>
 //             <hr style="border:none;border-top:1px solid #E8D9BB;margin:20px 0;">
 //             <p style="margin:0;">Warm regards,</p>
-//             <p style="margin:5px 0 0;font-weight:bold;">Smt. Gayatri Inaayat</p>
+//             <p style="margin:5px 0 0;font-weight:bold;">Ms. Gayatri Inaayat</p>
 //             <p style="margin:0;color:#6B5040;">Founder & Artistic Director<br>Sarvah Dance Academy, London, Ontario</p>
 //             <div style="margin-top:16px;">
 //               <a href="https://wa.me/19055871808" style="display:inline-block;background:#25D366;color:#fff;padding:8px 16px;text-decoration:none;border-radius:4px;margin-right:8px;font-size:0.8rem;">💬 WhatsApp</a>
